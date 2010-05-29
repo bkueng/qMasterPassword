@@ -1,0 +1,12 @@
+
+*~
+*.o
+*.ko
+*.a
+
+/build*
+/.config
+
+*.log
+
+

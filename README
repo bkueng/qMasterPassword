@@ -1,0 +1,14 @@
+## beat küng
+# 23.05.2010
+
+this serves as a starting point for new projects, for linux/windows, with Qt, Makefile, whatever, ...
+
+to start:
+- change licence in files if not GPL
+- change project specific things in config.h and in Makefile
+- include global.h in all files
+
+the do-tag script is used under linux to automatically change version.h file and make a git commit
+
+
+
