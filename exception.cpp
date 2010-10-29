@@ -17,6 +17,9 @@
 #include "config.h"
 #include "logging.h"
 
+#include <cstdarg>
+#include <cstdio>
+
 
 /*********************************************************************//*
  * class Exception
