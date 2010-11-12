@@ -39,8 +39,16 @@ void CLog::Log(ELOG level, const char* file, const char* function, int line, con
 	FILE* pFile = fopen(LOG_FILE,"a+");
 	if(pFile) {
 		if(level <= m_file_log) {
-			if(m_bLog_src_file[level]) fprintf(pFile, "%s: %s() Line %d: ", file, function, line);
+			if(m_bLog_src_file[level]) {
+				/* be more verbose in debug mode */
+#ifdef _DEBUG
+				fprintf(pFile, "%s: %s() Line %d: ", file, function, line);
+#else
+				fprintf(pFile, "%s(): ", function);
+#endif
+			}
 			if(m_bLog_time) fprintf(pFile, "%s %s: ", getDate().c_str(), getTime().c_str());
+			if(level==ERROR) fprintf(pFile, "Error: ");
 			fprintf(pFile, "%s\n", buffer);
 		}
 		fclose(pFile);
@@ -49,11 +57,23 @@ void CLog::Log(ELOG level, const char* file, const char* function, int line, con
 	
 	if(level <= m_console_log) {
 		if(level==ERROR) {
-			if(m_bLog_src_file[level]) fprintf(stderr, "%s: %s() Line %d: ", file, function, line);
+			if(m_bLog_src_file[level]) {
+#ifdef _DEBUG
+				fprintf(stderr, "%s: %s() Line %d: ", file, function, line);
+#else
+				fprintf(stderr, "%s(): ", function);
+#endif
+			}
 			if(m_bLog_time) fprintf(stderr, "%s %s: ", getDate().c_str(), getTime().c_str());
-			fprintf(stderr, "%s\n", buffer);
+			fprintf(stderr, "Error: %s\n", buffer);
 		} else {
-			if(m_bLog_src_file[level]) printf("%s: %s() Line %d: ", file, function, line);
+			if(m_bLog_src_file[level]) {
+#ifdef _DEBUG
+				printf("%s: %s() Line %d: ", file, function, line);
+#else
+				printf("%s(): ", function);
+#endif
+			}
 			if(m_bLog_time) printf("%s %s: ", getDate().c_str(), getTime().c_str());
 			printf("%s\n", buffer);
 		}
@@ -110,5 +130,6 @@ CLog::~CLog() {
 
 
 CLog::Instance CLog::m_instance;
+
 
 
