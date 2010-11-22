@@ -45,6 +45,8 @@ public:
 		return(m_instance.log ? *m_instance.log : *(m_instance.log=new CLog()));
 	}
 	
+	static string toStr(ELOG level);
+	
 	void Log(ELOG level, const char* file, const char* function, int line, const char* fmt, ...);
 	
 	ELOG consoleLevel() { return(m_console_log); }
@@ -53,8 +55,11 @@ public:
 	void setConsoleLevel(ELOG level) { if(level>=NONE && level<=DEBUG) m_console_log=level; }
 	void setFileLevel(ELOG level) { if(level>=NONE && level<=DEBUG) m_file_log=level; }
 	
-	bool logDateTime() { return(m_bLog_time); }
-	void setLogDateTime(bool on) { m_bLog_time=on; }
+	bool logDateTimeFile() { return(m_bLog_time_file); }
+	bool logDateTimeConsole() { return(m_bLog_time_console); }
+	void setLogDateTime(bool on) { m_bLog_time_file=m_bLog_time_console=on; }
+	void setLogDateTimeConsole(bool on) { m_bLog_time_console=on; }
+	void setLogDateTimeFile(bool on) { m_bLog_time_file=on; }
 	
 	
 	bool logSourceFile(ELOG level) { return(m_bLog_src_file[level]); }
@@ -73,7 +78,8 @@ private:
 	CLog();
 	~CLog();
 	
-	bool m_bLog_time;
+	bool m_bLog_time_file;
+	bool m_bLog_time_console;
 	bool m_bLog_src_file[LOG_LEVEL_COUNT];
 	
 	ELOG m_console_log;

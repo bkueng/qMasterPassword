@@ -28,6 +28,18 @@
 /*////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+string CLog::toStr(ELOG level) {
+	switch(level) {
+	case ERROR: return("ERROR");
+	case WARN: return("WARN");
+	case INFO: return("INFO");
+	case DEBUG: return("DEBUG");
+	case NONE:
+	default:
+	return("UNKNOWN LEVEL");
+	}
+}
+
 void CLog::Log(ELOG level, const char* file, const char* function, int line, const char* fmt, ...) {
 	
 	char buffer[2048];
@@ -47,9 +59,8 @@ void CLog::Log(ELOG level, const char* file, const char* function, int line, con
 				fprintf(pFile, "%s(): ", function);
 #endif
 			}
-			if(m_bLog_time) fprintf(pFile, "%s %s: ", getDate().c_str(), getTime().c_str());
-			if(level==ERROR) fprintf(pFile, "Error: ");
-			fprintf(pFile, "%s\n", buffer);
+			if(m_bLog_time_file) fprintf(pFile, "%s %s: ", getDate().c_str(), getTime().c_str());
+			fprintf(pFile, "%s: %s\n", toStr(level).c_str(), buffer);
 		}
 		fclose(pFile);
 		++m_file_log_count[level];
@@ -64,8 +75,8 @@ void CLog::Log(ELOG level, const char* file, const char* function, int line, con
 				fprintf(stderr, "%s(): ", function);
 #endif
 			}
-			if(m_bLog_time) fprintf(stderr, "%s %s: ", getDate().c_str(), getTime().c_str());
-			fprintf(stderr, "Error: %s\n", buffer);
+			if(m_bLog_time_console) fprintf(stderr, "%s %s: ", getDate().c_str(), getTime().c_str());
+			fprintf(stderr, "%s\n", buffer);
 		} else {
 			if(m_bLog_src_file[level]) {
 #ifdef _DEBUG
@@ -74,7 +85,7 @@ void CLog::Log(ELOG level, const char* file, const char* function, int line, con
 				printf("%s(): ", function);
 #endif
 			}
-			if(m_bLog_time) printf("%s %s: ", getDate().c_str(), getTime().c_str());
+			if(m_bLog_time_console) printf("%s %s: ", getDate().c_str(), getTime().c_str());
 			printf("%s\n", buffer);
 		}
 		++m_console_log_count[level];
@@ -119,7 +130,8 @@ string CLog::getTime() {
 }
 
 
-CLog::CLog() : m_bLog_time(true), m_console_log(INFO), m_file_log(INFO) {
+CLog::CLog() : m_bLog_time_file(true), m_bLog_time_console(false)
+	, m_console_log(INFO), m_file_log(INFO) {
 	memset(m_console_log_count, 0, sizeof(m_console_log_count));
 	memset(m_file_log_count, 0, sizeof(m_file_log_count));
 	memset(m_bLog_src_file, 0, sizeof(m_bLog_src_file));

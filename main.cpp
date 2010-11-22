@@ -24,7 +24,6 @@ int main(int argc, char *argv[]) {
 		CLog::getInstance().setConsoleLevel(WARN);
 #endif
 		CLog::getInstance().setFileLevel(WARN);
-		CLog::getInstance().setLogDateTime(false);
 		CLog::getInstance().setLogSourceFileAll(false);
 		CLog::getInstance().setLogSourceFile(ERROR, true);
 		
