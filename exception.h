@@ -68,8 +68,8 @@ public:
 	Exception(EnErrors err, const char* func, const char* file, int line);
 	virtual ~Exception();
 	
-	virtual EnErrors getError() { return(m_err); }
-	virtual string getErrorStr(); //description of the error number
+	virtual EnErrors getError() const { return(m_err); }
+	virtual string getErrorStr() const; //description of the error number
 	
 protected:
 	Exception(EnErrors err); //this constructor does not log anything
@@ -95,7 +95,7 @@ public:
 			, const char* file, int line, const char* fmt, ...);
 	virtual ~ExceptionString();
 	
-	virtual string getErrorStr() { return(m_err_desc); }
+	virtual string getErrorStr() const { return(m_err_desc); }
 private:
 	string m_err_desc;
 };
@@ -110,6 +110,19 @@ private:
 	if(!(exp)) throw(EXCEPTION_s(EASSERT, err_fmt, ## __VA_ARGS__)) 
 #define ASSERT_THROW_e(exp, err, err_fmt, ...) \
 	if(!(exp)) throw(EXCEPTION_s(err, err_fmt, ## __VA_ARGS__)) 
+
+
+#ifdef _DEBUG
+#define DEBUG_ASSERT(exp, err_fmt, ...) \
+	if(!(exp)) { \
+		printf("Assert: %s:%i %s: ", __FILE__, __LINE__, __FUNCTION__); \
+		printf(err_fmt, ## __VA_ARGS__); \
+		printf("\nGood bye\n"); abort(); \
+	}
+#else
+#define DEBUG_ASSERT(exp, err_fmt, ...) \
+	{ }
+#endif
 
 #endif /* EXCEPTION_H_ */
 

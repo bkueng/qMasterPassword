@@ -40,7 +40,7 @@ Exception::Exception(EnErrors err, const char* func, const char* file, int line)
 
 
 
-string Exception::getErrorStr() {
+string Exception::getErrorStr() const {
 	switch(m_err) {
 	case EGENERAL: return("EGENERAL");
 	case EASSERT: return("EASSERT");
@@ -66,6 +66,7 @@ string Exception::getErrorStr() {
 	case ETRY_AGAIN: return("ETRY_AGAIN");
 	case EINTERRUPTED: return("EINTERRUPTED");
 	case EUNSUPPORTED: return("EUNSUPPORTED");
+	default:;
 	}
 	return("(unknown Error)");
 }
