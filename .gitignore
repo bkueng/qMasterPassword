@@ -9,4 +9,5 @@
 
 *.log
 
-
+/.cproject
+/.project
