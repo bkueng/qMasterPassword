@@ -31,6 +31,7 @@ using namespace std;
 
 
 #define SAVE_DEL(x) if(x) { delete(x); x=NULL; }
+#define SAVE_DEL_ARR(X) if(X) { delete[](X); X=NULL; }
 
 
 string getDate(); //format: DD.MM.YY
