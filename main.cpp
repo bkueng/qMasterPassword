@@ -27,10 +27,14 @@ int main(int argc, char *argv[]) {
 		CLog::getInstance().setLogSourceFileAll(false);
 		CLog::getInstance().setLogSourceFile(ERROR, true);
 		
+		Exception::setLogAllExceptions(true);
+		
+		
 		CMain main;
 		main.init(argc, argv);
 		main.exec();
 	} catch(Exception& e) {
+		e.log();
 		return(-1);
 	}
 	return(0);

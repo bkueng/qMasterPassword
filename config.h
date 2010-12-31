@@ -36,8 +36,6 @@
 
 #define LOG_FILE "."PATH_SEP""APP_NAME".log"
 
-#define LOG_EXCEPTIONS
-
 
 
 

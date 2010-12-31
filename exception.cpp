@@ -25,17 +25,27 @@
  * class Exception
  *//*********************************************************************/
 
-Exception::Exception(EnErrors err) : m_err(err) {
-}
+bool Exception::m_bLog_exceptions = true;
 
-Exception::~Exception() {
+Exception::Exception(EnErrors err) : m_bLogged(false), m_func(NULL)
+	, m_file(NULL), m_line(0), m_err(err) {
+	
 }
 
 Exception::Exception(EnErrors err, const char* func, const char* file, int line)
-	: m_err(err) {
-#ifdef LOG_EXCEPTIONS
-	CLog::getInstance().Log(ERROR, file, func, line, "Exception: %s", getErrorStr().c_str());
-#endif
+	: m_bLogged(false), m_func(func), m_file(file), m_line(line), m_err(err) {
+	
+}
+
+Exception::~Exception() {
+	if(m_bLog_exceptions) log();
+}
+
+void Exception::log() {
+	if(!m_bLogged) {
+		CLog::getInstance().Log(ERROR, m_file, m_func, m_line, "Exception: %s", getErrorStr().c_str());
+		m_bLogged=true;
+	}
 }
 
 
@@ -80,7 +90,7 @@ string Exception::getErrorStr() const {
 
 ExceptionString::ExceptionString(EnErrors err, const char* func
 		, const char* file, int line, const char* fmt, ...)
-	: Exception(err) {
+	: Exception(err, func, file, line) {
 	
 	va_list va;
 	char buf[2048];
@@ -89,11 +99,16 @@ ExceptionString::ExceptionString(EnErrors err, const char* func
 	va_end(va);
 	m_err_desc=buf;
 	
-#ifdef LOG_EXCEPTIONS
-	CLog::getInstance().Log(ERROR, file, func, line, "%s", m_err_desc.c_str());
-#endif
+}
+
+void ExceptionString::log() {
+	if(!m_bLogged) {
+		CLog::getInstance().Log(ERROR, m_file, m_func, m_line, "%s", m_err_desc.c_str());
+		m_bLogged=true;
+	}
 }
 
 ExceptionString::~ExceptionString() {
+	if(m_bLog_exceptions) log();
 }
 

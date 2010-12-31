@@ -66,13 +66,28 @@ enum EnErrors {
 class Exception {
 public:
 	Exception(EnErrors err, const char* func, const char* file, int line);
+	Exception(EnErrors err);
 	virtual ~Exception();
 	
 	virtual EnErrors getError() const { return(m_err); }
 	virtual string getErrorStr() const; //description of the error number
 	
+	virtual void log();
+	
+	//whether all exceptions should be logged when they are created
+	static void setLogAllExceptions(bool bLog) { m_bLog_exceptions=bLog; }
+	static bool logAllExceptions() { return(m_bLog_exceptions); }
+	
+	
 protected:
-	Exception(EnErrors err); //this constructor does not log anything
+	bool m_bLogged;
+	
+	//where the exception occured:
+	const char* m_func;
+	const char* m_file;
+	int m_line;
+	
+	static bool m_bLog_exceptions;
 private:
 	EnErrors m_err;
 };
@@ -94,6 +109,8 @@ public:
 	ExceptionString(EnErrors err, const char* func
 			, const char* file, int line, const char* fmt, ...);
 	virtual ~ExceptionString();
+	
+	virtual void log();
 	
 	virtual string getErrorStr() const { return(m_err_desc); }
 private:

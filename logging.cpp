@@ -51,7 +51,7 @@ void CLog::Log(ELOG level, const char* file, const char* function, int line, con
 	FILE* pFile = fopen(LOG_FILE,"a+");
 	if(pFile) {
 		if(level <= m_file_log) {
-			if(m_bLog_src_file[level]) {
+			if(m_bLog_src_file[level] && file) {
 				/* be more verbose in debug mode */
 #ifdef _DEBUG
 				fprintf(pFile, "%s: %s() Line %d: ", file, function, line);
@@ -68,7 +68,7 @@ void CLog::Log(ELOG level, const char* file, const char* function, int line, con
 	
 	if(level <= m_console_log) {
 		if(level==ERROR) {
-			if(m_bLog_src_file[level]) {
+			if(m_bLog_src_file[level] && file) {
 #ifdef _DEBUG
 				fprintf(stderr, "%s: %s() Line %d: ", file, function, line);
 #else
@@ -78,7 +78,7 @@ void CLog::Log(ELOG level, const char* file, const char* function, int line, con
 			if(m_bLog_time_console) fprintf(stderr, "%s %s: ", getDate().c_str(), getTime().c_str());
 			fprintf(stderr, "%s\n", buffer);
 		} else {
-			if(m_bLog_src_file[level]) {
+			if(m_bLog_src_file[level] && file) {
 #ifdef _DEBUG
 				printf("%s: %s() Line %d: ", file, function, line);
 #else
