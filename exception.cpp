@@ -82,6 +82,10 @@ string Exception::getErrorStr() const {
 }
 
 
+Exception* Exception::copy() const {
+	return(new Exception(*this));
+}
+
 
 /*********************************************************************//*
  * class ExceptionString
@@ -110,5 +114,9 @@ void ExceptionString::log() {
 
 ExceptionString::~ExceptionString() {
 	if(m_bLog_exceptions) log();
+}
+
+Exception* ExceptionString::copy() const {
+	return(new ExceptionString(*this));
 }
 

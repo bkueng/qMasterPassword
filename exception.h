@@ -78,6 +78,8 @@ public:
 	static void setLogAllExceptions(bool bLog) { m_bLog_exceptions=bLog; }
 	static bool logAllExceptions() { return(m_bLog_exceptions); }
 	
+	//create a copy of this object. the caller must delete it
+	virtual Exception* copy() const;
 	
 protected:
 	bool m_bLogged;
@@ -113,6 +115,8 @@ public:
 	virtual void log();
 	
 	virtual string getErrorStr() const { return(m_err_desc); }
+	
+	virtual Exception* copy() const;
 private:
 	string m_err_desc;
 };
