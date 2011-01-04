@@ -21,8 +21,11 @@
 #include <cstdio>
 #include <cstdlib>
 #include <vector>
+#include <list>
 #include <string>
 #include <map>
+#include <queue>
+#include <stack>
 #include <cmath>
 using namespace std;
 
