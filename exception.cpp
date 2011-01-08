@@ -76,6 +76,7 @@ string Exception::getErrorStr() const {
 	case ETRY_AGAIN: return("ETRY_AGAIN");
 	case EINTERRUPTED: return("EINTERRUPTED");
 	case EUNSUPPORTED: return("EUNSUPPORTED");
+	case EWRONG_STATE: return("EWRONG_STATE");
 	default:;
 	}
 	return("(unknown Error)");
