@@ -10,5 +10,14 @@ to start:
 
 the do-tag script is used under linux to automatically change version.h file and make a git commit
 
+for Qt projects
+---------------
+run qmake
+add these lines to the .pro file:
 
+Debug:DEFINES += _DEBUG
+DEFINES += APP_NAME=\\\"$(TARGET)\\\"
+CONFIG += debug_and_release
+
+run make
 
