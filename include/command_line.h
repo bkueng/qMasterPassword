@@ -43,7 +43,6 @@ using namespace std;
  * 
  * 
  * Known Issues:
- * - file parameters or parameters without a --<name> are not supported
  * - it is not checked whether a parameter/switch/task name is used twice
 /*////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -98,7 +97,9 @@ public:
 	void addSwitch(const string& name, char short_name=' ', const string& task_name="");
 	
 	//parse the arguments
-	ECLParsingResult parse();
+	//bAllow_files: if true: arguments without -- or - are interpreted as files 
+	//  and can be queried with getFiles()
+	ECLParsingResult parse(bool bAllow_files=false);
 	
 	//set the current task and return it if found, NULL otherwise
 	//if name is "", task will be unset
@@ -112,6 +113,8 @@ public:
 	//todo: int/float overloading?
 	
 	
+	const vector<string>& getFiles() const { return(m_files); }
+	
 	const string& getUnknownCommand() const { return(m_unknown_command); }
 private:
 	ECLParsingResult unknownCommand(const string& command);
@@ -121,6 +124,8 @@ private:
 	
 	map<string, SCLTask> m_tasks;
 	SCLTask m_global;
+	
+	vector<string> m_files;
 	
 	string m_unknown_command;
 	SCLTask* m_cur_task;

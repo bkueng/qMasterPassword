@@ -107,7 +107,7 @@ void CCommandLineParser::addSwitch(const string& name, char short_name, const st
 	s->insert(make_pair(name, nswitch));
 }
 
-ECLParsingResult CCommandLineParser::parse() {
+ECLParsingResult CCommandLineParser::parse(bool bAllow_files) {
 	if(m_parse_result!=Parse_none_found) return(m_parse_result);
 	if(m_args.size()<2) return(Parse_none_found);
 	
@@ -172,7 +172,8 @@ ECLParsingResult CCommandLineParser::parse() {
 				}
 			}
 		} else {
-			return(unknownCommand(arg));
+			if(!bAllow_files) return(unknownCommand(arg));
+			m_files.push_back(arg);
 		}
 	}
 	
