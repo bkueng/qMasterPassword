@@ -18,6 +18,9 @@ add these lines to the .pro file:
 Debug:DEFINES += _DEBUG
 DEFINES += APP_NAME=\\\"$(TARGET)\\\"
 CONFIG += debug_and_release
+# for profiling (under linux):
+# QMAKE_CXXFLAGS_DEBUG += -pg
+# QMAKE_LFLAGS_DEBUG += -pg
 
 run make
 
