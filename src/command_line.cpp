@@ -55,7 +55,7 @@ CCommandLineParser::CCommandLineParser(int argc, char *argv[])
 	for(int i=1; i<argc; ++i) {
 		string arg=argv[i];
 		size_t pos=arg.find('=');
-		if(pos==string::npos) {
+		if(pos==string::npos || arg[0]!='-') {
 			m_args.push_back(arg);
 		} else {
 			if(pos==0 || pos==arg.length()-1) {
