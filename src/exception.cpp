@@ -77,6 +77,7 @@ string Exception::getErrorStr() const {
 	case EINTERRUPTED: return("EINTERRUPTED");
 	case EUNSUPPORTED: return("EUNSUPPORTED");
 	case EWRONG_STATE: return("EWRONG_STATE");
+	case EFILE_EXISTS: return("EFILE_EXISTS");
 	default:;
 	}
 	return("(unknown Error)");
