@@ -11,6 +11,7 @@
 
 /.cproject
 /.project
+/.settings
 
 /valgrind.out
 /gmon.out
