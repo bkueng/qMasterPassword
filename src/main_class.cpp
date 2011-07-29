@@ -49,6 +49,11 @@ void CMain::parseCommandLine(int argc, char *argv[]) {
 	m_parameters->addSwitch("help", 'h');
 	m_parameters->addSwitch("version");
 	m_parameters->addSwitch("verbose", 'v');
+	//control the logging
+	m_parameters->addParam("log");
+	m_parameters->addSwitch("no-log");
+	m_parameters->addParam("file-log");
+	m_parameters->addSwitch("no-file-log");
 	
 	
 	//m_parameters->addTask("main task", 't');
@@ -65,8 +70,16 @@ void CMain::printHelp() {
 		" "APP_NAME" [-v] \n"
 		" "APP_NAME" --version\n"
 		"  -v, --verbose                   print debug messages\n"
+		"                                  (same as --log debug)\n"
 		"  -h, --help                      print this message\n"
 		"  --version                       print the version\n"
+		"\n"
+		" logging\n"
+		"  --log <level>                   set console log level\n"
+		"  --file-log <level>              set file log level\n"
+		"   <level>                        none, error, warn, info, debug\n"
+		"  --no-log                        no console logging (--log none)\n"
+		"  --no-file-log                   no file logging (--file-log none)\n"
 		);
 }
 
@@ -116,7 +129,20 @@ void CMain::wrongUsage(const char* fmt, ...) {
 
 void CMain::processArgs() {
 	
+	//set console log level
+	string level;
 	if(m_parameters->getSwitch("verbose")) CLog::getInstance().setConsoleLevel(DEBUG);
+	else if(m_parameters->getSwitch("no-log")) CLog::getInstance().setConsoleLevel(NONE);
+	else if(m_parameters->getParam("log", level)) {
+		ELOG log_level;
+		if(CLog::parseLevel(level, log_level)) CLog::getInstance().setConsoleLevel(log_level);
+	}
+	//set file log level
+	if(m_parameters->getSwitch("no-file-log")) CLog::getInstance().setFileLevel(NONE);
+	else if(m_parameters->getParam("file-log", level)) {
+		ELOG log_level;
+		if(CLog::parseLevel(level, log_level)) CLog::getInstance().setFileLevel(log_level);
+	}
 	
 	
 	string device;

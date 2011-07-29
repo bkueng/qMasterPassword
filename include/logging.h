@@ -46,6 +46,7 @@ public:
 	}
 	
 	static string toStr(ELOG level);
+	static bool parseLevel(const string& level, ELOG& level_out);
 	
 	void Log(ELOG level, const char* file, const char* function, int line, const char* fmt, ...);
 	

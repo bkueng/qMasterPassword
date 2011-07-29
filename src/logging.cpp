@@ -14,6 +14,7 @@
 
 #include "logging.h"
 #include "config.h"
+#include "global.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -38,6 +39,17 @@ string CLog::toStr(ELOG level) {
 	default:
 	return("UNKNOWN LEVEL");
 	}
+}
+
+bool CLog::parseLevel(const string& level, ELOG& level_out) {
+	string str = toLower(level);
+	if(str == "error" || str == "e") level_out = ERROR;
+	else if(str == "warn" || str == "w") level_out = WARN;
+	else if(str == "info" || str == "i") level_out = INFO;
+	else if(str == "debug" || str == "d") level_out = DEBUG;
+	else if(str == "none" || str == "n") level_out = NONE;
+	else return(false);
+	return(true);
 }
 
 void CLog::Log(ELOG level, const char* file, const char* function, int line, const char* fmt, ...) {
