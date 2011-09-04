@@ -113,7 +113,6 @@ ECLParsingResult CCommandLineParser::parse(bool bAllow_files) {
 	
 	m_cur_task=NULL;
 	SCLTask* task;
-	bool bFound;
 	
 	for(int i=0; i<m_argc; ++i) {
 		const string& arg=m_args[i];
@@ -135,7 +134,6 @@ ECLParsingResult CCommandLineParser::parse(bool bAllow_files) {
 					
 					if(s) {
 						s->bGiven=true;
-						bFound=true;
 					} else if(p) {
 						p->values.push(m_args[i+1]);
 						++i;
@@ -161,7 +159,6 @@ ECLParsingResult CCommandLineParser::parse(bool bAllow_files) {
 						
 						if(s) {
 							s->bGiven=true;
-							bFound=true;
 						} else if(p && k==arg.length()-1) {
 							p->values.push(m_args[i+1]);
 							++i;
