@@ -1,5 +1,8 @@
-## beat küng
-# 23.05.2010
+                                 template
+                                 ========
+
+             Copyright 2010-2013 Beat Küng <beat-kueng@gmx.net>
+
 
 this serves as a starting point for new projects, for linux/windows, with Qt, Makefile, whatever, ...
 
@@ -18,7 +21,7 @@ add these lines to the .pro file:
 Debug:DEFINES += _DEBUG
 DEFINES += APP_NAME=\\\"$(TARGET)\\\"
 CONFIG += debug_and_release
-# for profiling (under linux):
+# for profiling (under linux, using gprof):
 #QMAKE_CXXFLAGS_DEBUG += -pg
 #QMAKE_LFLAGS_DEBUG += -pg
 
