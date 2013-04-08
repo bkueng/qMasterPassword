@@ -35,6 +35,8 @@ LD := 				$(GXX)
 LIBS :=				-lm
 INCPATH :=			-Iinclude
 
+# whether or not to generate & use include dependency files
+USE_DEP_FILES :=	1
 
 
 
@@ -43,6 +45,30 @@ all: $(APP_NAME)
 
 debug: $(APP_NAME)_dbg
 	mv $(APP_NAME)_dbg $(APP_NAME)
+
+
+# Dependency targets & includes
+DEP_cpp := $(patsubst %.cpp, build/%.d,$(SOURCES_cpp));
+DEP_c:= $(patsubst %.c, build/%.d,$(SOURCES_c));
+DEP_cpp_dbg := $(patsubst %.cpp, build_dbg/%.d,$(SOURCES_cpp));
+DEP_c_dbg:= $(patsubst %.c, build_dbg/%.d,$(SOURCES_c));
+
+ifeq ($(strip $(USE_DEP_FILES)),1)
+-include $(DEP_cpp) $(DEP_c)
+-include $(DEP_cpp_dbg) $(DEP_c_dbg)
+build/%.d: %.c
+	@$(GCC) -MM -MG $(INCPATH) $(CFLAGS) $< | \
+		sed -e "s@^\(.*\)\.o:@$(dir $@)\1.d $(dir $@)\1.o:@" > $@
+build/%.d: %.cpp
+	@$(GXX) -MM -MG $(INCPATH) $(CXXFLAGS) $< | \
+		sed -e "s@^\(.*\)\.o:@$(dir $@)\1.d $(dir $@)\1.o:@" > $@
+build_dbg/%.d: %.c
+	@$(GCC) -MM -MG $(INCPATH) $(CFLAGS) $< | \
+		sed -e "s@^\(.*\)\.o:@$(dir $@)\1.d $(dir $@)\1.o:@" > $@
+build_dbg/%.d: %.cpp
+	@$(GXX) -MM -MG $(INCPATH) $(CXXFLAGS) $< | \
+		sed -e "s@^\(.*\)\.o:@$(dir $@)\1.d $(dir $@)\1.o:@" > $@
+endif # ($(USE_DEP_FILES),1)
 
 
 # Build targets
