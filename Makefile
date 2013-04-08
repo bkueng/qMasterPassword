@@ -21,8 +21,8 @@ SHELL := $(shell which bash)
 APP_NAME := template
 
 # Listings of source files for the different executables.
-SOURCES := $(wildcard src/*.cpp) $(wildcard src/*.c)
-
+SOURCES_cpp := $(wildcard src/*.cpp)
+SOURCES_c:= $(wildcard src/*.c)
 
 # Generic flags for the C/CPP compiler.
 CFLAGS := 			-pipe -O2 -Wall -D'APP_NAME="$(APP_NAME)"'
@@ -49,20 +49,22 @@ debug: $(APP_NAME)_dbg
 build/%.o: %.cpp
 	@ mkdir -p $(dir $@)
 	$(GXX) -c $(CXXFLAGS) $(INCPATH) $*.cpp -o $@
-build_c/%.o: %.c
+build/%.o: %.c
 	@ mkdir -p $(dir $@)
 	$(GCC) -c $(CFLAGS) $(INCPATH) $*.c -o $@
 build_dbg/%.o: %.cpp
 	@ mkdir -p $(dir $@)
 	$(GXX) -c $(CXXFLAGS_debug) $(INCPATH) $*.cpp -o $@
-build_c_dbg/%.o: %.c
+build_dbg/%.o: %.c
 	@ mkdir -p $(dir $@)
 	$(GCC) -c $(CFLAGS_debug) $(INCPATH) $*.c -o $@
 
 # Link targets
-$(APP_NAME): $(patsubst %.cpp, build/%.o, $(patsubst %.c, build_c/%.o, $(SOURCES)))
+$(APP_NAME): $(patsubst %.cpp, build/%.o, $(SOURCES_cpp)) \
+	$(patsubst %.c, build/%.o, $(SOURCES_c))
 	$(LD) -o $@ $^ $(LIBS)
-$(APP_NAME)_dbg: $(patsubst %.cpp, build_dbg/%.o, $(patsubst %.c, build_c_dbg/%.o, $(SOURCES)))
+$(APP_NAME)_dbg: $(patsubst %.cpp, build_dbg/%.o, $(SOURCES_cpp)) \
+	$(patsubst %.c, build_dbg/%.o, $(SOURCES_c))
 	$(LD) -o $@ $^ $(LIBS)
 
 
