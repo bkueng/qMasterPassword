@@ -57,16 +57,20 @@ ifeq ($(strip $(USE_DEP_FILES)),1)
 -include $(DEP_cpp) $(DEP_c)
 -include $(DEP_cpp_dbg) $(DEP_c_dbg)
 build/%.d: %.c
+	@ mkdir -p $(dir $@)
 	@$(GCC) -MM -MG $(INCPATH) $(CFLAGS) $< | \
 		sed -e "s@^\(.*\)\.o:@$(dir $@)\1.d $(dir $@)\1.o:@" > $@
 build/%.d: %.cpp
+	@ mkdir -p $(dir $@)
 	@$(GXX) -MM -MG $(INCPATH) $(CXXFLAGS) $< | \
 		sed -e "s@^\(.*\)\.o:@$(dir $@)\1.d $(dir $@)\1.o:@" > $@
 build_dbg/%.d: %.c
-	@$(GCC) -MM -MG $(INCPATH) $(CFLAGS) $< | \
+	@ mkdir -p $(dir $@)
+	@$(GCC) -MM -MG $(INCPATH) $(CFLAGS_debug) $< | \
 		sed -e "s@^\(.*\)\.o:@$(dir $@)\1.d $(dir $@)\1.o:@" > $@
 build_dbg/%.d: %.cpp
-	@$(GXX) -MM -MG $(INCPATH) $(CXXFLAGS) $< | \
+	@ mkdir -p $(dir $@)
+	@$(GXX) -MM -MG $(INCPATH) $(CXXFLAGS_debug) $< | \
 		sed -e "s@^\(.*\)\.o:@$(dir $@)\1.d $(dir $@)\1.o:@" > $@
 endif # ($(USE_DEP_FILES),1)
 
@@ -96,4 +100,4 @@ $(APP_NAME)_dbg: $(patsubst %.cpp, build_dbg/%.o, $(SOURCES_cpp)) \
 
 # Cleans the module.
 clean:
-	rm -rf build build_dbg build_c build_c_dbg $(APP_NAME)
+	rm -rf build build_dbg $(APP_NAME)
