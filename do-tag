@@ -67,7 +67,7 @@ update_files() {
 	VERSION_PATCH=$4
 	VERSION_RC=$5
 	
-	VERSION_FILE="version.h"
+	VERSION_FILE="include/version.h"
 	
 	sed -ri -e "s/(VERSION_MAJOR[\t ]+)[0-9]+/\1$VERSION_MAJOR/" "$VERSION_FILE"
 	sed -ri -e "s/(VERSION_MINOR[\t ]+)[0-9]+/\1$VERSION_MINOR/" "$VERSION_FILE"
