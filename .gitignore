@@ -16,3 +16,6 @@
 /valgrind.out
 /gmon.out
 
+# static analysis output
+/analysis
+

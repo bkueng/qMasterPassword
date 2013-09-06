@@ -97,6 +97,11 @@ $(APP_NAME)_dbg: $(patsubst %.cpp, build_dbg/%.o, $(SOURCES_cpp)) \
 	$(patsubst %.c, build_dbg/%.o, $(SOURCES_c))
 	$(LD) -o $@ $^ $(LIBS)
 
+# static analyzer (using clang static analyzer)
+# another option would be cppcheck: cppcheck -Iinclude src
+analyze: clean
+	[ ! -d analysis ] && mkdir analysis; \
+		scan-build --use-analyzer=`which clang` -o analysis $(MAKE)
 
 # Cleans the module.
 clean:
