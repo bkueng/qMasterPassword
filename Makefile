@@ -29,9 +29,9 @@ CFLAGS := 			-pipe -O2 -Wall -D'APP_NAME="$(APP_NAME)"'
 CFLAGS_debug := 	-pipe -g -Wall -D'APP_NAME="$(APP_NAME)"' -D_DEBUG
 CXXFLAGS := 		$(CFLAGS)
 CXXFLAGS_debug := 	$(CFLAGS_debug)
-GCC := 				gcc
-GXX := 				g++
-LD := 				$(GXX)
+CC ?= 				gcc
+CXX ?= 				g++
+LD := 				$(CXX)
 LIBS :=				-lm
 INCPATH :=			-Iinclude
 
@@ -58,19 +58,19 @@ ifeq ($(strip $(USE_DEP_FILES)),1)
 -include $(DEP_cpp_dbg) $(DEP_c_dbg)
 build/%.d: %.c
 	@ mkdir -p $(dir $@)
-	@$(GCC) -MM -MG $(INCPATH) $(CFLAGS) $< | \
+	@$(CC) -MM -MG $(INCPATH) $(CFLAGS) $< | \
 		sed -e "s@^\(.*\)\.o:@$(dir $@)\1.d $(dir $@)\1.o:@" > $@
 build/%.d: %.cpp
 	@ mkdir -p $(dir $@)
-	@$(GXX) -MM -MG $(INCPATH) $(CXXFLAGS) $< | \
+	@$(CXX) -MM -MG $(INCPATH) $(CXXFLAGS) $< | \
 		sed -e "s@^\(.*\)\.o:@$(dir $@)\1.d $(dir $@)\1.o:@" > $@
 build_dbg/%.d: %.c
 	@ mkdir -p $(dir $@)
-	@$(GCC) -MM -MG $(INCPATH) $(CFLAGS_debug) $< | \
+	@$(CC) -MM -MG $(INCPATH) $(CFLAGS_debug) $< | \
 		sed -e "s@^\(.*\)\.o:@$(dir $@)\1.d $(dir $@)\1.o:@" > $@
 build_dbg/%.d: %.cpp
 	@ mkdir -p $(dir $@)
-	@$(GXX) -MM -MG $(INCPATH) $(CXXFLAGS_debug) $< | \
+	@$(CXX) -MM -MG $(INCPATH) $(CXXFLAGS_debug) $< | \
 		sed -e "s@^\(.*\)\.o:@$(dir $@)\1.d $(dir $@)\1.o:@" > $@
 endif # ($(USE_DEP_FILES),1)
 
@@ -78,16 +78,16 @@ endif # ($(USE_DEP_FILES),1)
 # Build targets
 build/%.o: %.cpp
 	@ mkdir -p $(dir $@)
-	$(GXX) -c $(CXXFLAGS) $(INCPATH) $*.cpp -o $@
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) $*.cpp -o $@
 build/%.o: %.c
 	@ mkdir -p $(dir $@)
-	$(GCC) -c $(CFLAGS) $(INCPATH) $*.c -o $@
+	$(CC) -c $(CFLAGS) $(INCPATH) $*.c -o $@
 build_dbg/%.o: %.cpp
 	@ mkdir -p $(dir $@)
-	$(GXX) -c $(CXXFLAGS_debug) $(INCPATH) $*.cpp -o $@
+	$(CXX) -c $(CXXFLAGS_debug) $(INCPATH) $*.cpp -o $@
 build_dbg/%.o: %.c
 	@ mkdir -p $(dir $@)
-	$(GCC) -c $(CFLAGS_debug) $(INCPATH) $*.c -o $@
+	$(CC) -c $(CFLAGS_debug) $(INCPATH) $*.c -o $@
 
 # Link targets
 $(APP_NAME): $(patsubst %.cpp, build/%.o, $(SOURCES_cpp)) \
