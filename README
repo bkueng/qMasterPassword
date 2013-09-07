@@ -10,6 +10,7 @@ to start:
 - change licence in files if not GPL
 - change project specific things in config.h and in Makefile
 - include global.h in all files
+- execute git_hooks/install.sh
 
 the do-tag script is used under linux to automatically change version.h file and make a git commit
 
