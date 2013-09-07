@@ -1,10 +1,10 @@
 /*
  * Copyright (C) 2010-2011 Beat Küng <beat-kueng@gmx.net>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; version 3 of the License.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -65,20 +65,21 @@ enum EnErrors {
 	Exception(err, __FUNCTION__, __FILE__, __LINE__)
 
 
-class Exception {
+class Exception
+{
 public:
 	Exception(EnErrors err, const char* func, const char* file, int line);
 	Exception(EnErrors err);
 	virtual ~Exception();
 	
-	virtual EnErrors getError() const { return(m_err); }
+	virtual EnErrors getError() const { return m_err; }
 	virtual string getErrorStr() const; //description of the error number
 	
 	virtual void log();
 	
 	//whether all exceptions should be logged when they are created
-	static void setLogAllExceptions(bool bLog) { m_bLog_exceptions=bLog; }
-	static bool logAllExceptions() { return(m_bLog_exceptions); }
+	static void setLogAllExceptions(bool bLog) { m_bLog_exceptions = bLog; }
+	static bool logAllExceptions() { return m_bLog_exceptions; }
 	
 	//create a copy of this object. the caller must delete it
 	virtual Exception* copy() const;
@@ -100,7 +101,7 @@ private:
 
 /*********************************************************************//*!
  * @class ExceptionString
- * 
+ *
  * @brief exception class with a user defined error description
  *//*********************************************************************/
 
@@ -108,15 +109,16 @@ private:
 	ExceptionString(err, __FUNCTION__, __FILE__, __LINE__, err_fmt, ## __VA_ARGS__)
 
 
-class ExceptionString : public Exception {
+class ExceptionString : public Exception
+{
 public:
 	ExceptionString(EnErrors err, const char* func
-			, const char* file, int line, const char* fmt, ...);
+					, const char* file, int line, const char* fmt, ...);
 	virtual ~ExceptionString();
 	
 	virtual void log();
 	
-	virtual string getErrorStr() const { return(m_err_desc); }
+	virtual string getErrorStr() const { return m_err_desc; }
 	
 	virtual Exception* copy() const;
 private:
@@ -126,13 +128,13 @@ private:
 
 
 #define THROW(err) throw(EXCEPTION(err))
-#define THROW_s(err, err_fmt, ...) throw(EXCEPTION_s(err, err_fmt, ## __VA_ARGS__)) 
+#define THROW_s(err, err_fmt, ...) throw(EXCEPTION_s(err, err_fmt, ## __VA_ARGS__))
 
 #define ASSERT_THROW(exp, err) if(!(exp)) throw(EXCEPTION(err))
 #define ASSERT_THROW_s(exp, err_fmt, ...) \
-	if(!(exp)) throw(EXCEPTION_s(EASSERT, err_fmt, ## __VA_ARGS__)) 
+	if(!(exp)) throw(EXCEPTION_s(EASSERT, err_fmt, ## __VA_ARGS__))
 #define ASSERT_THROW_e(exp, err, err_fmt, ...) \
-	if(!(exp)) throw(EXCEPTION_s(err, err_fmt, ## __VA_ARGS__)) 
+	if(!(exp)) throw(EXCEPTION_s(err, err_fmt, ## __VA_ARGS__))
 
 
 #ifdef _DEBUG

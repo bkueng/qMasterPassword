@@ -1,10 +1,10 @@
 /*
  * Copyright (C) 2010-2011 Beat Küng <beat-kueng@gmx.net>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; version 3 of the License.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -34,7 +34,7 @@ using namespace std;
 struct VERSION {
 	VERSION() : bSet(false) {}
 	VERSION(int vmajor, int vminor, int vpatch) : bSet(true) {
-		this->major=vmajor; this->minor=vminor; this->patch=vpatch;
+		this->major = vmajor; this->minor = vminor; this->patch = vpatch;
 	}
 	
 	bool bSet;
@@ -46,11 +46,11 @@ struct VERSION {
 	
 	string toStr() {
 		// version has the format: v<major>.<minor>[-p<patch>]
-		if(!bSet) return("");
+		if (!bSet) return "";
 		ostringstream stream;
 		stream << "v" << major << "." << minor;
-		if(patch!=0) stream << "-p" << patch;
-		return(stream.str());
+		if (patch != 0) stream << "-p" << patch;
+		return stream.str();
 	}
 };
 
