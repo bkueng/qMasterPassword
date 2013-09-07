@@ -19,3 +19,6 @@
 # static analysis output
 /analysis
 
+# astyle backup files
+*.astyle.orig
+

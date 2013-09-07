@@ -40,7 +40,7 @@ USE_DEP_FILES :=	1
 
 
 
-.PHONY: all clean debug $(APP_NAME)
+.PHONY: all clean debug $(APP_NAME) analyze format format_clean build_clean
 all: $(APP_NAME)
 
 debug: $(APP_NAME)_dbg
@@ -99,10 +99,27 @@ $(APP_NAME)_dbg: $(patsubst %.cpp, build_dbg/%.o, $(SOURCES_cpp)) \
 
 # static analyzer (using clang static analyzer)
 # another option would be cppcheck: cppcheck -Iinclude src
-analyze: clean
+analyze: build_clean
 	[ ! -d analysis ] && mkdir analysis; \
 		scan-build --use-analyzer=`which clang` -o analysis $(MAKE)
 
-# Cleans the module.
-clean:
+# code formatting
+# if you change the formatting, change it also in the git_hooks
+format:
+	astyle \
+		--lineend=linux --indent=force-tab=4 --indent-col1-comments \
+		--pad-header --pad-oper --unpad-paren \
+		--fill-empty-lines --align-pointer=type \
+		--align-reference=type --max-code-length=80 --break-after-logical \
+		--keep-one-line-blocks --keep-one-line-statements --style=kr \
+		--suffix=.astyle.orig \
+		"include/*.h" $(SOURCES_cpp) $(SOURCES_c)
+
+format_clean:
+	find src include -name '*.astyle.orig' -exec rm -f {} \;
+
+build_clean:
 	rm -rf build build_dbg $(APP_NAME)
+
+clean: build_clean format_clean
+
