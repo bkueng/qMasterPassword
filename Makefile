@@ -1,5 +1,5 @@
 ##
-# Copyright (C) 2010-2011 Beat Küng <beat-kueng@gmx.net>
+# Copyright (C) 2010-2013 Beat Küng <beat-kueng@gmx.net>
 # 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,9 +29,9 @@ CFLAGS := 			-pipe -O2 -Wall -D'APP_NAME="$(APP_NAME)"'
 CFLAGS_debug := 	-pipe -g -Wall -D'APP_NAME="$(APP_NAME)"' -D_DEBUG
 CXXFLAGS := 		$(CFLAGS)
 CXXFLAGS_debug := 	$(CFLAGS_debug)
-CC ?= 				gcc
-CXX ?= 				g++
-LD := 				$(CXX)
+CCt := 				gcc
+CXXt := 			g++
+LD = 				$(CXX)
 LIBS :=				-lm
 INCPATH :=			-Iinclude
 
@@ -39,6 +39,13 @@ INCPATH :=			-Iinclude
 USE_DEP_FILES :=	1
 
 
+# we want to be able to override CC & CXX. But we cannot simply check whether CC
+# is set, because make sets it implicitly and -R option from inside Makefile
+# seems not to work
+ifeq ($(CC_override),)
+CC := $(CCt)
+CXX := $(CXXt)
+endif
 
 .PHONY: all clean debug $(APP_NAME) analyze format format_clean build_clean
 all: $(APP_NAME)
@@ -101,7 +108,7 @@ $(APP_NAME)_dbg: $(patsubst %.cpp, build_dbg/%.o, $(SOURCES_cpp)) \
 # another option would be cppcheck: cppcheck -Iinclude src
 analyze: build_clean
 	[ ! -d analysis ] && mkdir analysis; \
-		scan-build --use-analyzer=`which clang` -o analysis $(MAKE)
+		scan-build --use-analyzer=`which clang` -o analysis $(MAKE) CC_override=1
 
 # code formatting
 # if you change the formatting, change it also in the git_hooks
