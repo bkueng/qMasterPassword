@@ -23,6 +23,7 @@ APP_NAME := template
 # Listings of source files for the different executables.
 SOURCES_cpp := $(wildcard src/*.cpp)
 SOURCES_c:= $(wildcard src/*.c)
+HEADERS := $(wildcard include/*.h)
 
 # Generic flags for the C/CPP compiler.
 CFLAGS := 			-pipe -O2 -Wall -D'APP_NAME="$(APP_NAME)"'
@@ -120,7 +121,7 @@ format:
 		--align-reference=type --max-code-length=80 --break-after-logical \
 		--keep-one-line-blocks --keep-one-line-statements --style=kr \
 		--suffix=.astyle.orig \
-		"include/*.h" $(SOURCES_cpp) $(SOURCES_c)
+		$(HEADERS) $(SOURCES_cpp) $(SOURCES_c)
 
 format_clean:
 	find src include -name '*.astyle.orig' -exec rm -f {} \;
