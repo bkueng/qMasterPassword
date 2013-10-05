@@ -32,7 +32,6 @@ CXXFLAGS := 		$(CFLAGS)
 CXXFLAGS_debug := 	$(CFLAGS_debug)
 CCt := 				gcc
 CXXt := 			g++
-LD = 				$(CXX)
 LIBS :=				-lm
 INCPATH :=			-Iinclude
 
@@ -47,6 +46,8 @@ ifeq ($(CC_override),)
 CC := $(CCt)
 CXX := $(CXXt)
 endif
+LD := 				$(CXX)
+
 
 .PHONY: all clean debug $(APP_NAME) analyze format format_clean build_clean
 all: $(APP_NAME)
