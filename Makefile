@@ -49,11 +49,13 @@ endif
 LD := 				$(CXX)
 
 
-.PHONY: all clean debug $(APP_NAME) analyze format format_clean build_clean
+.PHONY: all clean debug analyze format format_clean build_clean
 all: $(APP_NAME)
 
-debug: $(APP_NAME)_dbg
-	mv $(APP_NAME)_dbg $(APP_NAME)
+APP_NAME_dbg       := $(APP_NAME)_dbg
+VALGRIND_OUT_FILE  := valgrind.out
+
+debug: $(APP_NAME_dbg)
 
 
 # Dependency targets & includes
@@ -102,15 +104,25 @@ build_dbg/%.o: %.c
 $(APP_NAME): $(patsubst %.cpp, build/%.o, $(SOURCES_cpp)) \
 	$(patsubst %.c, build/%.o, $(SOURCES_c))
 	$(LD) -o $@ $^ $(LIBS)
-$(APP_NAME)_dbg: $(patsubst %.cpp, build_dbg/%.o, $(SOURCES_cpp)) \
+$(APP_NAME_dbg): $(patsubst %.cpp, build_dbg/%.o, $(SOURCES_cpp)) \
 	$(patsubst %.c, build_dbg/%.o, $(SOURCES_c))
 	$(LD) -o $@ $^ $(LIBS)
+
 
 # static analyzer (using clang static analyzer)
 # another option would be cppcheck: cppcheck -Iinclude src
 analyze: build_clean
 	[ ! -d analysis ] && mkdir analysis; \
 		scan-build --use-analyzer=`which clang` -o analysis $(MAKE) CC_override=1
+
+# run valgrind memory checker
+# usage: make valgrind [ARGS=<arguments>]
+# (another memory checker: clang -fsanitize=address -fno-omit-frame-pointer [...])
+valgrind: $(APP_NAME_dbg)
+	valgrind -v --track-origins=yes --tool=memcheck --leak-check=yes \
+		--show-reachable=yes --num-callers=20 --track-fds=yes ./$(APP_NAME_dbg) \
+		$(ARGS) 2>&1 1>/dev/null | tee $(VALGRIND_OUT_FILE)
+
 
 # code formatting
 # if you change the formatting, change it also in the git_hooks
@@ -128,7 +140,7 @@ format_clean:
 	find src include -name '*.astyle.orig' -exec rm -f {} \;
 
 build_clean:
-	rm -rf build build_dbg $(APP_NAME)
+	rm -rf build build_dbg $(APP_NAME) $(APP_NAME_dbg) $(VALGRIND_OUT_FILE)
 
 clean: build_clean format_clean
 
