@@ -72,8 +72,8 @@ void CMain::parseCommandLine(int argc, char* argv[])
 void CMain::printHelp()
 {
 	printf("Usage:\n"
-		   " "APP_NAME" [-v] \n"
-		   " "APP_NAME" --version\n"
+		   " " APP_NAME " [-v] \n"
+		   " " APP_NAME " --version\n"
 		   "  -v, --verbose                   print debug messages\n"
 		   "                                  (same as --log debug)\n"
 		   "  -h, --help                      print this message\n"
