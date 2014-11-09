@@ -144,8 +144,15 @@ private:
 		printf(err_fmt, ## __VA_ARGS__); \
 		printf("\nGood bye\n"); abort(); \
 	}
+#define DEBUG_ASSERT1(exp) \
+	if(!(exp)) { \
+		printf("\nAssertion \"%s\" failed\nIn: %s:%i %s\n", #exp, __FILE__, __LINE__, __FUNCTION__); \
+		printf("Good bye\n"); abort(); \
+	}
 #else
 #define DEBUG_ASSERT(exp, err_fmt, ...) \
+	{ }
+#define DEBUG_ASSERT1(exp) \
 	{ }
 #endif
 
