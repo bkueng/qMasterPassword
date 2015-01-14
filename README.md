@@ -1,24 +1,24 @@
-                                 template
-                                 ========
+### template ###
 
-             Copyright 2010-2013 Beat Küng <beat-kueng@gmx.net>
-
-
-this serves as a starting point for new projects, for linux/windows, with Qt, Makefile, whatever, ...
+this serves as a starting point for new projects, for linux/windows, with Qt,
+Makefile, whatever, ...
 
 to start:
 - change licence in files if not GPL
 - change project specific things in config.h and in Makefile
-- include global.h in all files
 - execute git_hooks/install.sh
 
-the do-tag script is used under linux to automatically change version.h file and make a git commit
+the do-tag script is used under linux to automatically change version.h file and
+make a git commit
+
 
 for Qt projects
 ---------------
-run qmake
+run qmake -project
 add these lines to the .pro file:
 
+TEMPLATE = app
+TARGET = <app name>
 Debug:DEFINES += _DEBUG
 DEFINES += APP_NAME=\\\"$(TARGET)\\\"
 CONFIG += debug_and_release
@@ -35,3 +35,5 @@ SOURCES += src/*.cpp
 
 run make
 
+
+Copyright 2010-2015 Beat Küng <beat-kueng@gmx.net>
