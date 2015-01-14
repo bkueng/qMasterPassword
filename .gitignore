@@ -22,3 +22,6 @@
 # astyle backup files
 *.astyle.orig
 
+/Makefile*
+/qMasterPassword
+
