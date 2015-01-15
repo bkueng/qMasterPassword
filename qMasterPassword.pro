@@ -5,7 +5,8 @@ INCLUDEPATH += include
 
 Debug:DEFINES += _DEBUG
 DEFINES += APP_NAME=\\\"$(TARGET)\\\"
-CONFIG += debug_and_release
+CONFIG += debug_and_release \
+	c++11
 
 LIBS += -lscrypt -lcrypto
 
