@@ -15,14 +15,16 @@
 #include "main_class.h"
 #include "version.h"
 
+#include <QApplication>
+#include "main_window.h"
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstdarg>
 #include <cstring>
 
-/*********************************************************************//*
- * class CMain
- *//*********************************************************************/
+#include "crypto.h"
+
 
 
 CMain::CMain() : m_parameters(NULL), m_cl_parse_result(Parse_none_found)
@@ -40,7 +42,8 @@ CMain::~CMain()
 void CMain::init(int argc, char* argv[])
 {
 	parseCommandLine(argc, argv);
-	
+	m_argc = argc;
+	m_argv = argv;
 }
 
 void CMain::parseCommandLine(int argc, char* argv[])
@@ -58,11 +61,6 @@ void CMain::parseCommandLine(int argc, char* argv[])
 	m_parameters->addSwitch("no-log");
 	m_parameters->addParam("file-log");
 	m_parameters->addSwitch("no-file-log");
-	
-	
-	//m_parameters->addTask("main task", 't');
-	//m_parameters->addParam("output", 'o', "", "main task");
-	//m_parameters->addSwitch("new-only", 'n', "main task");
 	
 	
 	m_cl_parse_result = m_parameters->parse();
@@ -96,7 +94,7 @@ void CMain::exec()
 	
 	switch (m_cl_parse_result) {
 	case Parse_none_found:
-		printHelp();
+		processArgs();
 		break;
 	case Parse_unknown_command:
 		wrongUsage("Unknown command: %s",
@@ -159,18 +157,11 @@ void CMain::processArgs()
 			CLog::getInstance().setFileLevel(log_level);
 	}
 	
-	
-	string device;
-	if (m_parameters->getParam("device", device)) {
-		//device set
-	} else {
-		//device is default value
-	}
-	
-	if (m_parameters->setTask("main task")->bGiven) {
-	
-	}
-	
+
+	QApplication app(m_argc, m_argv);
+	MainWindow main_window;
+	main_window.show();
+	app.exec();
 }
 
 

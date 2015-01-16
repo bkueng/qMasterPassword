@@ -48,6 +48,8 @@ private:
 	
 	CCommandLineParser* m_parameters;
 	ECLParsingResult m_cl_parse_result;
+	int m_argc;
+	char** m_argv;
 };
 
 

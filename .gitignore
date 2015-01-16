@@ -6,6 +6,8 @@
 
 /build*
 /.config
+/release
+/debug
 
 *.log
 
@@ -24,4 +26,8 @@
 
 /Makefile*
 /qMasterPassword
+
+moc_*.cpp
+ui/ui_*.h
+*.pro.user
 
