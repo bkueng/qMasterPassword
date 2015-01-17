@@ -17,12 +17,13 @@
 #include <cstdlib>
 #include <QPushButton>
 
-EditSiteWidget::EditSiteWidget(UiSite& site, Type type, QWidget *parent) :
+EditSiteWidget::EditSiteWidget(const QMap<CategoryId, QString>& categories,
+		UiSite& site, Type type, QWidget *parent) :
 	QDialog(parent),
-	ui(new Ui::EditSiteWidget), m_site(site), m_type(type)
+	ui(new Ui::EditSiteWidget), m_site(site), m_type(type),
+	m_categories(categories)
 {
 	ui->setupUi(this);
-	setFixedSize(size());
 	m_sample_password.login("test", "topsecret");
 
 	for (int i = 0; i < MPSiteTypeCount(); ++i) {
@@ -30,14 +31,21 @@ EditSiteWidget::EditSiteWidget(UiSite& site, Type type, QWidget *parent) :
 		ui->cmbPasswordType->addItem(QString::fromStdString(str_type));
 	}
 
+	for (auto iter = m_categories.begin(); iter != m_categories.end(); ++iter) {
+		if (iter.key() != 0) {
+			CategoryCheckbox* checkbox = new CategoryCheckbox(iter.key(), iter.value());
+			checkbox->setChecked(m_site.category_ids.contains(iter.key()));
+			ui->layoutCategories->addWidget(checkbox);
+		}
+	}
+	setFixedSize(sizeHint());
+
 	switch(type) {
 	case Type_edit:
 		setWindowTitle(tr("Edit Site"));
 		ui->txtSiteName->setText(QString::fromStdString(m_site.site.getName()));
 		ui->txtUserName->setText(m_site.user_name);
 		ui->txtComment->setText(m_site.comment);
-		//TODO: categories
-
 		ui->spnSiteCounter->setValue(m_site.site.getCounter());
 		break;
 	case Type_new:
@@ -60,7 +68,13 @@ void EditSiteWidget::applyData() {
 	m_site.comment = ui->txtComment->text();
 	m_site.site.setType(MPSiteTypeFromIdx(ui->cmbPasswordType->currentIndex()));
 	m_site.category_ids.clear();
-	//TODO: categories
+	for (int i = 0; i < ui->layoutCategories->count(); ++i) {
+		CategoryCheckbox* checkbox = dynamic_cast<CategoryCheckbox*>(
+				ui->layoutCategories->itemAt(i)->widget());
+		if (checkbox && checkbox->isChecked()) {
+			m_site.category_ids.push_back(checkbox->category_id);
+		}
+	}
 
 	m_site.site.setCounter(ui->spnSiteCounter->value());
 

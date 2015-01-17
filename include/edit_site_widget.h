@@ -16,12 +16,27 @@
 #define EDIT_SITE_WIDGET_H
 
 #include <QDialog>
+#include <QCheckBox>
+#include <QMap>
 #include "user.h"
 #include "crypto.h"
 
 namespace Ui {
 class EditSiteWidget;
 }
+
+
+class CategoryCheckbox : public QCheckBox
+{
+	Q_OBJECT
+public:
+	CategoryCheckbox(CategoryId id, const QString& text)
+		: QCheckBox(text), category_id(id) {}
+
+	const CategoryId category_id;
+private:
+};
+
 
 class EditSiteWidget : public QDialog
 {
@@ -32,7 +47,8 @@ public:
 		Type_edit,
 		Type_new
 	};
-	explicit EditSiteWidget(UiSite& site, Type type, QWidget *parent = 0);
+	explicit EditSiteWidget(const QMap<CategoryId, QString>& categories,
+			UiSite& site, Type type, QWidget *parent = 0);
 	~EditSiteWidget();
 
 	/** set the input data to the object */
@@ -43,6 +59,7 @@ private:
 	UiSite& m_site;
 	const Type m_type;
 	MasterPassword m_sample_password;
+	const QMap<CategoryId, QString>& m_categories;
 
 private slots:
 	void passwordTypeChanged(int new_type);

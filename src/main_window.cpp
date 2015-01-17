@@ -272,7 +272,7 @@ void MainWindow::readSettings() {
 void MainWindow::addSite() {
 	if (!m_current_user) return;
 	UiSite* site = new UiSite();
-	EditSiteWidget edit_site(*site, EditSiteWidget::Type_new, this);
+	EditSiteWidget edit_site(m_categories, *site, EditSiteWidget::Type_new, this);
 	if (edit_site.exec() == 1) { //accepted
 		edit_site.applyData();
 		m_current_user->getSites().append(site);
@@ -303,7 +303,7 @@ void MainWindow::editSite() {
 	if (!item) return;
 	UiSite& site = item->site();
 
-	EditSiteWidget edit_site(site, EditSiteWidget::Type_edit, this);
+	EditSiteWidget edit_site(m_categories, site, EditSiteWidget::Type_edit, this);
 	if (edit_site.exec() == 1) { //accepted
 		edit_site.applyData();
 		updateModelItem(item->row(), site);
