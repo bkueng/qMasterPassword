@@ -229,14 +229,14 @@ void MainWindow::readSettings() {
     categories_stream >> m_categories;
 	if (m_categories.isEmpty()) {
 		//add default categories
-		m_categories[m_next_category_id++] = "All";
-		m_categories[m_next_category_id++] = "Personal";
-		m_categories[m_next_category_id++] = "Work";
-		m_categories[m_next_category_id++] = "eShopping";
-		m_categories[m_next_category_id++] = "Social Networks";
-		m_categories[m_next_category_id++] = "Bank";
-		m_categories[m_next_category_id++] = "Forum";
-		m_categories[m_next_category_id++] = "eMail";
+		m_categories[m_next_category_id++] = tr("All");
+		m_categories[m_next_category_id++] = tr("Personal");
+		m_categories[m_next_category_id++] = tr("Work");
+		m_categories[m_next_category_id++] = tr("eShopping");
+		m_categories[m_next_category_id++] = tr("Social Networks");
+		m_categories[m_next_category_id++] = tr("Bank");
+		m_categories[m_next_category_id++] = tr("Forum");
+		m_categories[m_next_category_id++] = tr("eMail");
 	} else {
 		m_next_category_id = 0;
 		for (auto category : m_categories.keys()) {
