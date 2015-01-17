@@ -52,7 +52,9 @@ void MainWindow::initSitesView() {
     m_sites_model->setHeaderData(4, Qt::Horizontal, QObject::tr("Type"));
     m_sites_model->setHeaderData(5, Qt::Horizontal, QObject::tr("Counter"));
 
-    m_ui->tblSites->setModel(m_sites_model);
+	m_proxy_model = new MySortFilterProxyModel(*this);
+	m_proxy_model->setSourceModel(m_sites_model);
+	m_ui->tblSites->setModel(m_proxy_model);
 
     connect(m_ui->tblSites->selectionModel(),
             SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
@@ -78,8 +80,6 @@ void MainWindow::addSiteToUI(UiSite& site) {
 
 	m_sites_model->appendRow(items);
 	updateModelItem(m_sites_model->rowCount()-1, site);
-	m_ui->btnDeleteSite->setEnabled(true);
-	m_ui->btnEditSite->setEnabled(true);
 }
 void MainWindow::updateModelItem(int row, const UiSite& site) {
 	int i = 0;
@@ -315,7 +315,8 @@ TableItem* MainWindow::getSelectedItem() {
 	QModelIndexList selected_rows = selection->selectedRows();
 	if (selected_rows.count() == 0)
 		return nullptr;
-	return dynamic_cast<TableItem*>(m_sites_model->itemFromIndex(selected_rows.at(0)));
+	return dynamic_cast<TableItem*>(m_sites_model->itemFromIndex(
+			m_proxy_model->mapToSource(selected_rows.at(0))));
 }
 
 void MainWindow::selectionChanged(const QItemSelection& selected,
@@ -344,10 +345,31 @@ void MainWindow::selectCategory(CategoryId category) {
 		}
 	}
 	m_selected_category = category;
+	m_proxy_model->invalidate();
 }
 
 void MainWindow::categoryButtonPressed() {
 	CategoryButton* button = dynamic_cast<CategoryButton*>(sender());
 	if (!button) return;
 	selectCategory(button->category_id);
+}
+
+void MainWindow::filterTextChanged(QString filter_text) {
+	m_proxy_model->setFilterRegExp(
+			QRegExp(filter_text, Qt::CaseInsensitive, QRegExp::FixedString));
+	m_proxy_model->setFilterKeyColumn(0);
+}
+
+bool MySortFilterProxyModel::filterAcceptsRow(int source_row,
+		const QModelIndex& source_parent) const {
+	if (m_main_window.selectedCategory() != 0) {
+		QModelIndex index = sourceModel()->index(source_row, 0, source_parent);
+		TableItem* item = dynamic_cast<TableItem*>(m_main_window.model()->itemFromIndex(index));
+		if (item) {
+			if (!item->site().category_ids.contains(m_main_window.selectedCategory()))
+				return false;
+		}
+	}
+
+	return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
 }

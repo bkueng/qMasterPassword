@@ -126,6 +126,20 @@
            </spacer>
           </item>
           <item>
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>Filter:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="txtFilter">
+            <property name="clearButtonEnabled">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QPushButton" name="btnAddSite">
             <property name="text">
              <string>Add Site</string>
@@ -269,7 +283,7 @@
      <y>53</y>
     </hint>
     <hint type="destinationlabel">
-     <x>566</x>
+     <x>625</x>
      <y>48</y>
     </hint>
    </hints>
@@ -281,7 +295,7 @@
    <slot>addSite()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>557</x>
+     <x>646</x>
      <y>91</y>
     </hint>
     <hint type="destinationlabel">
@@ -297,7 +311,7 @@
    <slot>deleteSite()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>675</x>
+     <x>855</x>
      <y>93</y>
     </hint>
     <hint type="destinationlabel">
@@ -338,6 +352,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>txtFilter</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>filterTextChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>410</x>
+     <y>90</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>176</x>
+     <y>75</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>loginLogoutClicked()</slot>
@@ -346,5 +376,6 @@
   <slot>addSite()</slot>
   <slot>deleteSite()</slot>
   <slot>editSite()</slot>
+  <slot>filterTextChanged(QString)</slot>
  </slots>
 </ui>

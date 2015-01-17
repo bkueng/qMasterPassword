@@ -22,6 +22,7 @@
 #include <QList>
 #include <QPushButton>
 #include <QItemSelection>
+#include <QSortFilterProxyModel>
 
 #include "crypto.h"
 #include "user.h"
@@ -29,6 +30,7 @@
 namespace Ui {
 class MainWindow;
 }
+class MainWindow;
 
 class TableItem : public QStandardItem {
 public:
@@ -51,6 +53,20 @@ public:
 private:
 };
 
+class MySortFilterProxyModel : public QSortFilterProxyModel
+{
+public:
+	MySortFilterProxyModel(MainWindow& main_window, QObject *parent = 0)
+		: QSortFilterProxyModel(parent), m_main_window(main_window) {}
+
+protected:
+	bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
+private:
+	MainWindow& m_main_window;
+};
+
+
+
 class MainWindow : public QMainWindow
 {
 	Q_OBJECT
@@ -59,6 +75,8 @@ public:
 	explicit MainWindow(QWidget *parent = 0);
 	~MainWindow();
 
+	CategoryId selectedCategory() const { return m_selected_category; }
+	QStandardItemModel* model() const { return m_sites_model; }
 private:
 	Ui::MainWindow* m_ui;
 	void login();
@@ -79,6 +97,7 @@ private:
 	UiUser* m_current_user = nullptr; /** current logged in user */
 
 	QStandardItemModel* m_sites_model;
+	MySortFilterProxyModel* m_proxy_model;
 
 private slots:
 	void loginLogoutClicked();
@@ -92,6 +111,7 @@ private slots:
 	void enableUI(bool logged_in);
 	void selectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
 	void categoryButtonPressed();
+	void filterTextChanged(QString filter_text);
 
 protected:
 	void closeEvent(QCloseEvent *event);
