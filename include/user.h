@@ -55,14 +55,14 @@ class UiUser {
 public:
 	UiUser(const QString& user_name="") : m_user_name(user_name) {}
 
-	const QList<UiSite>& getSites() const { return m_sites; }
-	QList<UiSite>& getSites() { return m_sites; }
+	const QList<UiSite*>& getSites() const { return m_sites; }
+	QList<UiSite*>& getSites() { return m_sites; }
 
 	const QString& getUserName() const { return m_user_name; }
 	void setUserName(const QString& userName) { m_user_name = userName; }
 private:
 	QString m_user_name;
-	QList<UiSite> m_sites;
+	QList<UiSite*> m_sites;
 };
 
 Q_DECLARE_METATYPE(UiUser)

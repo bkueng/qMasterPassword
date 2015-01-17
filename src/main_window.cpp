@@ -15,6 +15,7 @@
 #include "main_window.h"
 #include "ui_main_window.h"
 #include "add_user.h"
+#include "edit_site_widget.h"
 #include "logging.h"
 
 #include <iostream>
@@ -23,16 +24,79 @@ using namespace std;
 #include <QMessageBox>
 #include <QSettings>
 #include <QDataStream>
+#include <QStandardItemModel>
+#include <QStandardItem>
 
 MainWindow::MainWindow(QWidget *parent) :
 		QMainWindow(parent), m_ui(new Ui::MainWindow) {
 	m_ui->setupUi(this);
+
+	initSitesView();
 	readSettings();
 	m_ui->btnDeleteUser->setEnabled(m_ui->cmbUserName->count() > 0);
+	enableUI(false);
 }
 
 MainWindow::~MainWindow() {
 	delete m_ui;
+	delete m_sites_model;
+}
+
+void MainWindow::initSitesView() {
+	m_sites_model = new QStandardItemModel();
+	m_sites_model->setColumnCount(6);
+    m_sites_model->setHeaderData(0, Qt::Horizontal, QObject::tr("Site"));
+    m_sites_model->setHeaderData(1, Qt::Horizontal, QObject::tr("Login Name"));
+    m_sites_model->setHeaderData(2, Qt::Horizontal, QObject::tr("Password"));
+    m_sites_model->setHeaderData(3, Qt::Horizontal, QObject::tr("Comment"));
+    m_sites_model->setHeaderData(4, Qt::Horizontal, QObject::tr("Type"));
+    m_sites_model->setHeaderData(5, Qt::Horizontal, QObject::tr("Counter"));
+
+    m_ui->tblSites->setModel(m_sites_model);
+
+    connect(m_ui->tblSites->selectionModel(),
+            SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
+            this,
+            SLOT(selectionChanged(const QItemSelection&, const QItemSelection&)));
+}
+
+void MainWindow::addSiteToUI(UiSite& site) {
+	QList<QStandardItem*> items;
+	for (int i = 0; i < 6; ++i) {
+		QStandardItem* item = new TableItem(site, "");
+		item->setEditable(false);
+		item->setDragEnabled(false);
+		item->setDropEnabled(false);
+		items.push_back(item);
+	}
+    /*
+    //display a button
+    QPushButton* btn = new QPushButton("button");
+    //btn->setAutoFillBackground(true);
+    m_ui->tblSites->setIndexWidget(model->index(1, 1), btn);
+     */
+
+	m_sites_model->appendRow(items);
+	updateModelItem(m_sites_model->rowCount()-1, site);
+	m_ui->btnDeleteSite->setEnabled(true);
+	m_ui->btnEditSite->setEnabled(true);
+}
+void MainWindow::updateModelItem(int row, const UiSite& site) {
+	int i = 0;
+	m_sites_model->item(row, i++)->setText(QString::fromStdString(site.site.getName()));
+	m_sites_model->item(row, i++)->setText(site.user_name);
+	string password = m_master_password.sitePassword(site.site);
+	m_sites_model->item(row, i++)->setText(QString::fromStdString(password));
+	m_sites_model->item(row, i++)->setText(site.comment);
+	m_sites_model->item(row, i++)->setText(QString::fromStdString(
+			MPSiteTypeToString(site.site.getType())));
+	m_sites_model->item(row, i++)->setText(QString::number(site.site.getCounter()));
+}
+
+void MainWindow::clearSitesUI() {
+	m_sites_model->removeRows(0, m_sites_model->rowCount());
+	m_ui->btnDeleteSite->setEnabled(false);
+	m_ui->btnEditSite->setEnabled(false);
 }
 
 void MainWindow::loginLogoutClicked() {
@@ -55,12 +119,15 @@ void MainWindow::login() {
 		m_master_password.logout();
 		m_master_password.login(user_name.toStdString(), password.toStdString());
 		m_ui->btnLoginLogout->setText(tr("Logout"));
-		m_ui->cmbUserName->setEnabled(false);
-		m_ui->txtPassword->setEnabled(false);
-		//TODO: load sites
+		enableUI(true);
+		clearSitesUI();
+		for (auto& site : m_current_user->getSites()) {
+			addSiteToUI(*site);
+		}
 
 		//clear the password: no need to store it anymore
 		m_ui->txtPassword->setText("");
+		m_ui->tblSites->setFocus();
 
 	} catch(CryptoException& e) {
 		QString error_msg;
@@ -86,9 +153,14 @@ void MainWindow::logout() {
 	m_current_user = nullptr;
 	m_ui->btnLoginLogout->setText(tr("Login"));
 	m_ui->txtPassword->setText("");
-	m_ui->cmbUserName->setEnabled(true);
-	m_ui->txtPassword->setEnabled(true);
-	//TODO: clear sites
+	enableUI(false);
+	clearSitesUI();
+}
+
+void MainWindow::enableUI(bool logged_in) {
+	m_ui->cmbUserName->setEnabled(!logged_in);
+	m_ui->txtPassword->setEnabled(!logged_in);
+	m_ui->btnAddSite->setEnabled(logged_in);
 }
 
 void MainWindow::addUser() {
@@ -162,4 +234,60 @@ void MainWindow::readSettings() {
 		m_ui->cmbUserName->setCurrentIndex(selected_index);
 	if (!m_users.isEmpty())
 		m_ui->txtPassword->setFocus();
+}
+
+void MainWindow::addSite() {
+	if (!m_current_user) return;
+	UiSite* site = new UiSite();
+	EditSiteWidget edit_site(*site, EditSiteWidget::Type_new, this);
+	if (edit_site.exec() == 1) { //accepted
+		edit_site.applyData();
+		m_current_user->getSites().append(site);
+		addSiteToUI(*site);
+	} else {
+		delete site;
+	}
+}
+
+void MainWindow::deleteSite() {
+	if (!m_current_user) return;
+	TableItem* item = getSelectedItem();
+	if (!item) return;
+	m_sites_model->removeRow(item->row());
+	for (auto iter = m_current_user->getSites().begin();
+			iter != m_current_user->getSites().end(); ++iter) {
+		if(*iter == &item->site()) {
+			delete *iter;
+			m_current_user->getSites().erase(iter);
+			break;
+		}
+	}
+}
+
+void MainWindow::editSite() {
+	if (!m_current_user) return;
+	TableItem* item = getSelectedItem();
+	if (!item) return;
+	UiSite& site = item->site();
+
+	EditSiteWidget edit_site(site, EditSiteWidget::Type_edit, this);
+	if (edit_site.exec() == 1) { //accepted
+		edit_site.applyData();
+		updateModelItem(item->row(), site);
+	}
+}
+
+TableItem* MainWindow::getSelectedItem() {
+	QItemSelectionModel* selection = m_ui->tblSites->selectionModel();
+	QModelIndexList selected_rows = selection->selectedRows();
+	if (selected_rows.count() == 0)
+		return nullptr;
+	return dynamic_cast<TableItem*>(m_sites_model->itemFromIndex(selected_rows.at(0)));
+}
+
+void MainWindow::selectionChanged(const QItemSelection& selected,
+		const QItemSelection& deselected) {
+	bool has_selection = selected.count() > 0;
+	m_ui->btnEditSite->setEnabled(has_selection);
+	m_ui->btnDeleteSite->setEnabled(has_selection);
 }

@@ -16,8 +16,11 @@
 #define MAIN_WINDOW_H
 
 #include <QMainWindow>
+#include <QStandardItemModel>
+#include <QStandardItem>
 #include <QMap>
-#include <vector>
+#include <QList>
+#include <QItemSelection>
 
 #include "crypto.h"
 #include "user.h"
@@ -25,6 +28,16 @@
 namespace Ui {
 class MainWindow;
 }
+
+class TableItem : public QStandardItem {
+public:
+	TableItem(UiSite& site, const QString& item_text)
+		: QStandardItem(item_text), m_site(site) {}
+
+	UiSite& site() { return m_site; }
+private:
+	UiSite& m_site;
+};
 
 class MainWindow : public QMainWindow
 {
@@ -38,17 +51,30 @@ private:
 	Ui::MainWindow* m_ui;
 	void login();
 	void logout();
+	void initSitesView();
+	void addSiteToUI(UiSite& site);
+	void clearSitesUI();
+	TableItem* getSelectedItem();
+	void updateModelItem(int row, const UiSite& site);
 
 	MasterPassword m_master_password;
 	QMap<QString, UiUser> m_users;
+	QMap<CategoryId, QString> m_categories;
 	UiUser* m_current_user = nullptr; /** current logged in user */
+
+	QStandardItemModel* m_sites_model;
 
 private slots:
 	void loginLogoutClicked();
 	void addUser();
 	void deleteUser();
+	void addSite();
+	void deleteSite();
+	void editSite();
 	void saveSettings();
 	void readSettings();
+	void enableUI(bool logged_in);
+	void selectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
 
 protected:
 	void closeEvent(QCloseEvent *event);

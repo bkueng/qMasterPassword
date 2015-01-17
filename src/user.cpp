@@ -52,16 +52,25 @@ QDataStream& operator >>(QDataStream& stream, UiSite& site) {
 QDataStream& operator <<(QDataStream& stream, const UiUser& user) {
 	stream << (qint8)0; //stream version
 	stream << user.getUserName();
-	stream << user.getSites();
+	stream << (qint32)user.getSites().count();
+	for (const auto& site : user.getSites()) {
+		stream << *site;
+	}
 	return stream;
 }
 
 QDataStream& operator >>(QDataStream& stream, UiUser& user) {
 	qint8 version;
+	qint32 site_count;
 	QString user_name;
 	stream >> version;
 	DEBUG_ASSERT1(version == 0);
-	stream >> user_name >> user.getSites();
+	stream >> user_name >> site_count;
+	for (int i = 0; i < site_count; ++i) {
+		UiSite* site = new UiSite();
+		stream >> *site;
+		user.getSites().push_back(site);
+	}
 	user.setUserName(user_name);
 	return stream;
 }
