@@ -20,6 +20,7 @@
 #include <QStandardItem>
 #include <QMap>
 #include <QList>
+#include <QPushButton>
 #include <QItemSelection>
 
 #include "crypto.h"
@@ -39,6 +40,17 @@ private:
 	UiSite& m_site;
 };
 
+class CategoryButton : public QPushButton
+{
+	Q_OBJECT
+public:
+	CategoryButton(CategoryId id, const QString& text)
+		: QPushButton(text), category_id(id) {}
+
+	const CategoryId category_id;
+private:
+};
+
 class MainWindow : public QMainWindow
 {
 	Q_OBJECT
@@ -56,10 +68,14 @@ private:
 	void clearSitesUI();
 	TableItem* getSelectedItem();
 	void updateModelItem(int row, const UiSite& site);
+	void addCategory(const QString& name, CategoryId id=-1);
+	void selectCategory(CategoryId category);
 
 	MasterPassword m_master_password;
 	QMap<QString, UiUser> m_users;
 	QMap<CategoryId, QString> m_categories;
+	CategoryId m_next_category_id = 0;
+	CategoryId m_selected_category = -1;
 	UiUser* m_current_user = nullptr; /** current logged in user */
 
 	QStandardItemModel* m_sites_model;
@@ -75,6 +91,7 @@ private slots:
 	void readSettings();
 	void enableUI(bool logged_in);
 	void selectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
+	void categoryButtonPressed();
 
 protected:
 	void closeEvent(QCloseEvent *event);

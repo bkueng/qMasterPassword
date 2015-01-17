@@ -209,6 +209,12 @@ void MainWindow::saveSettings() {
     settings.setValue("main_window/geometry", saveGeometry());
     settings.setValue("main_window/window_state", saveState());
     settings.setValue("main_window/selected_user", m_ui->cmbUserName->currentText());
+
+    QByteArray categories_data;
+    QDataStream categories_stream(&categories_data, QIODevice::ReadWrite);
+    categories_stream << m_categories;
+    settings.setValue("data/categories", categories_data);
+
     QByteArray user_data;
     QDataStream stream(&user_data, QIODevice::ReadWrite);
     stream << m_users;
@@ -218,6 +224,33 @@ void MainWindow::readSettings() {
     QSettings settings("qMasterPassword", "qMasterPassword");
     restoreGeometry(settings.value("main_window/geometry").toByteArray());
     restoreState(settings.value("main_window/window_state").toByteArray());
+
+    QDataStream categories_stream(settings.value("data/categories").toByteArray());
+    categories_stream >> m_categories;
+	if (m_categories.isEmpty()) {
+		//add default categories
+		m_categories[m_next_category_id++] = "All";
+		m_categories[m_next_category_id++] = "Personal";
+		m_categories[m_next_category_id++] = "Work";
+		m_categories[m_next_category_id++] = "eShopping";
+		m_categories[m_next_category_id++] = "Social Networks";
+		m_categories[m_next_category_id++] = "Bank";
+		m_categories[m_next_category_id++] = "Forum";
+		m_categories[m_next_category_id++] = "eMail";
+	} else {
+		m_next_category_id = 0;
+		for (auto category : m_categories.keys()) {
+			if (category > m_next_category_id)
+				m_next_category_id = category;
+		}
+		++m_next_category_id;
+		LOG(DEBUG, "next category id: %i", (int )m_next_category_id);
+    }
+	for (auto iter = m_categories.begin(); iter != m_categories.end(); ++iter) {
+		addCategory(iter.value(), iter.key());
+	}
+	selectCategory(0);
+
     QDataStream stream(settings.value("data/users").toByteArray());
     QString selected_user = settings.value("main_window/selected_user").toString();
     stream >> m_users;
@@ -290,4 +323,31 @@ void MainWindow::selectionChanged(const QItemSelection& selected,
 	bool has_selection = selected.count() > 0;
 	m_ui->btnEditSite->setEnabled(has_selection);
 	m_ui->btnDeleteSite->setEnabled(has_selection);
+}
+
+void MainWindow::addCategory(const QString& name, CategoryId id) {
+	if (id == -1)
+		id = m_next_category_id++;
+	m_categories[id] = name;
+	QPushButton* button = new CategoryButton(id, name);
+	button->setCheckable(true);
+    connect(button, SIGNAL(clicked()), this, SLOT(categoryButtonPressed()));
+	m_ui->layoutCategories->addWidget(button);
+}
+
+void MainWindow::selectCategory(CategoryId category) {
+	for (int i = 0; i < m_ui->layoutCategories->count(); ++i) {
+		CategoryButton* button = dynamic_cast<CategoryButton*>(
+				m_ui->layoutCategories->itemAt(i)->widget());
+		if (button) {
+			button->setChecked(button->category_id == category);
+		}
+	}
+	m_selected_category = category;
+}
+
+void MainWindow::categoryButtonPressed() {
+	CategoryButton* button = dynamic_cast<CategoryButton*>(sender());
+	if (!button) return;
+	selectCategory(button->category_id);
 }
