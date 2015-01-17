@@ -22,6 +22,9 @@
 #include <QString>
 #include <QList>
 #include <QMetaType>
+#include <QDateTime>
+
+typedef qint32 CategoryId;
 
 /**
  ** class UiSite
@@ -30,6 +33,13 @@
 class UiSite {
 public:
 	Site site;
+
+	QList<CategoryId> category_ids;
+	QString user_name;
+	QString comment;
+
+	QDateTime time_created;
+	QDateTime time_edited;
 private:
 };
 

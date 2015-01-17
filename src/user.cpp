@@ -18,39 +18,49 @@
 using namespace std;
 
 QDataStream& operator <<(QDataStream& stream, const UiSite& site) {
-	stream << QString::fromStdString(site.site.getComment());
+	stream << (qint8)0; //stream version
+	stream << site.comment;
 	stream << QString::fromStdString(site.site.getContext());
 	stream << (qint32)site.site.getCounter();
 	stream << QString::fromStdString(site.site.getName());
 	stream << (qint32)site.site.getType();
-	stream << QString::fromStdString(site.site.getUserName());
+	stream << site.user_name;
 	stream << (qint32)site.site.getVariant();
+	stream << site.category_ids;
+	stream << site.time_created;
+	stream << site.time_edited;
 	return stream;
 }
 
 QDataStream& operator >>(QDataStream& stream, UiSite& site) {
-	QString comment, context, name, user_name;
+	QString context, name;
 	qint32 counter, type, variant;
-	stream >> comment >> context >> counter >> name >> type >> user_name
-			>> variant;
-	site.site.setComment(comment.toStdString());
+	qint8 version;
+	stream >> version;
+	DEBUG_ASSERT1(version == 0);
+	stream >> site.comment >> context >> counter >> name >> type
+			>> site.user_name >> variant >> site.category_ids
+			>> site.time_created >> site.time_edited;
 	site.site.setContext(context.toStdString());
 	site.site.setCounter((uint32_t)counter);
 	site.site.setName(name.toStdString());
 	site.site.setType((MPSiteType)type);
-	site.site.setUserName(user_name.toStdString());
 	site.site.setVariant((MPSiteVariant)variant);
 	return stream;
 }
 
 QDataStream& operator <<(QDataStream& stream, const UiUser& user) {
+	stream << (qint8)0; //stream version
 	stream << user.getUserName();
 	stream << user.getSites();
 	return stream;
 }
 
 QDataStream& operator >>(QDataStream& stream, UiUser& user) {
+	qint8 version;
 	QString user_name;
+	stream >> version;
+	DEBUG_ASSERT1(version == 0);
 	stream >> user_name >> user.getSites();
 	user.setUserName(user_name);
 	return stream;

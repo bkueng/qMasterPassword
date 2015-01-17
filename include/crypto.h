@@ -68,6 +68,47 @@ typedef enum {
     MPSiteTypeStoredDevicePrivate = 0x1 | MPSiteTypeClassStored | MPSiteFeatureDevicePrivate,
 } MPSiteType;
 
+static inline int MPSiteTypeCount() { return 8; }
+static inline MPSiteType MPSiteTypeFromIdx(int idx) {
+	switch(idx) {
+	case 0: return MPSiteTypeGeneratedMaximum;
+	case 1: return MPSiteTypeGeneratedLong;
+	case 2: return MPSiteTypeGeneratedMedium;
+	case 3: return MPSiteTypeGeneratedBasic;
+	case 4: return MPSiteTypeGeneratedShort;
+	case 5: return MPSiteTypeGeneratedPIN;
+	case 6: return MPSiteTypeGeneratedName;
+	case 7: return MPSiteTypeGeneratedPhrase;
+	default: THROW(EINVALID_PARAMETER);
+	}
+}
+static inline int MPSiteTypeToIdx(MPSiteType type) {
+	switch(type) {
+	case MPSiteTypeGeneratedMaximum: return 0;
+	case MPSiteTypeGeneratedLong: return 1;
+	case MPSiteTypeGeneratedMedium: return 2;
+	case MPSiteTypeGeneratedBasic: return 3;
+	case MPSiteTypeGeneratedShort: return 4;
+	case MPSiteTypeGeneratedPIN: return 5;
+	case MPSiteTypeGeneratedName: return 6;
+	case MPSiteTypeGeneratedPhrase: return 7;
+	default: THROW(EINVALID_PARAMETER);
+	}
+}
+static inline std::string MPSiteTypeToString(MPSiteType type) {
+	switch(type) {
+	case MPSiteTypeGeneratedMaximum: return "Maximum";
+	case MPSiteTypeGeneratedLong: return "Long";
+	case MPSiteTypeGeneratedMedium: return "Medium";
+	case MPSiteTypeGeneratedBasic: return "Basic";
+	case MPSiteTypeGeneratedShort: return "Short";
+	case MPSiteTypeGeneratedPIN: return "PIN";
+	case MPSiteTypeGeneratedName: return "Name";
+	case MPSiteTypeGeneratedPhrase: return "Phrase";
+	default: THROW(EINVALID_PARAMETER);
+	}
+}
+
 /**
  ** class CryptoException
  */
@@ -93,9 +134,6 @@ private:
 class Site {
 public:
 
-	const std::string& getComment() const { return m_comment; }
-	void setComment(const std::string& comment) { m_comment = comment; }
-
 	const std::string& getContext() const { return m_context; }
 	void setContext(const std::string& context) { m_context = context; }
 
@@ -107,9 +145,6 @@ public:
 
 	MPSiteType getType() const { return m_type; }
 	void setType(MPSiteType type) { m_type = type; }
-
-	const std::string& getUserName() const { return m_user_name; }
-	void setUserName(const std::string& userName) { m_user_name = userName; }
 
 	MPSiteVariant getVariant() const { return m_variant; }
 	void setVariant(MPSiteVariant variant) { m_variant = variant; }
@@ -123,10 +158,6 @@ private:
 
 	/* optional things */
 	std::string m_context; /** type-specific context */
-
-	std::string m_user_name;
-	std::string m_comment;
-	//TODO: created/edit time
 
 	friend class MasterPassword;
 };
