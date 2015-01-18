@@ -24,7 +24,7 @@
         </property>
         <property name="icon">
          <iconset resource="resources.qrc">
-          <normaloff>:/icons/user_add.png</normaloff>:/icons/user_add.png</iconset>
+          <normaloff>:/user_add.png</normaloff>:/user_add.png</iconset>
         </property>
        </widget>
       </item>
@@ -35,7 +35,7 @@
         </property>
         <property name="icon">
          <iconset resource="resources.qrc">
-          <normaloff>:/icons/user_delete.png</normaloff>:/icons/user_delete.png</iconset>
+          <normaloff>:/user_delete.png</normaloff>:/user_delete.png</iconset>
         </property>
        </widget>
       </item>

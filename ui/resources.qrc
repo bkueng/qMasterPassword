@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
-        <file>../icons/user_add.png</file>
-        <file>../icons/user_delete.png</file>
+        <file alias="user_add.png">../icons/user_add.png</file>
+        <file alias="user_delete.png">../icons/user_delete.png</file>
+        <file alias="copy.png">../icons/copy.png</file>
     </qresource>
 </RCC>

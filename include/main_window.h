@@ -32,15 +32,18 @@ class MainWindow;
 }
 class MainWindow;
 
-class TableItem : public QStandardItem {
+template<typename T>
+class UserUITemplate : public T {
 public:
-	TableItem(UiSite& site, const QString& item_text)
-		: QStandardItem(item_text), m_site(site) {}
+	UserUITemplate(UiSite& site, const QString& item_text)
+		: T(item_text), m_site(site) {}
 
 	UiSite& site() { return m_site; }
 private:
 	UiSite& m_site;
 };
+typedef UserUITemplate<QStandardItem> TableItem;
+typedef UserUITemplate<QPushButton> UserPushButton;
 
 class CategoryButton : public QPushButton
 {
@@ -99,6 +102,8 @@ private:
 	QStandardItemModel* m_sites_model;
 	MySortFilterProxyModel* m_proxy_model;
 
+	int m_copy_column_idx;
+
 private slots:
 	void loginLogoutClicked();
 	void addUser();
@@ -112,6 +117,7 @@ private slots:
 	void selectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
 	void categoryButtonPressed();
 	void filterTextChanged(QString filter_text);
+	void copyPWToClipboardClicked();
 
 protected:
 	void closeEvent(QCloseEvent *event);

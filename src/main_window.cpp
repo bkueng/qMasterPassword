@@ -26,6 +26,7 @@ using namespace std;
 #include <QDataStream>
 #include <QStandardItemModel>
 #include <QStandardItem>
+#include <QClipboard>
 
 MainWindow::MainWindow(QWidget *parent) :
 		QMainWindow(parent), m_ui(new Ui::MainWindow) {
@@ -44,13 +45,16 @@ MainWindow::~MainWindow() {
 
 void MainWindow::initSitesView() {
 	m_sites_model = new QStandardItemModel();
-	m_sites_model->setColumnCount(6);
-    m_sites_model->setHeaderData(0, Qt::Horizontal, QObject::tr("Site"));
-    m_sites_model->setHeaderData(1, Qt::Horizontal, QObject::tr("Login Name"));
-    m_sites_model->setHeaderData(2, Qt::Horizontal, QObject::tr("Password"));
-    m_sites_model->setHeaderData(3, Qt::Horizontal, QObject::tr("Comment"));
-    m_sites_model->setHeaderData(4, Qt::Horizontal, QObject::tr("Type"));
-    m_sites_model->setHeaderData(5, Qt::Horizontal, QObject::tr("Counter"));
+	m_sites_model->setColumnCount(7);
+	int i = 0;
+	m_sites_model->setHeaderData(i++, Qt::Horizontal, QObject::tr("Site"));
+	m_sites_model->setHeaderData(i++, Qt::Horizontal, QObject::tr("Login Name"));
+	m_sites_model->setHeaderData(i++, Qt::Horizontal, QObject::tr("Password"));
+	m_sites_model->setHeaderData(m_copy_column_idx = i++, Qt::Horizontal,
+			QObject::tr("")); //copy pw button
+	m_sites_model->setHeaderData(i++, Qt::Horizontal, QObject::tr("Comment"));
+	m_sites_model->setHeaderData(i++, Qt::Horizontal, QObject::tr("Type"));
+	m_sites_model->setHeaderData(i++, Qt::Horizontal, QObject::tr("Counter"));
 
 	m_proxy_model = new MySortFilterProxyModel(*this);
 	m_proxy_model->setSourceModel(m_sites_model);
@@ -64,22 +68,29 @@ void MainWindow::initSitesView() {
 
 void MainWindow::addSiteToUI(UiSite& site) {
 	QList<QStandardItem*> items;
-	for (int i = 0; i < 6; ++i) {
+	for (int i = 0; i < 7; ++i) {
 		QStandardItem* item = new TableItem(site, "");
 		item->setEditable(false);
 		item->setDragEnabled(false);
 		item->setDropEnabled(false);
 		items.push_back(item);
 	}
-    /*
-    //display a button
-    QPushButton* btn = new QPushButton("button");
-    //btn->setAutoFillBackground(true);
-    m_ui->tblSites->setIndexWidget(model->index(1, 1), btn);
-     */
-
 	m_sites_model->appendRow(items);
 	updateModelItem(m_sites_model->rowCount()-1, site);
+
+	//display a 'copy to clipboard' button
+	QPushButton* btn = new UserPushButton(site, "");
+	btn->setIcon(QIcon(":/copy.png"));
+	btn->setFixedWidth(btn->sizeHint().width());
+	connect(btn, SIGNAL(clicked()), this, SLOT(copyPWToClipboardClicked()));
+	m_ui->tblSites->setIndexWidget(m_proxy_model->mapFromSource(
+		m_sites_model->index(m_sites_model->rowCount() - 1, m_copy_column_idx)), btn);
+
+	//set column to fixed size
+	m_ui->tblSites->horizontalHeader()->resizeSection(m_copy_column_idx,
+		btn->sizeHint().width());
+	m_ui->tblSites->horizontalHeader()->setSectionResizeMode(m_copy_column_idx,
+		QHeaderView::Fixed);
 }
 void MainWindow::updateModelItem(int row, const UiSite& site) {
 	int i = 0;
@@ -87,6 +98,7 @@ void MainWindow::updateModelItem(int row, const UiSite& site) {
 	m_sites_model->item(row, i++)->setText(site.user_name);
 	string password = m_master_password.sitePassword(site.site);
 	m_sites_model->item(row, i++)->setText(QString::fromStdString(password));
+	++i; //copy button
 	m_sites_model->item(row, i++)->setText(site.comment);
 	m_sites_model->item(row, i++)->setText(QString::fromStdString(
 			MPSiteTypeToString(site.site.getType())));
@@ -372,4 +384,13 @@ bool MySortFilterProxyModel::filterAcceptsRow(int source_row,
 	}
 
 	return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
+}
+
+void MainWindow::copyPWToClipboardClicked() {
+	UserPushButton* button = dynamic_cast<UserPushButton*>(sender());
+	if (!button) return;
+	string password = m_master_password.sitePassword(button->site().site);
+	QClipboard *clipboard = QApplication::clipboard();
+	QString originalText = clipboard->text();
+	clipboard->setText(QString::fromStdString(password));
 }
