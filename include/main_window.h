@@ -69,6 +69,7 @@ private:
 	void updateModelItem(int row, const UiSite& site);
 	void addCategory(const QString& name, CategoryId id=-1);
 	void selectCategory(CategoryId category);
+	void uiSitesTableChanged();
 
 	MasterPassword m_master_password;
 	QMap<QString, UiUser> m_users;
@@ -95,6 +96,7 @@ private slots:
 	void selectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
 	void categoryButtonPressed();
 	void filterTextChanged(QString filter_text);
+public slots:
 	void copyPWToClipboardClicked();
 
 protected:

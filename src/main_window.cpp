@@ -17,6 +17,7 @@
 #include "add_user.h"
 #include "edit_site_widget.h"
 #include "logging.h"
+#include "pushbutton_delegate.h"
 
 #include <iostream>
 using namespace std;
@@ -60,6 +61,12 @@ void MainWindow::initSitesView() {
 	m_proxy_model->setSourceModel(m_sites_model);
 	m_ui->tblSites->setModel(m_proxy_model);
 
+	PushButtonDelegate* button_item_delegate = new PushButtonDelegate(*this);
+	m_ui->tblSites->setItemDelegateForColumn(m_copy_column_idx, button_item_delegate);
+
+	m_ui->tblSites->horizontalHeader()->setSectionResizeMode(m_copy_column_idx,
+		QHeaderView::Fixed);
+
     connect(m_ui->tblSites->selectionModel(),
             SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
             this,
@@ -78,19 +85,18 @@ void MainWindow::addSiteToUI(UiSite& site) {
 	m_sites_model->appendRow(items);
 	updateModelItem(m_sites_model->rowCount()-1, site);
 
-	//display a 'copy to clipboard' button
+	/*
+	//simpler version to display a 'copy to clipboard' button
+	// (but it will be hidden after filter changes)
 	QPushButton* btn = new UserPushButton(site, "");
 	btn->setIcon(QIcon(":/copy.png"));
 	btn->setFixedWidth(btn->sizeHint().width());
 	connect(btn, SIGNAL(clicked()), this, SLOT(copyPWToClipboardClicked()));
 	m_ui->tblSites->setIndexWidget(m_proxy_model->mapFromSource(
 		m_sites_model->index(m_sites_model->rowCount() - 1, m_copy_column_idx)), btn);
+	*/
 
-	//set column to fixed size
-	m_ui->tblSites->horizontalHeader()->resizeSection(m_copy_column_idx,
-		btn->sizeHint().width());
-	m_ui->tblSites->horizontalHeader()->setSectionResizeMode(m_copy_column_idx,
-		QHeaderView::Fixed);
+	uiSitesTableChanged();
 }
 void MainWindow::updateModelItem(int row, const UiSite& site) {
 	int i = 0;
@@ -363,6 +369,7 @@ void MainWindow::selectCategory(CategoryId category) {
 	}
 	m_selected_category = category;
 	m_proxy_model->invalidate();
+	uiSitesTableChanged();
 }
 
 void MainWindow::categoryButtonPressed() {
@@ -375,6 +382,27 @@ void MainWindow::filterTextChanged(QString filter_text) {
 	m_proxy_model->setFilterRegExp(
 			QRegExp(filter_text, Qt::CaseInsensitive, QRegExp::FixedString));
 	m_proxy_model->setFilterKeyColumn(0);
+	uiSitesTableChanged();
+}
+
+void MainWindow::copyPWToClipboardClicked() {
+	LOG(DEBUG, "copy to clipboard clicked");
+	UserPushButton* button = dynamic_cast<UserPushButton*>(sender());
+	if (!button) return;
+	string password = m_master_password.sitePassword(button->site().site);
+	QClipboard *clipboard = QApplication::clipboard();
+	QString originalText = clipboard->text();
+	clipboard->setText(QString::fromStdString(password));
+}
+
+void MainWindow::uiSitesTableChanged() {
+	//(re-)open persistent editors, because after refilter, they get hidden.
+	//yes it's ugly, but i didn't see an easier way...
+	for (int row = 0; row < m_proxy_model->rowCount(); ++row) {
+		m_ui->tblSites->openPersistentEditor(
+			m_proxy_model->index(row, m_copy_column_idx));
+	}
+	m_ui->tblSites->resizeColumnToContents(m_copy_column_idx);
 }
 
 bool MySortFilterProxyModel::filterAcceptsRow(int source_row,
@@ -391,11 +419,3 @@ bool MySortFilterProxyModel::filterAcceptsRow(int source_row,
 	return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
 }
 
-void MainWindow::copyPWToClipboardClicked() {
-	UserPushButton* button = dynamic_cast<UserPushButton*>(sender());
-	if (!button) return;
-	string password = m_master_password.sitePassword(button->site().site);
-	QClipboard *clipboard = QApplication::clipboard();
-	QString originalText = clipboard->text();
-	clipboard->setText(QString::fromStdString(password));
-}
