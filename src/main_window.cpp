@@ -217,25 +217,30 @@ void MainWindow::closeEvent(QCloseEvent *event) {
     QMainWindow::closeEvent(event);
 }
 void MainWindow::saveSettings() {
-    QSettings settings("qMasterPassword", "qMasterPassword");
-    settings.setValue("main_window/geometry", saveGeometry());
-    settings.setValue("main_window/window_state", saveState());
-    settings.setValue("main_window/selected_user", m_ui->cmbUserName->currentText());
+	QSettings settings("qMasterPassword", "qMasterPassword");
+	settings.setValue("main_window/geometry", saveGeometry());
+	settings.setValue("main_window/window_state", saveState());
+	settings.setValue("main_window/selected_user",
+			m_ui->cmbUserName->currentText());
+	settings.setValue("main_window/table_header_state",
+			m_ui->tblSites->horizontalHeader()->saveState());
 
-    QByteArray categories_data;
-    QDataStream categories_stream(&categories_data, QIODevice::ReadWrite);
-    categories_stream << m_categories;
-    settings.setValue("data/categories", categories_data);
+	QByteArray categories_data;
+	QDataStream categories_stream(&categories_data, QIODevice::ReadWrite);
+	categories_stream << m_categories;
+	settings.setValue("data/categories", categories_data);
 
-    QByteArray user_data;
-    QDataStream stream(&user_data, QIODevice::ReadWrite);
-    stream << m_users;
-    settings.setValue("data/users", user_data);
+	QByteArray user_data;
+	QDataStream stream(&user_data, QIODevice::ReadWrite);
+	stream << m_users;
+	settings.setValue("data/users", user_data);
 }
 void MainWindow::readSettings() {
-    QSettings settings("qMasterPassword", "qMasterPassword");
-    restoreGeometry(settings.value("main_window/geometry").toByteArray());
-    restoreState(settings.value("main_window/window_state").toByteArray());
+	QSettings settings("qMasterPassword", "qMasterPassword");
+	restoreGeometry(settings.value("main_window/geometry").toByteArray());
+	restoreState(settings.value("main_window/window_state").toByteArray());
+	m_ui->tblSites->horizontalHeader()->restoreState(
+			settings.value("main_window/table_header_state").toByteArray());
 
     QDataStream categories_stream(settings.value("data/categories").toByteArray());
     categories_stream >> m_categories;
