@@ -84,9 +84,6 @@ void MainWindow::initSitesView() {
 	PushButtonDelegate* button_item_delegate = new PushButtonDelegate(*this, this);
 	m_ui->tblSites->setItemDelegateForColumn(m_copy_column_idx, button_item_delegate);
 
-	m_ui->tblSites->horizontalHeader()->setSectionResizeMode(m_copy_column_idx,
-		QHeaderView::Fixed);
-
     connect(m_ui->tblSites->selectionModel(),
             SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
             this,

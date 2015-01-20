@@ -144,11 +144,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="txtFilter">
-            <property name="clearButtonEnabled">
-             <bool>true</bool>
-            </property>
-           </widget>
+           <widget class="QLineEdit" name="txtFilter"/>
           </item>
           <item>
            <widget class="QPushButton" name="btnAddSite">

@@ -25,6 +25,7 @@ win32 {
 	LIBS += -lscrypt -lcrypto
 }
 ICON = data/icons/app_icon.png
+QMAKE_CXXFLAGS += -std=c++11
 
 # Input
 HEADERS += \
