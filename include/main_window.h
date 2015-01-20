@@ -26,35 +26,13 @@
 
 #include "crypto.h"
 #include "user.h"
+#include "ui_helpers.h"
 
 namespace Ui {
 class MainWindow;
 }
 class MainWindow;
 
-template<typename T>
-class UserUITemplate : public T {
-public:
-	UserUITemplate(UiSite& site, const QString& item_text)
-		: T(item_text), m_site(site) {}
-
-	UiSite& site() { return m_site; }
-private:
-	UiSite& m_site;
-};
-typedef UserUITemplate<QStandardItem> TableItem;
-typedef UserUITemplate<QPushButton> UserPushButton;
-
-class CategoryButton : public QPushButton
-{
-	Q_OBJECT
-public:
-	CategoryButton(CategoryId id, const QString& text)
-		: QPushButton(text), category_id(id) {}
-
-	const CategoryId category_id;
-private:
-};
 
 class MySortFilterProxyModel : public QSortFilterProxyModel
 {

@@ -20,22 +20,11 @@
 #include <QMap>
 #include "user.h"
 #include "crypto.h"
+#include "ui_helpers.h"
 
 namespace Ui {
 class EditSiteWidget;
 }
-
-
-class CategoryCheckbox : public QCheckBox
-{
-	Q_OBJECT
-public:
-	CategoryCheckbox(CategoryId id, const QString& text)
-		: QCheckBox(text), category_id(id) {}
-
-	const CategoryId category_id;
-private:
-};
 
 
 class EditSiteWidget : public QDialog
