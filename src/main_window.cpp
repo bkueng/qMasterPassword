@@ -42,11 +42,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow() {
 	delete m_ui;
-	delete m_sites_model;
 }
 
 void MainWindow::initSitesView() {
-	m_sites_model = new QStandardItemModel();
+	m_sites_model = new QStandardItemModel(this);
 	m_sites_model->setColumnCount(7);
 	int i = 0;
 	m_sites_model->setHeaderData(i++, Qt::Horizontal, QObject::tr("Site"));
@@ -58,11 +57,11 @@ void MainWindow::initSitesView() {
 	m_sites_model->setHeaderData(i++, Qt::Horizontal, QObject::tr("Type"));
 	m_sites_model->setHeaderData(i++, Qt::Horizontal, QObject::tr("Counter"));
 
-	m_proxy_model = new MySortFilterProxyModel(*this);
+	m_proxy_model = new MySortFilterProxyModel(*this, this);
 	m_proxy_model->setSourceModel(m_sites_model);
 	m_ui->tblSites->setModel(m_proxy_model);
 
-	PushButtonDelegate* button_item_delegate = new PushButtonDelegate(*this);
+	PushButtonDelegate* button_item_delegate = new PushButtonDelegate(*this, this);
 	m_ui->tblSites->setItemDelegateForColumn(m_copy_column_idx, button_item_delegate);
 
 	m_ui->tblSites->horizontalHeader()->setSectionResizeMode(m_copy_column_idx,
