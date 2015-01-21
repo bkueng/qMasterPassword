@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	readSettings();
 	m_ui->btnDeleteUser->setEnabled(m_ui->cmbUserName->count() > 0);
 	enableUI(false);
+	setWindowIcon(QIcon(":/app_icon.png"));
 }
 
 MainWindow::~MainWindow() {

@@ -12,6 +12,7 @@ QT += widgets
 UI_DIR = ui
 
 LIBS += -lscrypt -lcrypto
+ICON = icons/app_icon.png
 
 # Input
 HEADERS   += include/*.h
