@@ -40,6 +40,8 @@ public:
 
 	QDateTime time_created;
 	QDateTime time_edited;
+
+	bool password_visible = true;
 private:
 };
 

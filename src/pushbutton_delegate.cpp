@@ -18,6 +18,7 @@
 
 #include <QIcon>
 #include <QStandardItemModel>
+#include <QHBoxLayout>
 
 PushButtonDelegate::PushButtonDelegate(MainWindow& main_window, QObject* parent)
 	: QStyledItemDelegate(parent), m_main_window(main_window) {
@@ -35,12 +36,29 @@ QWidget* PushButtonDelegate::createEditor(QWidget* parent,
 	TableItem* table_item = dynamic_cast<TableItem*>(item_model->itemFromIndex(
 			item_proxy_model->mapToSource(index)));
 	DEBUG_ASSERT1(table_item);
-	QPushButton* btn = new UserPushButton(table_item->site(), "", parent);
-	btn->setIcon(QIcon(":/copy.png"));
-	btn->setFixedWidth(btn->sizeHint().width());
-	connect(btn, SIGNAL(clicked()), &m_main_window,
+
+	QPushButton* btn_copy = new UserPushButton(table_item->site(), "", parent);
+	btn_copy->setIcon(QIcon(":/copy.png"));
+	btn_copy->setFixedWidth(btn_copy->sizeHint().width());
+	connect(btn_copy, SIGNAL(clicked()), &m_main_window,
 			SLOT(copyPWToClipboardClicked()));
-	return btn;
+
+	QPushButton* btn_show = new UserPushButton(table_item->site(), "", parent);
+	btn_show->setIcon(QIcon(table_item->site().password_visible ?
+			":/hidden.png" : ":/shown.png"));
+	btn_show->setFixedWidth(btn_show->sizeHint().width());
+	connect(btn_show, SIGNAL(clicked()), &m_main_window,
+			SLOT(showHidePWClicked()));
+
+	QHBoxLayout* layout = new QHBoxLayout(parent);
+	layout->setMargin(0);
+	layout->addWidget(btn_show);
+	layout->addWidget(btn_copy);
+	QWidget* widget = new QWidget(parent);
+	widget->setLayout(layout);
+	widget->setFixedWidth(widget->sizeHint().width());
+
+	return widget;
 }
 
 void PushButtonDelegate::updateEditorGeometry(QWidget* editor,

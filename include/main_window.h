@@ -98,6 +98,7 @@ private slots:
 	void filterTextChanged(QString filter_text);
 public slots:
 	void copyPWToClipboardClicked();
+	void showHidePWClicked();
 
 protected:
 	void closeEvent(QCloseEvent *event);

@@ -3,5 +3,7 @@
         <file alias="user_add.png">../icons/user_add.png</file>
         <file alias="user_delete.png">../icons/user_delete.png</file>
         <file alias="copy.png">../icons/copy.png</file>
+        <file alias="shown.png">../icons/shown.png</file>
+        <file alias="hidden.png">../icons/hidden.png</file>
     </qresource>
 </RCC>

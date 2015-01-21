@@ -102,8 +102,12 @@ void MainWindow::updateModelItem(int row, const UiSite& site) {
 	int i = 0;
 	m_sites_model->item(row, i++)->setText(QString::fromStdString(site.site.getName()));
 	m_sites_model->item(row, i++)->setText(site.user_name);
-	string password = m_master_password.sitePassword(site.site);
-	m_sites_model->item(row, i++)->setText(QString::fromStdString(password));
+	if (site.password_visible) {
+		string password = m_master_password.sitePassword(site.site);
+		m_sites_model->item(row, i++)->setText(QString::fromStdString(password));
+	} else {
+		m_sites_model->item(row, i++)->setText("***");
+	}
 	++i; //copy button
 	m_sites_model->item(row, i++)->setText(site.comment);
 	m_sites_model->item(row, i++)->setText(QString::fromStdString(
@@ -393,6 +397,22 @@ void MainWindow::copyPWToClipboardClicked() {
 	QClipboard *clipboard = QApplication::clipboard();
 	QString originalText = clipboard->text();
 	clipboard->setText(QString::fromStdString(password));
+}
+void MainWindow::showHidePWClicked() {
+	LOG(DEBUG, "show/hide PW clicked");
+	UserPushButton* button = dynamic_cast<UserPushButton*>(sender());
+	if (!button) return;
+	UiSite& site = button->site();
+	site.password_visible = !site.password_visible;
+	button->setIcon(QIcon(site.password_visible ? ":/hidden.png" : ":/shown.png"));
+
+	for (int i = 0; i < m_sites_model->rowCount(); ++i) {
+		TableItem* item = dynamic_cast<TableItem*>(m_sites_model->item(i, 0));
+		if (item && &item->site() == &site) {
+			updateModelItem(i, site);
+			break;
+		}
+	}
 }
 
 void MainWindow::uiSitesTableChanged() {
