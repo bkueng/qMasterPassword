@@ -28,6 +28,7 @@
 #include "crypto.h"
 #include "user.h"
 #include "ui_helpers.h"
+#include "app_settings.h"
 
 namespace Ui {
 class MainWindow;
@@ -59,7 +60,7 @@ public:
 
 	CategoryId selectedCategory() const { return m_selected_category; }
 	QStandardItemModel* model() const { return m_sites_model; }
-	bool trayIconEnabled() const { return m_tray_icon_enabled; }
+	bool trayIconEnabled() const { return m_application_settings.show_systray_icon; }
 private:
 	Ui::MainWindow* m_ui;
 	void login();
@@ -85,8 +86,8 @@ private:
 	MySortFilterProxyModel* m_proxy_model;
 
 	QSystemTrayIcon* m_tray_icon = nullptr;
-	bool m_tray_icon_enabled = false;
 	QAction* m_tray_icon_show_action = nullptr;
+	ApplicationSettings m_application_settings;
 
 	int m_copy_column_idx;
 
@@ -105,6 +106,8 @@ private slots:
 	void filterTextChanged(QString filter_text);
 	void iconActivated(QSystemTrayIcon::ActivationReason reason);
 	void showHide();
+	void showTrayIcon(bool visible);
+	void showSettingsWidget();
 public slots:
 	void copyPWToClipboardClicked();
 	void showHidePWClicked();

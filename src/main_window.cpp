@@ -18,6 +18,7 @@
 #include "edit_site_widget.h"
 #include "logging.h"
 #include "pushbutton_delegate.h"
+#include "settings_widget.h"
 
 #include <iostream>
 using namespace std;
@@ -38,11 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	readSettings();
 	m_ui->btnDeleteUser->setEnabled(m_ui->cmbUserName->count() > 0);
 	enableUI(false);
-
-	if (m_tray_icon_enabled) {
-		initTrayIcon();
-		m_tray_icon->show();
-	}
+	showTrayIcon(m_application_settings.show_systray_icon);
 	setWindowIcon(QIcon(":/app_icon.png"));
 	connect(QCoreApplication::instance(), SIGNAL(aboutToQuit()),
 			this, SLOT(saveSettings()));
@@ -174,6 +171,7 @@ void MainWindow::login() {
 		enableUI(true);
 		clearSitesUI();
 		for (auto& site : m_current_user->getSites()) {
+			site->password_visible = m_application_settings.show_pw_after_login;
 			addSiteToUI(*site);
 		}
 
@@ -279,6 +277,7 @@ void MainWindow::saveSettings() {
 	QDataStream stream(&user_data, QIODevice::ReadWrite);
 	stream << m_users;
 	settings.setValue("data/users", user_data);
+	m_application_settings.saveSettings(settings);
 }
 void MainWindow::readSettings() {
 	QSettings settings("qMasterPassword", "qMasterPassword");
@@ -329,6 +328,7 @@ void MainWindow::readSettings() {
 		m_ui->cmbUserName->setCurrentIndex(selected_index);
 	if (!m_users.isEmpty())
 		m_ui->txtPassword->setFocus();
+	m_application_settings.restoreSettings(settings);
 }
 
 void MainWindow::addSite() {
@@ -479,6 +479,28 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason) {
 		break;
 	default:
 		break;
+	}
+}
+void MainWindow::showSettingsWidget() {
+	SettingsWidget settings_widget(m_application_settings, this);
+	connect(&settings_widget, SIGNAL(showTrayIconChanged(bool)),
+			this, SLOT(showTrayIcon(bool)));
+
+	if (settings_widget.exec() == 1) {
+		//nothing to do...
+	}
+}
+
+void MainWindow::showTrayIcon(bool visible) {
+	if (visible) {
+		initTrayIcon();
+		m_tray_icon->show();
+	} else {
+		if (m_tray_icon) {
+			m_tray_icon->hide();
+			delete m_tray_icon;
+			m_tray_icon = nullptr;
+		}
 	}
 }
 

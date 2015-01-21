@@ -79,6 +79,17 @@
         </property>
        </spacer>
       </item>
+      <item>
+       <widget class="QPushButton" name="btnSettings">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="resources.qrc">
+          <normaloff>:/settings.png</normaloff>:/settings.png</iconset>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
     <item>
@@ -283,8 +294,8 @@
      <y>53</y>
     </hint>
     <hint type="destinationlabel">
-     <x>625</x>
-     <y>48</y>
+     <x>617</x>
+     <y>60</y>
     </hint>
    </hints>
   </connection>
@@ -368,6 +379,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>btnSettings</sender>
+   <signal>pressed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showSettingsWidget()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>865</x>
+     <y>43</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>888</x>
+     <y>50</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>loginLogoutClicked()</slot>
@@ -377,5 +404,6 @@
   <slot>deleteSite()</slot>
   <slot>editSite()</slot>
   <slot>filterTextChanged(QString)</slot>
+  <slot>showSettingsWidget()</slot>
  </slots>
 </ui>
