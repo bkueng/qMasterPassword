@@ -333,14 +333,12 @@ void MainWindow::readSettings() {
 
 void MainWindow::addSite() {
 	if (!m_current_user) return;
-	UiSite* site = new UiSite();
+	shared_ptr<UiSite> site = make_shared<UiSite>();
 	EditSiteWidget edit_site(m_categories, *site, EditSiteWidget::Type_new, this);
 	if (edit_site.exec() == 1) { //accepted
 		edit_site.applyData();
 		m_current_user->getSites().append(site);
-		addSiteToUI(*site);
-	} else {
-		delete site;
+		addSiteToUI(*site.get());
 	}
 }
 
@@ -351,8 +349,7 @@ void MainWindow::deleteSite() {
 	m_sites_model->removeRow(item->row());
 	for (auto iter = m_current_user->getSites().begin();
 			iter != m_current_user->getSites().end(); ++iter) {
-		if(*iter == &item->site()) {
-			delete *iter;
+		if(iter->get() == &item->site()) {
 			m_current_user->getSites().erase(iter);
 			break;
 		}

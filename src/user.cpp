@@ -67,7 +67,7 @@ QDataStream& operator >>(QDataStream& stream, UiUser& user) {
 	DEBUG_ASSERT1(version == 0);
 	stream >> user_name >> site_count;
 	for (int i = 0; i < site_count; ++i) {
-		UiSite* site = new UiSite();
+		shared_ptr<UiSite> site = make_shared<UiSite>();
 		stream >> *site;
 		user.getSites().push_back(site);
 	}
