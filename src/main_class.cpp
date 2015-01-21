@@ -62,6 +62,7 @@ void CMain::parseCommandLine(int argc, char* argv[])
 	m_parameters->addParam("file-log");
 	m_parameters->addSwitch("no-file-log");
 	
+	m_parameters->addSwitch("start-minimized");
 	
 	m_cl_parse_result = m_parameters->parse();
 	
@@ -83,6 +84,9 @@ void CMain::printHelp()
 		   "   <level>                        none, error, warn, info, debug\n"
 		   "  --no-log                        no console logging (--log none)\n"
 		   "  --no-file-log                   no file logging (--file-log none)\n"
+		   "\n"
+		   "  --start-minimized               start with hidden main window\n"
+		   "                                  (if tray icon enabled)\n"
 		  );
 }
 
@@ -157,10 +161,12 @@ void CMain::processArgs()
 			CLog::getInstance().setFileLevel(log_level);
 	}
 	
+	bool start_minimized = m_parameters->getSwitch("start-minimized");
 
 	QApplication app(m_argc, m_argv);
 	MainWindow main_window;
-	main_window.show();
+	if (!start_minimized || !main_window.trayIconEnabled())
+		main_window.show();
 	app.exec();
 }
 
