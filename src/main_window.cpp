@@ -334,6 +334,7 @@ void MainWindow::readSettings() {
 void MainWindow::addSite() {
 	if (!m_current_user) return;
 	shared_ptr<UiSite> site = make_shared<UiSite>();
+	site->password_visible = m_application_settings.show_pw_after_login;
 	EditSiteWidget edit_site(m_categories, *site, EditSiteWidget::Type_new, this);
 	if (edit_site.exec() == 1) { //accepted
 		edit_site.applyData();
