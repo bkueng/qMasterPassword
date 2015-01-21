@@ -28,6 +28,7 @@ using namespace std;
 #include <QStandardItemModel>
 #include <QStandardItem>
 #include <QClipboard>
+#include <QCloseEvent>
 
 MainWindow::MainWindow(QWidget *parent) :
 		QMainWindow(parent), m_ui(new Ui::MainWindow) {
@@ -37,7 +38,14 @@ MainWindow::MainWindow(QWidget *parent) :
 	readSettings();
 	m_ui->btnDeleteUser->setEnabled(m_ui->cmbUserName->count() > 0);
 	enableUI(false);
+
+	if (m_tray_icon_enabled) {
+		initTrayIcon();
+		m_tray_icon->show();
+	}
 	setWindowIcon(QIcon(":/app_icon.png"));
+	connect(QCoreApplication::instance(), SIGNAL(aboutToQuit()),
+			this, SLOT(saveSettings()));
 }
 
 MainWindow::~MainWindow() {
@@ -71,6 +79,28 @@ void MainWindow::initSitesView() {
             SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
             this,
             SLOT(selectionChanged(const QItemSelection&, const QItemSelection&)));
+}
+
+void MainWindow::initTrayIcon() {
+	if (m_tray_icon) return;
+
+	m_tray_icon_show_action = new QAction("", this);
+	connect(m_tray_icon_show_action, SIGNAL(triggered()), this, SLOT(showHide()));
+	QAction* quitAction = new QAction(tr("&Quit"), this);
+	connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+
+	QMenu* trayIconMenu = new QMenu(this);
+	trayIconMenu->addAction(m_tray_icon_show_action);
+	trayIconMenu->addSeparator();
+	trayIconMenu->addAction(quitAction);
+
+	m_tray_icon = new QSystemTrayIcon(this);
+	m_tray_icon->setContextMenu(trayIconMenu);
+	m_tray_icon->setIcon(QIcon(":/app_icon.png"));
+	m_tray_icon->setToolTip("qMasterPassword");
+
+	connect(m_tray_icon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+			this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 }
 
 void MainWindow::addSiteToUI(UiSite& site) {
@@ -223,10 +253,15 @@ void MainWindow::deleteUser() {
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
-	saveSettings();
-    QMainWindow::closeEvent(event);
+	if (m_tray_icon && m_tray_icon->isVisible()) {
+		hide();
+		event->ignore();
+	} else {
+		QMainWindow::closeEvent(event);
+	}
 }
 void MainWindow::saveSettings() {
+	LOG(DEBUG, "saving settings");
 	QSettings settings("qMasterPassword", "qMasterPassword");
 	settings.setValue("main_window/geometry", saveGeometry());
 	settings.setValue("main_window/window_state", saveState());
@@ -423,6 +458,28 @@ void MainWindow::uiSitesTableChanged() {
 			m_proxy_model->index(row, m_copy_column_idx));
 	}
 	m_ui->tblSites->resizeColumnToContents(m_copy_column_idx);
+}
+
+void MainWindow::showHide() {
+	setVisible(!isVisible());
+}
+void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason) {
+	switch (reason) {
+	case QSystemTrayIcon::Trigger:
+		setVisible(!isVisible());
+		break;
+	case QSystemTrayIcon::Context:
+		if (m_tray_icon_show_action) {
+			if (isVisible()) {
+				m_tray_icon_show_action->setText(tr("&Hide"));
+			} else {
+				m_tray_icon_show_action->setText(tr("&Show"));
+			}
+		}
+		break;
+	default:
+		break;
+	}
 }
 
 bool MySortFilterProxyModel::filterAcceptsRow(int source_row,

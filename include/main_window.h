@@ -23,6 +23,7 @@
 #include <QPushButton>
 #include <QItemSelection>
 #include <QSortFilterProxyModel>
+#include <QSystemTrayIcon>
 
 #include "crypto.h"
 #include "user.h"
@@ -58,11 +59,13 @@ public:
 
 	CategoryId selectedCategory() const { return m_selected_category; }
 	QStandardItemModel* model() const { return m_sites_model; }
+	bool trayIconEnabled() const { return m_tray_icon_enabled; }
 private:
 	Ui::MainWindow* m_ui;
 	void login();
 	void logout();
 	void initSitesView();
+	void initTrayIcon();
 	void addSiteToUI(UiSite& site);
 	void clearSitesUI();
 	TableItem* getSelectedItem();
@@ -81,6 +84,10 @@ private:
 	QStandardItemModel* m_sites_model;
 	MySortFilterProxyModel* m_proxy_model;
 
+	QSystemTrayIcon* m_tray_icon = nullptr;
+	bool m_tray_icon_enabled = false;
+	QAction* m_tray_icon_show_action = nullptr;
+
 	int m_copy_column_idx;
 
 private slots:
@@ -96,6 +103,8 @@ private slots:
 	void selectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
 	void categoryButtonPressed();
 	void filterTextChanged(QString filter_text);
+	void iconActivated(QSystemTrayIcon::ActivationReason reason);
+	void showHide();
 public slots:
 	void copyPWToClipboardClicked();
 	void showHidePWClicked();
