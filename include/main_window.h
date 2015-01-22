@@ -70,10 +70,12 @@ private:
 	void addSiteToUI(UiSite& site);
 	void clearSitesUI();
 	TableItem* getSelectedItem();
+	QModelIndex getSelectedRow();
 	void updateModelItem(int row, const UiSite& site);
 	void addCategory(const QString& name, CategoryId id=-1);
 	void selectCategory(CategoryId category);
 	void uiSitesTableChanged();
+	void copyPWToClipboard(UiSite& site);
 
 	MasterPassword m_master_password;
 	QMap<QString, UiUser> m_users;
@@ -114,6 +116,7 @@ public slots:
 
 protected:
 	void closeEvent(QCloseEvent *event);
+	bool eventFilter(QObject *obj, QEvent *event);
 };
 
 #endif // MAIN_WINDOW_H

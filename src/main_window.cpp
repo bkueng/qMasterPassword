@@ -76,6 +76,7 @@ void MainWindow::initSitesView() {
             SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
             this,
             SLOT(selectionChanged(const QItemSelection&, const QItemSelection&)));
+	m_ui->tblSites->installEventFilter(this);
 }
 
 void MainWindow::initTrayIcon() {
@@ -261,6 +262,47 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 		QMainWindow::closeEvent(event);
 	}
 }
+bool MainWindow::eventFilter(QObject* obj, QEvent* event) {
+	if (obj == m_ui->tblSites && event->type() == QEvent::KeyPress) {
+		QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
+		bool handled_key = true;
+		auto changeSelection = [this] (int offset) {
+			QModelIndex selected_row = getSelectedRow();
+			if (selected_row.isValid()) {
+				m_ui->tblSites->selectRow(
+					(selected_row.row() + offset + m_proxy_model->rowCount())
+					% m_proxy_model->rowCount());
+			}
+		};
+
+		switch (keyEvent->key()) {
+		case Qt::Key_Space:
+		case Qt::Key_Y:
+		{
+			TableItem* item = getSelectedItem();
+			if (item)
+				copyPWToClipboard(item->site());
+		}
+			break;
+		case Qt::Key_Slash:
+			m_ui->txtFilter->selectAll();
+			m_ui->txtFilter->setFocus();
+			break;
+		case Qt::Key_J: //select next
+			changeSelection(+1);
+			break;
+		case Qt::Key_K: //select previous
+			changeSelection(-1);
+			break;
+		default:
+			handled_key = false;
+			break;
+		}
+		return handled_key;
+	}
+	return false;
+}
+
 void MainWindow::saveSettings() {
 	LOG(DEBUG, "saving settings");
 	QSettings settings("qMasterPassword", "qMasterPassword");
@@ -373,13 +415,19 @@ void MainWindow::editSite() {
 	}
 }
 
-TableItem* MainWindow::getSelectedItem() {
+QModelIndex MainWindow::getSelectedRow() {
 	QItemSelectionModel* selection = m_ui->tblSites->selectionModel();
 	QModelIndexList selected_rows = selection->selectedRows();
 	if (selected_rows.count() == 0)
+		return QModelIndex();
+	return selected_rows.at(0);
+}
+TableItem* MainWindow::getSelectedItem() {
+	QModelIndex selected_row = getSelectedRow();
+	if (!selected_row.isValid())
 		return nullptr;
 	return dynamic_cast<TableItem*>(m_sites_model->itemFromIndex(
-			m_proxy_model->mapToSource(selected_rows.at(0))));
+			m_proxy_model->mapToSource(selected_row)));
 }
 
 void MainWindow::selectionChanged(const QItemSelection& selected,
@@ -426,10 +474,13 @@ void MainWindow::filterTextChanged(QString filter_text) {
 }
 
 void MainWindow::copyPWToClipboardClicked() {
-	LOG(DEBUG, "copy to clipboard clicked");
 	UserPushButton* button = dynamic_cast<UserPushButton*>(sender());
 	if (!button) return;
-	string password = m_master_password.sitePassword(button->site().site);
+	copyPWToClipboard(button->site());
+}
+void MainWindow::copyPWToClipboard(UiSite& site) {
+	LOG(DEBUG, "copy pw to clipboard");
+	string password = m_master_password.sitePassword(site.site);
 	QClipboard *clipboard = QApplication::clipboard();
 	QString originalText = clipboard->text();
 	clipboard->setText(QString::fromStdString(password));
@@ -470,7 +521,7 @@ void MainWindow::showHide() {
 void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason) {
 	switch (reason) {
 	case QSystemTrayIcon::Trigger:
-		setVisible(!isVisible());
+		showHide();
 		break;
 	case QSystemTrayIcon::Context:
 		if (m_tray_icon_show_action) {
