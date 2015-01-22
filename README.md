@@ -19,6 +19,8 @@ concept and reasons why to use it.
 qMasterPassword is developed on Linux, but it should be easy to get it to work
 on other platforms if the dependencies are met.
 
+![screenshot](screenshots/main_window.png)
+
 
 #### Dependencies ####
 * Qt 5.2 or higher (see branch qt4.8 for older Qt version support)
