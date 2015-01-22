@@ -24,6 +24,9 @@ SettingsWidget::SettingsWidget(ApplicationSettings& settings, QWidget *parent) :
 
 	ui->chkShowPasswords->setChecked(m_settings.show_pw_after_login);
 	ui->chkTrayIcon->setChecked(m_settings.show_systray_icon);
+	ui->chkAutoLogout->setChecked(m_settings.auto_logout_when_hidden);
+	ui->spnAutoLogoutTimeout->setValue(m_settings.auto_logout_timeout);
+	updateUi();
 }
 
 SettingsWidget::~SettingsWidget()
@@ -36,5 +39,23 @@ void SettingsWidget::showPWAfterLogin(bool show) {
 }
 void SettingsWidget::showTrayIcon(bool show) {
 	m_settings.show_systray_icon = show;
+	updateUi();
 	emit showTrayIconChanged(show);
+}
+
+void SettingsWidget::autoLogout(bool activated) {
+	m_settings.auto_logout_when_hidden = activated;
+}
+
+void SettingsWidget::autoLogoutValueChanged(int value) {
+	m_settings.auto_logout_timeout = value;
+}
+
+void SettingsWidget::updateUi() {
+	bool enabled = m_settings.show_systray_icon;
+	ui->chkAutoLogout->setEnabled(enabled);
+	ui->spnAutoLogoutTimeout->setEnabled(enabled);
+	ui->lblTimeout->setEnabled(enabled);
+	ui->lblMinutes->setEnabled(enabled);
+	if (!enabled) ui->chkAutoLogout->setChecked(false);
 }

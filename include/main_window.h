@@ -24,6 +24,7 @@
 #include <QItemSelection>
 #include <QSortFilterProxyModel>
 #include <QSystemTrayIcon>
+#include <QTimer>
 
 #include "crypto.h"
 #include "user.h"
@@ -63,8 +64,6 @@ public:
 	bool trayIconEnabled() const { return m_application_settings.show_systray_icon; }
 private:
 	Ui::MainWindow* m_ui;
-	void login();
-	void logout();
 	void initSitesView();
 	void initTrayIcon();
 	void addSiteToUI(UiSite& site);
@@ -76,6 +75,8 @@ private:
 	void selectCategory(CategoryId category);
 	void uiSitesTableChanged();
 	void copyPWToClipboard(UiSite& site);
+	void activateLogoutTimer();
+	void abortLogoutTimer();
 
 	MasterPassword m_master_password;
 	QMap<QString, UiUser> m_users;
@@ -83,6 +84,7 @@ private:
 	CategoryId m_next_category_id = 0;
 	CategoryId m_selected_category = -1;
 	UiUser* m_current_user = nullptr; /** current logged in user */
+	QTimer* m_logout_timer = nullptr;
 
 	QStandardItemModel* m_sites_model;
 	MySortFilterProxyModel* m_proxy_model;
@@ -94,6 +96,8 @@ private:
 	int m_copy_column_idx;
 
 private slots:
+	void login();
+	void logout();
 	void loginLogoutClicked();
 	void addUser();
 	void deleteUser();

@@ -28,15 +28,24 @@ public:
 	bool show_systray_icon = false;
 	bool show_pw_after_login = true;
 
+	bool auto_logout_when_hidden = false;
+	int auto_logout_timeout = 0; //[min]
+
 	void saveSettings(QSettings& settings) {
 		settings.setValue("app_settings/show_systray_icon", show_systray_icon);
 		settings.setValue("app_settings/show_password_after_login", show_pw_after_login);
+		settings.setValue("app_settings/auto_logout_when_hidden", auto_logout_when_hidden);
+		settings.setValue("app_settings/auto_logout_timeout", auto_logout_timeout);
 	}
 	void restoreSettings(QSettings& settings) {
 		show_systray_icon = settings.value("app_settings/show_systray_icon",
 				show_systray_icon).toBool();
 		show_pw_after_login = settings.value("app_settings/show_password_after_login",
 				show_pw_after_login).toBool();
+		auto_logout_when_hidden = settings.value("app_settings/auto_logout_when_hidden",
+				auto_logout_when_hidden).toBool();
+		auto_logout_timeout = settings.value("app_settings/auto_logout_timeout",
+				auto_logout_timeout).toInt();
 	}
 
 private:

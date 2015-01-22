@@ -35,6 +35,10 @@ MainWindow::MainWindow(QWidget *parent) :
 		QMainWindow(parent), m_ui(new Ui::MainWindow) {
 	m_ui->setupUi(this);
 
+	m_logout_timer = new QTimer(this);
+	connect(m_logout_timer, SIGNAL(timeout()), this, SLOT(logout()));
+	m_logout_timer->setSingleShot(true);
+
 	initSitesView();
 	readSettings();
 	m_ui->btnDeleteUser->setEnabled(m_ui->cmbUserName->count() > 0);
@@ -157,6 +161,7 @@ void MainWindow::loginLogoutClicked() {
 }
 
 void MainWindow::login() {
+	LOG(DEBUG, "Login");
 	QString user_name = m_ui->cmbUserName->currentText();
 	QString password = m_ui->txtPassword->text();
 	auto iter_user = m_users.find(user_name);
@@ -203,12 +208,14 @@ void MainWindow::login() {
 }
 
 void MainWindow::logout() {
+	LOG(DEBUG, "Logout");
 	m_master_password.logout();
 	m_current_user = nullptr;
 	m_ui->btnLoginLogout->setText(tr("Login"));
 	m_ui->txtPassword->setText("");
 	enableUI(false);
 	clearSitesUI();
+	m_ui->txtPassword->setFocus();
 }
 
 void MainWindow::enableUI(bool logged_in) {
@@ -257,6 +264,7 @@ void MainWindow::deleteUser() {
 void MainWindow::closeEvent(QCloseEvent *event) {
 	if (m_tray_icon && m_tray_icon->isVisible()) {
 		hide();
+		activateLogoutTimer();
 		event->ignore();
 	} else {
 		QMainWindow::closeEvent(event);
@@ -515,9 +523,26 @@ void MainWindow::uiSitesTableChanged() {
 			&& m_ui->tblSites->selectionModel()->selectedRows().count() == 0)
 		m_ui->tblSites->selectRow(0);
 }
+void MainWindow::activateLogoutTimer() {
+	if (!m_master_password.isLoggedIn() ||
+		!m_application_settings.auto_logout_when_hidden) return;
+
+	LOG(DEBUG, "Activating Logout Timer (%i min)",
+			m_application_settings.auto_logout_timeout);
+	m_logout_timer->start(m_application_settings.auto_logout_timeout*60*1000);
+}
+
+void MainWindow::abortLogoutTimer() {
+	if (m_logout_timer->isActive()) {
+		LOG(DEBUG, "Aborting Logout Timer");
+		m_logout_timer->stop();
+	}
+}
 
 void MainWindow::showHide() {
 	setVisible(!isVisible());
+	if (isVisible()) abortLogoutTimer();
+	else activateLogoutTimer();
 }
 void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason) {
 	switch (reason) {

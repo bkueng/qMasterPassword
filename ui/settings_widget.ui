@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>288</width>
-    <height>170</height>
+    <width>572</width>
+    <height>201</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,6 +33,51 @@
          <string>Show System Tray Icon</string>
         </property>
        </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QCheckBox" name="chkAutoLogout">
+          <property name="text">
+           <string>Auto logout when Window is hidden.</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="lblTimeout">
+          <property name="text">
+           <string>Timeout:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="spnAutoLogoutTimeout">
+          <property name="maximum">
+           <number>1440</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="lblMinutes">
+          <property name="text">
+           <string>Minutes</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
       </item>
       <item>
        <spacer name="verticalSpacer">
@@ -71,8 +116,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>227</x>
-     <y>143</y>
+     <x>236</x>
+     <y>212</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -87,8 +132,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>295</x>
-     <y>149</y>
+     <x>304</x>
+     <y>212</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
@@ -128,9 +173,43 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>chkAutoLogout</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>SettingsWidget</receiver>
+   <slot>autoLogout(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>252</x>
+     <y>98</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>5</x>
+     <y>144</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spnAutoLogoutTimeout</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>SettingsWidget</receiver>
+   <slot>autoLogoutValueChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>422</x>
+     <y>105</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>639</x>
+     <y>127</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>showPWAfterLogin(bool)</slot>
   <slot>showTrayIcon(bool)</slot>
+  <slot>autoLogout(bool)</slot>
+  <slot>autoLogoutValueChanged(int)</slot>
  </slots>
 </ui>

@@ -31,11 +31,14 @@ public:
 	~SettingsWidget();
 
 private:
+	void updateUi();
 	Ui::SettingsWidget *ui;
 	ApplicationSettings& m_settings;
 private slots:
 	void showPWAfterLogin(bool show);
 	void showTrayIcon(bool show);
+	void autoLogout(bool activated);
+	void autoLogoutValueChanged(int value);
 signals:
 	void showTrayIconChanged(bool visible);
 };
