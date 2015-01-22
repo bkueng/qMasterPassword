@@ -484,6 +484,7 @@ void MainWindow::copyPWToClipboard(UiSite& site) {
 	QClipboard *clipboard = QApplication::clipboard();
 	QString originalText = clipboard->text();
 	clipboard->setText(QString::fromStdString(password));
+	statusBar()->showMessage(tr("Copied Password to Clipboard"), 1500);
 }
 void MainWindow::showHidePWClicked() {
 	LOG(DEBUG, "show/hide PW clicked");
