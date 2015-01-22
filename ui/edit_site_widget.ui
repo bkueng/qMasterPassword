@@ -144,6 +144,7 @@
   <tabstop>txtSiteName</tabstop>
   <tabstop>txtUserName</tabstop>
   <tabstop>txtComment</tabstop>
+  <tabstop>cmbPasswordType</tabstop>
   <tabstop>spnSiteCounter</tabstop>
  </tabstops>
  <resources/>
