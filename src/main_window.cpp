@@ -174,6 +174,9 @@ void MainWindow::login() {
 			site->password_visible = m_application_settings.show_pw_after_login;
 			addSiteToUI(*site);
 		}
+		m_proxy_model->invalidate();
+		if (m_proxy_model->rowCount() > 0)
+			m_ui->tblSites->selectRow(0);
 
 		//clear the password: no need to store it anymore
 		m_ui->txtPassword->setText("");
@@ -456,6 +459,9 @@ void MainWindow::uiSitesTableChanged() {
 			m_proxy_model->index(row, m_copy_column_idx));
 	}
 	m_ui->tblSites->resizeColumnToContents(m_copy_column_idx);
+	if (m_proxy_model->rowCount() > 0
+			&& m_ui->tblSites->selectionModel()->selectedRows().count() == 0)
+		m_ui->tblSites->selectRow(0);
 }
 
 void MainWindow::showHide() {
