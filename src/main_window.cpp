@@ -128,18 +128,18 @@ void MainWindow::addSiteToUI(UiSite& site) {
 }
 void MainWindow::updateModelItem(int row, const UiSite& site) {
 	int i = 0;
-	m_sites_model->item(row, i++)->setText(QString::fromStdString(site.site.getName()));
+	m_sites_model->item(row, i++)->setText(QString::fromUtf8(site.site.getName().c_str()));
 	m_sites_model->item(row, i++)->setText(site.user_name);
 	if (site.password_visible) {
 		string password = m_master_password.sitePassword(site.site);
-		m_sites_model->item(row, i++)->setText(QString::fromStdString(password));
+		m_sites_model->item(row, i++)->setText(QString::fromUtf8(password.c_str()));
 	} else {
 		m_sites_model->item(row, i++)->setText("***");
 	}
 	++i; //copy button
 	m_sites_model->item(row, i++)->setText(site.comment);
-	m_sites_model->item(row, i++)->setText(QString::fromStdString(
-			MPSiteTypeToString(site.site.getType())));
+	m_sites_model->item(row, i++)->setText(QString::fromUtf8(
+			MPSiteTypeToString(site.site.getType()).c_str()));
 	m_sites_model->item(row, i++)->setText(QString::number(site.site.getCounter()));
 }
 
@@ -167,7 +167,7 @@ void MainWindow::login() {
 	try {
 		m_current_user = &iter_user.value();
 		m_master_password.logout();
-		m_master_password.login(user_name.toStdString(), password.toStdString());
+		m_master_password.login(user_name.toUtf8().constData(), password.toUtf8().constData());
 		m_ui->btnLoginLogout->setText(tr("Logout"));
 		enableUI(true);
 		clearSitesUI();
@@ -363,7 +363,7 @@ void MainWindow::readSettings() {
     int selected_index = -1;
 	for (auto& user : m_users) {
 		LOG(DEBUG, "Read user: %s (%i sites)",
-			user.getUserName().toStdString().c_str(), user.getSites().count());
+			user.getUserName().toUtf8().constData(), user.getSites().count());
 
 		m_ui->cmbUserName->addItem(user.getUserName());
 		if (user.getUserName() == selected_user)
@@ -483,7 +483,7 @@ void MainWindow::copyPWToClipboard(UiSite& site) {
 	string password = m_master_password.sitePassword(site.site);
 	QClipboard *clipboard = QApplication::clipboard();
 	QString originalText = clipboard->text();
-	clipboard->setText(QString::fromStdString(password));
+	clipboard->setText(QString::fromUtf8(password.c_str()));
 	statusBar()->showMessage(tr("Copied Password to Clipboard"), 1500);
 }
 void MainWindow::showHidePWClicked() {

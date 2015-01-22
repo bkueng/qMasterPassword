@@ -20,9 +20,9 @@ using namespace std;
 QDataStream& operator <<(QDataStream& stream, const UiSite& site) {
 	stream << (qint8)0; //stream version
 	stream << site.comment;
-	stream << QString::fromStdString(site.site.getContext());
+	stream << QString::fromUtf8(site.site.getContext().c_str());
 	stream << (qint32)site.site.getCounter();
-	stream << QString::fromStdString(site.site.getName());
+	stream << QString::fromUtf8(site.site.getName().c_str());
 	stream << (qint32)site.site.getType();
 	stream << site.user_name;
 	stream << (qint32)site.site.getVariant();
@@ -41,9 +41,9 @@ QDataStream& operator >>(QDataStream& stream, UiSite& site) {
 	stream >> site.comment >> context >> counter >> name >> type
 			>> site.user_name >> variant >> site.category_ids
 			>> site.time_created >> site.time_edited;
-	site.site.setContext(context.toStdString());
+	site.site.setContext(context.toUtf8().constData());
 	site.site.setCounter((uint32_t)counter);
-	site.site.setName(name.toStdString());
+	site.site.setName(name.toUtf8().constData());
 	site.site.setType((MPSiteType)type);
 	site.site.setVariant((MPSiteVariant)variant);
 	return stream;

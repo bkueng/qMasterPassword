@@ -28,7 +28,7 @@ EditSiteWidget::EditSiteWidget(const QMap<CategoryId, QString>& categories,
 
 	for (int i = 0; i < MPSiteTypeCount(); ++i) {
 		std::string str_type = MPSiteTypeToString(MPSiteTypeFromIdx(i));
-		ui->cmbPasswordType->addItem(QString::fromStdString(str_type));
+		ui->cmbPasswordType->addItem(QString::fromUtf8(str_type.c_str()));
 	}
 
 	for (auto iter = m_categories.begin(); iter != m_categories.end(); ++iter) {
@@ -43,7 +43,7 @@ EditSiteWidget::EditSiteWidget(const QMap<CategoryId, QString>& categories,
 	switch(type) {
 	case Type_edit:
 		setWindowTitle(tr("Edit Site"));
-		ui->txtSiteName->setText(QString::fromStdString(m_site.site.getName()));
+		ui->txtSiteName->setText(QString::fromUtf8(m_site.site.getName().c_str()));
 		ui->txtUserName->setText(m_site.user_name);
 		ui->txtComment->setText(m_site.comment);
 		ui->spnSiteCounter->setValue(m_site.site.getCounter());
@@ -63,7 +63,7 @@ EditSiteWidget::~EditSiteWidget()
 }
 
 void EditSiteWidget::applyData() {
-	m_site.site.setName(ui->txtSiteName->text().toStdString());
+	m_site.site.setName(ui->txtSiteName->text().toUtf8().constData());
 	m_site.user_name = ui->txtUserName->text();
 	m_site.comment = ui->txtComment->text();
 	m_site.site.setType(MPSiteTypeFromIdx(ui->cmbPasswordType->currentIndex()));
@@ -95,7 +95,7 @@ void EditSiteWidget::passwordTypeChanged(int new_type) {
 	test_site.setType(MPSiteTypeFromIdx(new_type));
 	test_site.setCounter(rand() % 9999 + 1);
 	std::string password = m_sample_password.sitePassword(test_site);
-	ui->lblSamplePassword->setText(QString::fromStdString(password));
+	ui->lblSamplePassword->setText(QString::fromUtf8(password.c_str()));
 }
 void EditSiteWidget::checkInputValidity() {
 	bool is_valid = ui->txtSiteName->text().length() > 0;
