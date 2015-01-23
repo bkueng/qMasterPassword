@@ -13,9 +13,8 @@
  */
 
 #include "global.h"
-
-
 #include "version.h"
+#include <ctime>
 
 VERSION getAppVersion()
 {
