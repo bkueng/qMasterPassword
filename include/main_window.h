@@ -79,7 +79,7 @@ private:
 	void abortLogoutTimer();
 
 	MasterPassword m_master_password;
-	QMap<QString, UiUser> m_users;
+	QMap<QString /* user name */, UiUser> m_users;
 	QMap<CategoryId, QString> m_categories;
 	CategoryId m_next_category_id = 0;
 	CategoryId m_selected_category = -1;

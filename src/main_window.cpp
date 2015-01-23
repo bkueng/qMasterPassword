@@ -567,7 +567,7 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason) {
 	}
 }
 void MainWindow::showSettingsWidget() {
-	SettingsWidget settings_widget(m_application_settings, this);
+	SettingsWidget settings_widget(m_application_settings, m_users, m_categories, this);
 	connect(&settings_widget, SIGNAL(showTrayIconChanged(bool)),
 			this, SLOT(showTrayIcon(bool)));
 

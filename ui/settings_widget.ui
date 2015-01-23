@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>572</width>
-    <height>201</height>
+    <height>298</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -79,21 +79,81 @@
         </item>
        </layout>
       </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
+      <string>Import/Export</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <spacer name="verticalSpacer">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>User:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="cmbExportedUser"/>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnExportJson">
+          <property name="text">
+           <string>Export as JSON</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
@@ -107,6 +167,14 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>chkShowPasswords</tabstop>
+  <tabstop>chkTrayIcon</tabstop>
+  <tabstop>chkAutoLogout</tabstop>
+  <tabstop>spnAutoLogoutTimeout</tabstop>
+  <tabstop>cmbExportedUser</tabstop>
+  <tabstop>btnExportJson</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
@@ -116,8 +184,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>236</x>
-     <y>212</y>
+     <x>245</x>
+     <y>337</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -132,8 +200,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>304</x>
-     <y>212</y>
+     <x>313</x>
+     <y>337</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
@@ -200,8 +268,24 @@
      <y>105</y>
     </hint>
     <hint type="destinationlabel">
-     <x>639</x>
+     <x>571</x>
      <y>127</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnExportJson</sender>
+   <signal>clicked()</signal>
+   <receiver>SettingsWidget</receiver>
+   <slot>exportAsJsonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>512</x>
+     <y>203</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>569</x>
+     <y>238</y>
     </hint>
    </hints>
   </connection>
@@ -211,5 +295,6 @@
   <slot>showTrayIcon(bool)</slot>
   <slot>autoLogout(bool)</slot>
   <slot>autoLogoutValueChanged(int)</slot>
+  <slot>exportAsJsonClicked()</slot>
  </slots>
 </ui>

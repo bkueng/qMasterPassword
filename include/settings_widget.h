@@ -16,7 +16,10 @@
 #define SETTINGS_WIDGET_H
 
 #include <QDialog>
+#include <QMap>
+#include <QString>
 #include "app_settings.h"
+#include "user.h"
 
 namespace Ui {
 class SettingsWidget;
@@ -27,18 +30,25 @@ class SettingsWidget : public QDialog
 	Q_OBJECT
 
 public:
-	explicit SettingsWidget(ApplicationSettings& settings, QWidget *parent = 0);
+	explicit SettingsWidget(ApplicationSettings& settings,
+			const QMap<QString, UiUser>& users,
+			const QMap<CategoryId, QString>& categories,
+			QWidget *parent = 0);
 	~SettingsWidget();
 
 private:
 	void updateUi();
+	void exportJson(const UiUser& user, const QString& file_name);
 	Ui::SettingsWidget *ui;
 	ApplicationSettings& m_settings;
+	const QMap<QString, UiUser>& m_users;
+	const QMap<CategoryId, QString>& m_categories;
 private slots:
 	void showPWAfterLogin(bool show);
 	void showTrayIcon(bool show);
 	void autoLogout(bool activated);
 	void autoLogoutValueChanged(int value);
+	void exportAsJsonClicked();
 signals:
 	void showTrayIconChanged(bool visible);
 };
