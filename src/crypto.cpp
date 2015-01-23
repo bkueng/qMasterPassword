@@ -19,8 +19,10 @@
 #include "crypto.h"
 #include "crypto_functions.h"
 
-#if defined(__linux__) || defined(_WIN32) || defined(__APPLE__)
+#if defined(__linux__) || defined(__APPLE__)
 #include <arpa/inet.h>
+#elif defined(_WIN32)
+#include <winsock2.h>
 #else
 #error "unsupported platform: add include for htonl"
 #endif

@@ -11,7 +11,11 @@ CONFIG += debug_and_release \
 QT += widgets
 UI_DIR = ui
 
-LIBS += -lscrypt -lcrypto
+win32 {
+	LIBS += -lws2_32 -lscrypt -llibeay32
+} else {
+	LIBS += -lscrypt -lcrypto
+}
 ICON = icons/app_icon.png
 
 # Input

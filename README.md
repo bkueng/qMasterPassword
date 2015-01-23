@@ -25,7 +25,8 @@ on other platforms if the dependencies are met.
 #### Dependencies ####
 * Qt 5.2 or higher (see branch qt4.8 for older Qt version support)
 * OpenSSL (libcrypto library)
-* libscrypt library (https://github.com/technion/libscrypt)
+* libscrypt library (https://github.com/technion/libscrypt for Linux/OSX,
+  https://github.com/barrysteyn/scrypt-windows for Windows)
 
 
 #### Build ####
