@@ -323,11 +323,13 @@ void MainWindow::saveSettings() {
 
 	QByteArray categories_data;
 	QDataStream categories_stream(&categories_data, QIODevice::ReadWrite);
+	categories_stream.setVersion(QDataStream::Qt_4_8);
 	categories_stream << m_categories;
 	settings.setValue("data/categories", categories_data);
 
 	QByteArray user_data;
 	QDataStream stream(&user_data, QIODevice::ReadWrite);
+	stream.setVersion(QDataStream::Qt_4_8);
 	stream << m_users;
 	settings.setValue("data/users", user_data);
 	m_application_settings.saveSettings(settings);
@@ -340,6 +342,7 @@ void MainWindow::readSettings() {
 			settings.value("main_window/table_header_state").toByteArray());
 
     QDataStream categories_stream(settings.value("data/categories").toByteArray());
+	categories_stream.setVersion(QDataStream::Qt_4_8);
     categories_stream >> m_categories;
 	if (m_categories.isEmpty()) {
 		//add default categories
@@ -366,6 +369,7 @@ void MainWindow::readSettings() {
 	selectCategory(0);
 
     QDataStream stream(settings.value("data/users").toByteArray());
+	stream.setVersion(QDataStream::Qt_4_8);
     QString selected_user = settings.value("main_window/selected_user").toString();
     stream >> m_users;
     int selected_index = -1;
