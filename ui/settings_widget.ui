@@ -118,6 +118,13 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
+         <widget class="QPushButton" name="btnImportJson">
+          <property name="text">
+           <string>Import from JSON</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <spacer name="horizontalSpacer_2">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -184,8 +191,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>245</x>
-     <y>337</y>
+     <x>254</x>
+     <y>288</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -200,8 +207,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>313</x>
-     <y>337</y>
+     <x>322</x>
+     <y>288</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
@@ -289,6 +296,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>btnImportJson</sender>
+   <signal>clicked()</signal>
+   <receiver>SettingsWidget</receiver>
+   <slot>importFromJsonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>75</x>
+     <y>204</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>11</x>
+     <y>229</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>showPWAfterLogin(bool)</slot>
@@ -296,5 +319,6 @@
   <slot>autoLogout(bool)</slot>
   <slot>autoLogoutValueChanged(int)</slot>
   <slot>exportAsJsonClicked()</slot>
+  <slot>importFromJsonClicked()</slot>
  </slots>
 </ui>

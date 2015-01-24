@@ -118,6 +118,7 @@ void SettingsWidget::importFromJsonClicked() {
 		QString file_name = file_names[0];
 		try {
 			m_import_export.importJson(*user, file_name);
+			emit dataImported(user->getUserName());
 		} catch(Exception& e) {
 			switch (e.getError()) {
 			case EFILE_ERROR:

@@ -30,6 +30,18 @@
 
 using namespace std;
 
+void Site::setType(const std::string& type_str) {
+	if (type_str == "GeneratedMaximum") m_type = MPSiteTypeGeneratedMaximum;
+	else if (type_str == "GeneratedLong") m_type = MPSiteTypeGeneratedLong;
+	else if (type_str == "GeneratedMedium") m_type = MPSiteTypeGeneratedMedium;
+	else if (type_str == "GeneratedBasic") m_type = MPSiteTypeGeneratedBasic;
+	else if (type_str == "GeneratedShort") m_type = MPSiteTypeGeneratedShort;
+	else if (type_str == "GeneratedPIN") m_type = MPSiteTypeGeneratedPIN;
+	else if (type_str == "GeneratedName") m_type = MPSiteTypeGeneratedName;
+	else if (type_str == "GeneratedPhrase") m_type = MPSiteTypeGeneratedPhrase;
+	else THROW(EINVALID_PARAMETER);
+}
+
 MasterPassword::MasterPassword() {
 }
 

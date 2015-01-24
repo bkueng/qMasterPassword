@@ -37,6 +37,9 @@ public:
 			QWidget *parent = 0);
 	~SettingsWidget();
 
+signals:
+	void dataImported(QString user_name);
+
 private:
 	UiUser* selectedUser();
 	void updateUi();

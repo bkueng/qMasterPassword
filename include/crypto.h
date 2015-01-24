@@ -145,6 +145,7 @@ public:
 
 	MPSiteType getType() const { return m_type; }
 	void setType(MPSiteType type) { m_type = type; }
+	void setType(const std::string& type_str);
 
 	MPSiteVariant getVariant() const { return m_variant; }
 	void setVariant(MPSiteVariant variant) { m_variant = variant; }

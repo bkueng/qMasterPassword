@@ -572,6 +572,8 @@ void MainWindow::showSettingsWidget() {
 			m_import_export, this);
 	connect(&settings_widget, SIGNAL(showTrayIconChanged(bool)),
 			this, SLOT(showTrayIcon(bool)));
+	//on import we would need to update the ui. but simply logout is easier :)
+	connect(&settings_widget, SIGNAL(dataImported(QString)), this, SLOT(logout()));
 
 	if (settings_widget.exec() == 1) {
 		//nothing to do...
