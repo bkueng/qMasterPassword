@@ -202,7 +202,7 @@ void MainWindow::login() {
 			error_msg = tr("not logged in");
 			break;
 		}
-		QMessageBox::warning(this, tr("Cryptographic exception"),
+		QMessageBox::critical(this, tr("Cryptographic exception"),
 			tr("Error: %1.\n"
 			"Should it happen again, then something is seriously wrong with the program installation.").arg(error_msg));
 	}
@@ -230,7 +230,7 @@ void MainWindow::addUser() {
 	if (add_user.exec() == 1) { //accepted
 		QString user_name = add_user.userName();
 		if (m_users.find(user_name) != m_users.end()) {
-			QMessageBox::warning(this, tr("User exists"),
+			QMessageBox::critical(this, tr("User exists"),
 					tr("Error: user already exists."));
 			return;
 		}
