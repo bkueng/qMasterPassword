@@ -30,6 +30,7 @@
 #include "user.h"
 #include "ui_helpers.h"
 #include "app_settings.h"
+#include "import_export.h"
 
 namespace Ui {
 class MainWindow;
@@ -92,6 +93,7 @@ private:
 	QSystemTrayIcon* m_tray_icon = nullptr;
 	QAction* m_tray_icon_show_action = nullptr;
 	ApplicationSettings m_application_settings;
+	DataImportExport m_import_export;
 
 	int m_copy_column_idx;
 

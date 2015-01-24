@@ -32,7 +32,8 @@ using namespace std;
 #include <QCloseEvent>
 
 MainWindow::MainWindow(QWidget *parent) :
-		QMainWindow(parent), m_ui(new Ui::MainWindow) {
+		QMainWindow(parent), m_ui(new Ui::MainWindow),
+		m_import_export(m_categories) {
 	m_ui->setupUi(this);
 
 	m_logout_timer = new QTimer(this);
@@ -567,7 +568,8 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason) {
 	}
 }
 void MainWindow::showSettingsWidget() {
-	SettingsWidget settings_widget(m_application_settings, m_users, m_categories, this);
+	SettingsWidget settings_widget(m_application_settings, m_users,
+			m_import_export, this);
 	connect(&settings_widget, SIGNAL(showTrayIconChanged(bool)),
 			this, SLOT(showTrayIcon(bool)));
 

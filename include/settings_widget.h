@@ -20,6 +20,7 @@
 #include <QString>
 #include "app_settings.h"
 #include "user.h"
+#include "import_export.h"
 
 namespace Ui {
 class SettingsWidget;
@@ -31,24 +32,25 @@ class SettingsWidget : public QDialog
 
 public:
 	explicit SettingsWidget(ApplicationSettings& settings,
-			const QMap<QString, UiUser>& users,
-			const QMap<CategoryId, QString>& categories,
+			QMap<QString, UiUser>& users,
+			DataImportExport& import_export,
 			QWidget *parent = 0);
 	~SettingsWidget();
 
 private:
+	UiUser* selectedUser();
 	void updateUi();
-	void exportJson(const UiUser& user, const QString& file_name);
 	Ui::SettingsWidget *ui;
 	ApplicationSettings& m_settings;
-	const QMap<QString, UiUser>& m_users;
-	const QMap<CategoryId, QString>& m_categories;
+	QMap<QString, UiUser>& m_users;
+	DataImportExport& m_import_export;
 private slots:
 	void showPWAfterLogin(bool show);
 	void showTrayIcon(bool show);
 	void autoLogout(bool activated);
 	void autoLogoutValueChanged(int value);
 	void exportAsJsonClicked();
+	void importFromJsonClicked();
 signals:
 	void showTrayIconChanged(bool visible);
 };
