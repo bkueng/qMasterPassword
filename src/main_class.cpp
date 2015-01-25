@@ -91,10 +91,11 @@ void CMain::printHelp()
 }
 
 
-void CMain::exec()
+int CMain::exec()
 {
 
 	ASSERT_THROW(m_parameters, ENOT_INITIALIZED);
+	int ret = 0;
 	
 	switch (m_cl_parse_result) {
 	case Parse_none_found:
@@ -103,6 +104,7 @@ void CMain::exec()
 	case Parse_unknown_command:
 		wrongUsage("Unknown command: %s",
 				   m_parameters->getUnknownCommand().c_str());
+		ret = -1;
 		break;
 	case Parse_success:
 		if (m_parameters->getSwitch("help")) {
@@ -110,10 +112,11 @@ void CMain::exec()
 		} else if (m_parameters->getSwitch("version")) {
 			printVersion();
 		} else {
-			processArgs();
+			ret = processArgs();
 		}
 		break;
 	}
+	return ret;
 }
 
 void CMain::printVersion()
@@ -138,7 +141,7 @@ void CMain::wrongUsage(const char* fmt, ...)
 }
 
 
-void CMain::processArgs()
+int CMain::processArgs()
 {
 
 	//set console log level
@@ -167,7 +170,7 @@ void CMain::processArgs()
 	MainWindow main_window;
 	if (!start_minimized || !main_window.trayIconEnabled())
 		main_window.show();
-	app.exec();
+	return app.exec();
 }
 
 

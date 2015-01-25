@@ -17,6 +17,7 @@
 
 int main(int argc, char* argv[])
 {
+	int ret = 0;
 	try {
 	
 #ifdef _DEBUG
@@ -33,11 +34,11 @@ int main(int argc, char* argv[])
 		
 		CMain main;
 		main.init(argc, argv);
-		main.exec();
+		ret = main.exec();
 	} catch (Exception& e) {
 		e.log();
-		return -1;
+		ret = -1;
 	}
-	return 0;
+	return ret;
 }
 
