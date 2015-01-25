@@ -35,7 +35,7 @@ public:
 	/* parse the command line parameters */
 	void init(int argc, char* argv[]);
 	
-	void exec();
+	int exec();
 	
 private:
 	void parseCommandLine(int argc, char* argv[]);
@@ -43,7 +43,7 @@ private:
 	void wrongUsage(const char* fmt, ...);
 	void printVersion();
 	
-	void processArgs();
+	int processArgs();
 	
 	
 	CCommandLineParser* m_parameters;
