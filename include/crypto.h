@@ -149,6 +149,7 @@ public:
 
 	MPSiteVariant getVariant() const { return m_variant; }
 	void setVariant(MPSiteVariant variant) { m_variant = variant; }
+	void setVariant(const std::string& variant);
 
 private:
 	std::string m_name;

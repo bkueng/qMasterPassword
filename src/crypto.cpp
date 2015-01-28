@@ -42,6 +42,14 @@ void Site::setType(const std::string& type_str) {
 	else THROW(EINVALID_PARAMETER);
 }
 
+void Site::setVariant(const std::string& variant) {
+	if (variant == "Password") m_variant = MPSiteVariantPassword;
+	else if (variant == "Login") m_variant = MPSiteVariantLogin;
+	else if (variant == "Answer") m_variant = MPSiteVariantAnswer;
+	else THROW(EINVALID_PARAMETER);
+}
+
+
 MasterPassword::MasterPassword() {
 }
 
