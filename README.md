@@ -42,6 +42,12 @@ Keyboard: When the list view has focus:
 - [J]/[K]: Select next/previous item
 
 
+#### Testing ####
+`$ make debug`  
+Run unit tests:  
+`$ ./qMasterPassword --test test/tests.xml`
+
+
 #### Miscellaneous ####
 if you have any improvements or suggestions you are welcome to implement them
 and/or contact me.

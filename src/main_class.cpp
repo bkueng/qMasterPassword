@@ -25,6 +25,9 @@
 
 #include "crypto.h"
 
+#ifdef TESTING_SUPPORT
+#include "test/test.h"
+#endif
 
 
 CMain::CMain() : m_parameters(NULL), m_cl_parse_result(Parse_none_found)
@@ -63,6 +66,10 @@ void CMain::parseCommandLine(int argc, char* argv[])
 	m_parameters->addSwitch("no-file-log");
 	
 	m_parameters->addSwitch("start-minimized");
+
+#ifdef TESTING_SUPPORT
+	m_parameters->addParam("test");
+#endif
 	
 	m_cl_parse_result = m_parameters->parse();
 	
@@ -87,6 +94,9 @@ void CMain::printHelp()
 		   "\n"
 		   "  --start-minimized               start with hidden main window\n"
 		   "                                  (if tray icon enabled)\n"
+#ifdef TESTING_SUPPORT
+		   "  --test <xml-file>               run unit test using xml-file\n"
+#endif
 		  );
 }
 
@@ -163,7 +173,16 @@ int CMain::processArgs()
 		if (CLog::parseLevel(level, log_level))
 			CLog::getInstance().setFileLevel(log_level);
 	}
-	
+
+#ifdef TESTING_SUPPORT
+	string test_file;
+	if (m_parameters->getParam("test", test_file)) {
+		LOG(DEBUG, "Running tests on file %s", test_file.c_str());
+		UnitTests test(test_file);
+		return QTest::qExec(&test);
+	}
+#endif
+
 	bool start_minimized = m_parameters->getSwitch("start-minimized");
 
 	QApplication app(m_argc, m_argv);
