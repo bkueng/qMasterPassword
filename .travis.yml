@@ -1,14 +1,17 @@
+language: cpp
 install:
     - sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
+    - sudo add-apt-repository --yes ppa:jpabel/tokentube
+    - sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
     - sudo apt-get update -qq
     - sudo apt-get install qtbase5-dev qtdeclarative5-dev libqt5webkit5-dev libsqlite3-dev
     - sudo apt-get install qt5-default qttools5-dev-tools libqt5network5
-    - wget http://mirrors.kernel.org/ubuntu/pool/universe/libs/libscrypt/libscrypt0_1-2ubuntu2_amd64.deb
-    - sudo dpkg -i libscrypt0_1-2ubuntu2_amd64.deb
-    - wget http://mirrors.kernel.org/ubuntu/pool/universe/libs/libscrypt/libscrypt-dev_1-2ubuntu2_amd64.deb
-    - sudo dpkg -i libscrypt-dev_1-2ubuntu2_amd64.deb
-      #    - sudo apt-get install libscrypt0 libscrypt-dev
+    - sudo apt-get install libscrypt0 libscrypt-dev
+    - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
+    - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 90
 script:
-    - qmake
-    - make debug
+    - qmake && make debug
     - ./qMasterPassword --test test/tests.xml
+branches:
+    only:
+        - ci-travis
