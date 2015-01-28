@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/bkueng/qMasterPassword.svg)](https://travis-ci.org/bkueng/qMasterPassword)
+
 ### qMasterPassword ###
 
 qMasterPassword is a password manager based on Qt. Access all your passwords
