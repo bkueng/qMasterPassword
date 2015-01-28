@@ -77,7 +77,7 @@ void DataImportExport::importJson(UiUser& user, const QString& file_name) {
 		QString site_name = json_site["siteName"].toString();
 		QString user_name = json_site["userName"].toString();
 		bool ok;
-		uint32_t site_counter = json_site["siteCounter"].toString().toInt(&ok);
+		uint32_t site_counter = json_site["siteCounter"].toString().toUInt(&ok);
 		if (!ok) site_counter = 1;
 		QString comment = json_site["comment"].toString();
 		if (site_name != "") {
