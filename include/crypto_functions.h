@@ -29,7 +29,9 @@ extern "C" {
 }
 #define libscrypt_scrypt crypto_scrypt
 #else
+extern "C"{
 #include <libscrypt.h>
+}
 #endif
 
 // * crypto_scrypt(passwd, passwdlen, salt, saltlen, N, r, p, buf, buflen):
