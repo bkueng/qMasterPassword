@@ -29,7 +29,10 @@ SettingsWidget::SettingsWidget(ApplicationSettings& settings,
 	for (const auto& user : m_users.keys()) {
 		ui->cmbExportedUser->addItem(user);
 	}
-	if (m_users.isEmpty()) ui->btnExportJson->setEnabled(false);
+	if (m_users.isEmpty()) {
+		ui->btnExportJson->setEnabled(false);
+		ui->btnImportJson->setEnabled(false);
+	}
 
 	ui->chkShowPasswords->setChecked(m_settings.show_pw_after_login);
 	ui->chkTrayIcon->setChecked(m_settings.show_systray_icon);
