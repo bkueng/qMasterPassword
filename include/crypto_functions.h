@@ -22,7 +22,14 @@
 #include <stdint.h>
 
 #include <openssl/hmac.h>
+#ifdef WIN32
+extern "C" {
+#include <crypto/crypto_scrypt.h>
+}
+#define libscrypt_scrypt crypto_scrypt
+#else
 #include <libscrypt.h>
+#endif
 
 // * crypto_scrypt(passwd, passwdlen, salt, saltlen, N, r, p, buf, buflen):
 /**
