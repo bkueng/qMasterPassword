@@ -64,4 +64,4 @@ SOURCES += src/add_user.cpp \
 		   src/settings_widget.cpp \
 		   src/user.cpp
 RESOURCES += ui/resources.qrc
-
+win32:RC_FILE = icons/app_icon.rc

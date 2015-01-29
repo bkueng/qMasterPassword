@@ -9,6 +9,8 @@
 /release
 /debug
 
+/windows_build
+
 *.log
 
 /.cproject
