@@ -27,7 +27,7 @@ using namespace std;
 
 
 #define VERSION_MAJOR	0	/*<! @brief Major version number. */
-#define VERSION_MINOR	1	/*<! @brief Minor version number. */
+#define VERSION_MINOR	9	/*<! @brief Minor version number. */
 #define VERSION_PATCH	0	/*<! @brief patch number. */
 
 
