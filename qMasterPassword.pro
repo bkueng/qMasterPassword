@@ -27,8 +27,41 @@ win32 {
 ICON = icons/app_icon.png
 
 # Input
-HEADERS   += include/*.h
-SOURCES   += src/*.cpp
-FORMS     += ui/*.ui
+HEADERS += include/add_user.h \
+		   include/app_settings.h \
+		   include/command_line.h \
+		   include/config.h \
+		   include/crypto.h \
+		   include/crypto_functions.h \
+		   include/edit_site_widget.h \
+		   include/exception.h \
+		   include/global.h \
+		   include/import_export.h \
+		   include/logging.h \
+		   include/main_class.h \
+		   include/main_window.h \
+		   include/pushbutton_delegate.h \
+		   include/settings_widget.h \
+		   include/ui_helpers.h \
+		   include/user.h \
+		   include/version.h
+FORMS += ui/add_user.ui \
+		 ui/edit_site_widget.ui \
+		 ui/main_window.ui \
+		 ui/settings_widget.ui
+SOURCES += src/add_user.cpp \
+		   src/command_line.cpp \
+		   src/crypto.cpp \
+		   src/edit_site_widget.cpp \
+		   src/exception.cpp \
+		   src/global.cpp \
+		   src/import_export.cpp \
+		   src/logging.cpp \
+		   src/main.cpp \
+		   src/main_class.cpp \
+		   src/main_window.cpp \
+		   src/pushbutton_delegate.cpp \
+		   src/settings_widget.cpp \
+		   src/user.cpp
 RESOURCES += ui/resources.qrc
 
