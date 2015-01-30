@@ -19,8 +19,9 @@ Android or iOS.
 See also http://masterpasswordapp.com/what.html to get more familiar with the
 concept and reasons why to use it.
 
-qMasterPassword is developed on Linux, but it should be easy to get it to work
-on other platforms if the dependencies are met.
+qMasterPassword is developed on Linux and also tested on Windows. For Windows
+there are prebuilt binaries under
+[releases](https://github.com/bkueng/qMasterPassword/releases).
 
 ![screenshot](screenshots/main_window.png)
 
