@@ -15,7 +15,7 @@ script:
 branches:
     only:
         - ci-travis
-        - coverty
+        - coverity
 
 env:
   global:
@@ -29,5 +29,5 @@ addons:
     notification_email: beat-kueng@gmx.net
     build_command_prepend: "qmake"
     build_command:   "make -j 4"
-    branch_pattern: coverty
+    branch_pattern: coverity
 
