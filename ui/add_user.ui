@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>452</width>
-    <height>159</height>
+    <width>426</width>
+    <height>172</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -70,6 +70,13 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="chkCheckPassword">
+     <property name="text">
+      <string>Check Password when logging in</string>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">

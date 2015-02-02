@@ -44,3 +44,7 @@ void AddUser::checkInputValidity() {
 			&& ui->txtPassword->text() == ui->txtPasswordRepeat->text();
 	ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(is_valid);
 }
+
+bool AddUser::checkPasswordOnLogin() const {
+	return ui->chkCheckPassword->isChecked();
+}

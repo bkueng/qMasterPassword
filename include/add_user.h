@@ -32,6 +32,8 @@ public:
 	QString password() const;
 	QString userName() const;
 
+	bool checkPasswordOnLogin() const;
+
 private:
 	Ui::AddUser *ui;
 private slots:

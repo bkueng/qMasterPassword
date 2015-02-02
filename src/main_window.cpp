@@ -247,6 +247,19 @@ void MainWindow::addUser() {
 			return;
 		}
 		UiUser user(user_name);
+		if (add_user.checkPasswordOnLogin()) {
+			try {
+				user.userData().setStorePasswordHash(
+					add_user.password().toUtf8().constData());
+			} catch(CryptoException& e) {
+				QMessageBox::critical(this, tr("Cryptographic exception"),
+					tr("Failed to generate password hash. password check will be disabled."));
+				user.userData().disableStorePasswordHash();
+			}
+		} else {
+			user.userData().disableStorePasswordHash();
+		}
+
 		m_users.insert(user_name, user);
 		m_ui->txtPassword->setText(add_user.password());
 		m_ui->cmbUserName->addItem(user_name);
