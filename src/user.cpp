@@ -15,6 +15,7 @@
 
 #include "user.h"
 #include <QDataStream>
+#include <QByteArray>
 using namespace std;
 
 QDataStream& operator <<(QDataStream& stream, const UiSite& site) {
@@ -50,8 +51,18 @@ QDataStream& operator >>(QDataStream& stream, UiSite& site) {
 }
 
 QDataStream& operator <<(QDataStream& stream, const UiUser& user) {
-	stream << (qint8)0; //stream version
+	stream << (qint8)1; //stream version
 	stream << user.getUserName();
+	bool store_hash = user.userData().storePasswordHash();
+	stream << store_hash;
+	if (store_hash) {
+		const string& hash = user.userData().getPasswordHash();
+		QByteArray hash_array(hash.c_str(), hash.length());
+		stream << hash_array;
+		const string& salt = user.userData().getSalt();
+		QByteArray salt_array(salt.c_str(), salt.length());
+		stream << salt_array;
+	}
 	stream << (qint32)user.getSites().count();
 	for (const auto& site : user.getSites()) {
 		stream << *site;
@@ -64,8 +75,24 @@ QDataStream& operator >>(QDataStream& stream, UiUser& user) {
 	qint32 site_count;
 	QString user_name;
 	stream >> version;
-	DEBUG_ASSERT1(version == 0);
-	stream >> user_name >> site_count;
+	DEBUG_ASSERT1(version == 0 || version == 1);
+	stream >> user_name;
+	if (version == 1) {
+		bool store_hash;
+		stream >> store_hash;
+		if (store_hash) {
+			QByteArray hash_array;
+			stream >> hash_array;
+			QByteArray salt_array;
+			stream >> salt_array;
+			user.userData().setStoredHashData(
+					string(hash_array.constData(), hash_array.length()),
+					string(salt_array.constData(), salt_array.length()));
+		} else {
+			user.userData().disableStorePasswordHash();
+		}
+	}
+	stream >> site_count;
 	for (int i = 0; i < site_count; ++i) {
 		shared_ptr<UiSite> site = make_shared<UiSite>();
 		stream >> *site;

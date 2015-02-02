@@ -22,6 +22,7 @@
 #include <stdint.h>
 
 #include <openssl/hmac.h>
+#include <openssl/rand.h>
 #ifdef WIN32
 extern "C" {
 #include <crypto/crypto_scrypt.h>
@@ -73,6 +74,19 @@ static inline const unsigned char* HMAC_SHA256(const uint8_t *key, size_t key_le
 
 	DEBUG_ASSERT1(buffer_len == 32);
 
+	return ret;
+}
+
+/**
+ * secure random number generator
+ * @param buffer
+ * @param num
+ * @return 1 on success, 0 if unsecure pseudo numbers were used, -1 on error
+ */
+static inline int secureRandomBytes(unsigned char* buffer, int num) {
+	int ret = RAND_bytes(buffer, num);
+	if (ret != 1)
+		return RAND_pseudo_bytes(buffer, num);
 	return ret;
 }
 

@@ -18,6 +18,9 @@
 
 #include "crypto.h"
 #include "crypto_functions.h"
+#include "logging.h"
+
+#include <future>
 
 #if defined(__linux__) || defined(__APPLE__)
 #include <arpa/inet.h>
@@ -50,15 +53,62 @@ void Site::setVariant(const std::string& variant) {
 }
 
 
+void User::setStorePasswordHash(const std::string& password) {
+	m_store_password_hash = true;
+
+	//generate salt
+	const int salt_length = 32;
+	unsigned char salt_buffer[salt_length];
+	int ret = secureRandomBytes(salt_buffer, salt_length);
+	if (ret == 0) {
+		LOG(WARN, "Unsecure random bytes used for password salt!");
+	} else if (ret == -1) {
+		throw CryptoException(CryptoException::Type_random_failed);
+	}
+	m_salt = string((char*)salt_buffer, salt_length);
+
+	m_password_hash = hash(password, m_salt);
+}
+
+void User::setStoredHashData(const std::string& hash, const std::string& salt) {
+	m_store_password_hash = true;
+	m_password_hash = hash;
+	m_salt = salt;
+}
+
+std::string User::hash(const string& password, const string& salt) {
+
+	const int hash_length = 32;
+	unsigned char hash_buffer[hash_length];
+	int ret = scrypt((const uint8_t*) password.c_str(), password.length(),
+			(const uint8_t*) salt.c_str(), salt.length(),
+			MP_N, MP_r, MP_p, hash_buffer, hash_length);
+
+	if (ret != 0) throw CryptoException(CryptoException::Type_scrypt_failed);
+
+	return string((char*)hash_buffer, hash_length);
+}
+
+
 MasterPassword::MasterPassword() {
 }
 
 MasterPassword::~MasterPassword() {
 }
 
-void MasterPassword::login(const std::string& user_name,
+bool MasterPassword::login(const User& user,
 		const std::string& password) {
 	logout();
+
+	//check password
+	//calling scrypt is quite expensive & we need to do it twice if pw check is
+	//enabled. so do one of the scrypt calls in a background thread (at slight
+	//cost of threadding overhead).
+	//look at that cool syntax: C++11 rocks! :)
+	future<string> hash;
+	if (user.storePasswordHash()) {
+		hash = async(launch::async, User::hash, password, user.getSalt());
+	}
 
 	//calculate master key
 	string key_scope = getScope(MPSiteVariantPassword);
@@ -66,16 +116,24 @@ void MasterPassword::login(const std::string& user_name,
 	// Calculate the master key salt
 	// master_key_salt = key_scope . #user_name . user_name
 	string master_key_salt = key_scope;
-	addIntToString(master_key_salt, user_name.length());
-	master_key_salt += user_name;
+	addIntToString(master_key_salt, user.getUserName().length());
+	master_key_salt += user.getUserName();
 
 	int ret = scrypt((const uint8_t*) password.c_str(), password.length(),
 			(const uint8_t*) master_key_salt.c_str(), master_key_salt.length(),
 			MP_N, MP_r, MP_p, m_master_key, MP_dkLen);
 
+	if (user.storePasswordHash()) {
+		if (!hash.valid())
+			throw CryptoException(CryptoException::Type_thread_exception);
+		if (hash.get() != user.getPasswordHash())
+			return false;
+	}
+
 	if (ret != 0) throw CryptoException(CryptoException::Type_scrypt_failed);
 
 	m_is_logged_in = true;
+	return true;
 }
 
 void MasterPassword::logout() {

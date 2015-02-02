@@ -56,15 +56,21 @@ QDataStream &operator>>(QDataStream &, UiSite &);
  */
 class UiUser {
 public:
-	UiUser(const QString& user_name="") : m_user_name(user_name) {}
+	UiUser(const QString& user_name="")
+		: m_user(std::string(user_name.toUtf8().constData())) {}
 
 	const QList<std::shared_ptr<UiSite>>& getSites() const { return m_sites; }
 	QList<std::shared_ptr<UiSite>>& getSites() { return m_sites; }
 
-	const QString& getUserName() const { return m_user_name; }
-	void setUserName(const QString& userName) { m_user_name = userName; }
+	QString getUserName() const {
+		return QString::fromUtf8(m_user.getUserName().c_str()); }
+	void setUserName(const QString& userName) {
+		m_user.setUserName(userName.toUtf8().constData()); }
+
+	const User& userData() const { return m_user; }
+	User& userData() { return m_user; }
 private:
-	QString m_user_name;
+	User m_user;
 	QList<std::shared_ptr<UiSite>> m_sites;
 };
 

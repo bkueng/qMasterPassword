@@ -24,7 +24,8 @@ EditSiteWidget::EditSiteWidget(const QMap<CategoryId, QString>& categories,
 	m_categories(categories)
 {
 	ui->setupUi(this);
-	m_sample_password.login("test", "topsecret");
+	m_sample_user.setUserName("test");
+	m_sample_password.login(m_sample_user, "topsecret");
 
 	for (int i = 0; i < MPSiteTypeCount(); ++i) {
 		std::string str_type = MPSiteTypeToString(MPSiteTypeFromIdx(i));

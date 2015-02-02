@@ -47,6 +47,7 @@ private:
 	Ui::EditSiteWidget *ui;
 	UiSite& m_site;
 	const Type m_type;
+	User m_sample_user;
 	MasterPassword m_sample_password;
 	const QMap<CategoryId, QString>& m_categories;
 

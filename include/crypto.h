@@ -117,7 +117,9 @@ public:
 	enum CryptoExceptionType {
 		Type_scrypt_failed = 0,
 		Type_HMAC_SHA256_failed,
-		Type_not_logged_in
+		Type_not_logged_in,
+		Type_random_failed,
+		Type_thread_exception,
 	};
 	CryptoException(CryptoExceptionType exception_type)
 		: type(exception_type) {}
@@ -164,6 +166,32 @@ private:
 	friend class MasterPassword;
 };
 
+/**
+ ** class User
+ */
+class User {
+public:
+	User(const std::string& user_name="") : m_user_name(user_name) {}
+
+	const std::string& getPasswordHash() const { return m_password_hash; }
+	const std::string& getSalt() const { return m_salt; }
+
+	bool storePasswordHash() const { return m_store_password_hash; }
+	void disableStorePasswordHash() { m_store_password_hash = false; m_password_hash = ""; }
+	void setStorePasswordHash(const std::string& password);
+	void setStoredHashData(const std::string& hash, const std::string& salt);
+
+	const std::string& getUserName() const { return m_user_name; }
+	void setUserName(const std::string& userName) { m_user_name = userName; }
+
+	static std::string hash(const string& password, const string& salt);
+private:
+	std::string m_user_name;
+
+	bool m_store_password_hash = false; /// if hash is stored, pw is verified on login
+	std::string m_password_hash;
+	std::string m_salt;
+};
 
 /**
  ** class MasterPassword
@@ -174,7 +202,10 @@ public:
 	MasterPassword();
 	~MasterPassword();
 
-	void login(const std::string& user_name, const std::string& password);
+	/**
+	 * @return true if successfully logged in, false if wrong password
+	 */
+	bool login(const User& user, const std::string& password);
 	void logout();
 	bool isLoggedIn() const { return m_is_logged_in; }
 

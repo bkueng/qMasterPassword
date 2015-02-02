@@ -173,7 +173,16 @@ void MainWindow::login() {
 	try {
 		m_current_user = &iter_user.value();
 		m_master_password.logout();
-		m_master_password.login(user_name.toUtf8().constData(), password.toUtf8().constData());
+		bool logged_in = m_master_password.login(m_current_user->userData(),
+				password.toUtf8().constData());
+		if (!logged_in) {
+			m_current_user = nullptr;
+			m_ui->txtPassword->selectAll();
+			m_ui->txtPassword->setFocus();
+			QMessageBox::critical(this, tr("Login Failed"),
+					tr("Wrong Password"));
+			return;
+		}
 		m_ui->btnLoginLogout->setText(tr("Logout"));
 		enableUI(true);
 		clearSitesUI();
@@ -200,6 +209,9 @@ void MainWindow::login() {
 			break;
 		case CryptoException::Type_not_logged_in:
 			error_msg = tr("not logged in");
+			break;
+		case CryptoException::Type_thread_exception:
+			error_msg = tr("Multithreadding exception");
 			break;
 		}
 		QMessageBox::critical(this, tr("Cryptographic exception"),

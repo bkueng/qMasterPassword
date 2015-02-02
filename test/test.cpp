@@ -115,9 +115,9 @@ void UnitTests::runTests() {
 
 	MasterPassword mp;
 	Site site;
+	User user_data(user_name.toUtf8().constData());
 	try {
-		mp.login(user_name.toUtf8().constData(),
-				master_password.toUtf8().constData());
+		mp.login(user_data, master_password.toUtf8().constData());
 		site.setName(site_name.toUtf8().constData());
 		site.setCounter(site_counter);
 		site.setVariant(site_variant.toUtf8().constData());
