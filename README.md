@@ -44,6 +44,7 @@ Keyboard: When the list view has focus:
 - [Y]/[Space]: copy password of selected entry to clipboard
 - [/]: focus the filter input
 - [J]/[K]: Select next/previous item
+- [Q]: Logout
 
 
 #### Testing ####

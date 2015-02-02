@@ -335,6 +335,9 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event) {
 		case Qt::Key_K: //select previous
 			changeSelection(-1);
 			break;
+		case Qt::Key_Q:
+			logout();
+			break;
 		default:
 			handled_key = false;
 			break;
