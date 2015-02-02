@@ -29,6 +29,17 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="btnEditUser">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="resources.qrc">
+          <normaloff>:/user_edit.png</normaloff>:/user_edit.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="btnDeleteUser">
         <property name="text">
          <string/>
@@ -231,6 +242,20 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <tabstops>
+  <tabstop>btnAddUser</tabstop>
+  <tabstop>btnEditUser</tabstop>
+  <tabstop>btnDeleteUser</tabstop>
+  <tabstop>cmbUserName</tabstop>
+  <tabstop>txtPassword</tabstop>
+  <tabstop>btnLoginLogout</tabstop>
+  <tabstop>btnSettings</tabstop>
+  <tabstop>txtFilter</tabstop>
+  <tabstop>btnAddSite</tabstop>
+  <tabstop>btnEditSite</tabstop>
+  <tabstop>btnDeleteSite</tabstop>
+  <tabstop>tblSites</tabstop>
+ </tabstops>
  <resources>
   <include location="resources.qrc"/>
  </resources>
@@ -274,8 +299,8 @@
    <slot>deleteUser()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>106</x>
-     <y>49</y>
+     <x>198</x>
+     <y>64</y>
     </hint>
     <hint type="destinationlabel">
      <x>689</x>
@@ -411,6 +436,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>btnEditUser</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>editUser()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>104</x>
+     <y>47</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>212</x>
+     <y>24</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>loginLogoutClicked()</slot>
@@ -421,5 +462,6 @@
   <slot>editSite()</slot>
   <slot>filterTextChanged(QString)</slot>
   <slot>showSettingsWidget()</slot>
+  <slot>editUser()</slot>
  </slots>
 </ui>

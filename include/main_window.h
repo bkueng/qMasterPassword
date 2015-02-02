@@ -102,6 +102,7 @@ private slots:
 	void logout();
 	void loginLogoutClicked();
 	void addUser();
+	void editUser();
 	void deleteUser();
 	void addSite();
 	void deleteSite();

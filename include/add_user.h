@@ -16,6 +16,7 @@
 #define ADD_USER_H
 
 #include <QDialog>
+#include "user.h"
 
 namespace Ui {
 class AddUser;
@@ -26,11 +27,18 @@ class AddUser : public QDialog
 	Q_OBJECT
 
 public:
-	explicit AddUser(QWidget *parent = 0);
+	enum Type {
+		Type_edit,
+		Type_new
+	};
+	explicit AddUser(Type type, QWidget *parent = 0);
 	~AddUser();
 
 	QString password() const;
 	QString userName() const;
+
+	void setData(const UiUser& user);
+	void applyData(UiUser& user);
 
 	bool checkPasswordOnLogin() const;
 

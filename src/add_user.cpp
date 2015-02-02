@@ -16,14 +16,20 @@
 #include "ui_add_user.h"
 
 #include <QPushButton>
+#include <QMessageBox>
 
-AddUser::AddUser(QWidget *parent) :
+AddUser::AddUser(Type type, QWidget *parent) :
 	QDialog(parent),
 	ui(new Ui::AddUser)
 {
 	ui->setupUi(this);
 	setFixedSize(size());
 	checkInputValidity();
+
+	if (type == Type_edit) {
+		ui->txtUserName->setEnabled(false);
+		setWindowTitle(tr("Edit User"));
+	}
 }
 
 AddUser::~AddUser()
@@ -38,6 +44,21 @@ QString AddUser::userName() const {
 	return ui->txtUserName->text();
 }
 
+void AddUser::applyData(UiUser& user) {
+	if (ui->chkCheckPassword->isChecked()) {
+		try {
+			user.userData().setStorePasswordHash(
+				ui->txtPassword->text().toUtf8().constData());
+		} catch(CryptoException& e) {
+			QMessageBox::critical(this, tr("Cryptographic exception"),
+				tr("Failed to generate password hash. password check will be disabled."));
+			user.userData().disableStorePasswordHash();
+		}
+	} else {
+		user.userData().disableStorePasswordHash();
+	}
+}
+
 void AddUser::checkInputValidity() {
 	bool is_valid = ui->txtUserName->text().length() > 0
 			&& ui->txtPassword->text().length() > 0
@@ -47,4 +68,9 @@ void AddUser::checkInputValidity() {
 
 bool AddUser::checkPasswordOnLogin() const {
 	return ui->chkCheckPassword->isChecked();
+}
+
+void AddUser::setData(const UiUser& user) {
+	ui->txtUserName->setText(user.getUserName());
+	ui->chkCheckPassword->setChecked(user.userData().storePasswordHash());
 }

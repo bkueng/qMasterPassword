@@ -43,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	initSitesView();
 	readSettings();
 	m_ui->btnDeleteUser->setEnabled(m_ui->cmbUserName->count() > 0);
+	m_ui->btnEditUser->setEnabled(m_ui->cmbUserName->count() > 0);
 	enableUI(false);
 	showTrayIcon(m_application_settings.show_systray_icon);
 	setWindowIcon(QIcon(":/app_icon.png"));
@@ -238,7 +239,7 @@ void MainWindow::enableUI(bool logged_in) {
 }
 
 void MainWindow::addUser() {
-	AddUser add_user(this);
+	AddUser add_user(AddUser::Type_new, this);
 	if (add_user.exec() == 1) { //accepted
 		QString user_name = add_user.userName();
 		if (m_users.find(user_name) != m_users.end()) {
@@ -247,25 +248,29 @@ void MainWindow::addUser() {
 			return;
 		}
 		UiUser user(user_name);
-		if (add_user.checkPasswordOnLogin()) {
-			try {
-				user.userData().setStorePasswordHash(
-					add_user.password().toUtf8().constData());
-			} catch(CryptoException& e) {
-				QMessageBox::critical(this, tr("Cryptographic exception"),
-					tr("Failed to generate password hash. password check will be disabled."));
-				user.userData().disableStorePasswordHash();
-			}
-		} else {
-			user.userData().disableStorePasswordHash();
-		}
+		add_user.applyData(user);
 
 		m_users.insert(user_name, user);
 		m_ui->txtPassword->setText(add_user.password());
 		m_ui->cmbUserName->addItem(user_name);
 		m_ui->cmbUserName->setCurrentIndex(m_ui->cmbUserName->count() - 1);
 		m_ui->btnDeleteUser->setEnabled(true);
+		m_ui->btnEditUser->setEnabled(true);
 		login();
+	}
+}
+void MainWindow::editUser() {
+	AddUser user_widget(AddUser::Type_edit, this);
+
+	QString user_name = m_ui->cmbUserName->currentText();
+	auto iter_user = m_users.find(user_name);
+	if (iter_user == m_users.end())
+		return;
+	UiUser& user = iter_user.value();
+	user_widget.setData(user);
+
+	if (user_widget.exec() == 1) { //accepted
+		user_widget.applyData(user);
 	}
 }
 
@@ -283,8 +288,10 @@ void MainWindow::deleteUser() {
 			m_users.remove(user_name);
 		}
 	}
-	if (m_ui->cmbUserName->count() == 0)
+	if (m_ui->cmbUserName->count() == 0) {
 		m_ui->btnDeleteUser->setEnabled(false);
+		m_ui->btnEditUser->setEnabled(false);
+	}
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
