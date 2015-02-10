@@ -42,6 +42,8 @@ QWidget* PushButtonDelegate::createEditor(QWidget* parent,
 	btn_copy->setFixedWidth(btn_copy->sizeHint().width());
 	connect(btn_copy, SIGNAL(clicked()), &m_main_window,
 			SLOT(copyPWToClipboardClicked()));
+	btn_copy->setFocusPolicy(Qt::NoFocus);
+	btn_copy->setFlat(true);
 
 	QPushButton* btn_show = new UserPushButton(table_item->site(), "", parent);
 	btn_show->setIcon(QIcon(table_item->site().password_visible ?
@@ -49,6 +51,8 @@ QWidget* PushButtonDelegate::createEditor(QWidget* parent,
 	btn_show->setFixedWidth(btn_show->sizeHint().width());
 	connect(btn_show, SIGNAL(clicked()), &m_main_window,
 			SLOT(showHidePWClicked()));
+	btn_show->setFocusPolicy(Qt::NoFocus);
+	btn_show->setFlat(true);
 
 	QHBoxLayout* layout = new QHBoxLayout(parent);
 	layout->setMargin(0);
