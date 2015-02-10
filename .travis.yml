@@ -14,7 +14,7 @@ script:
     - ./qMasterPassword --test test/tests.xml
 branches:
     only:
-        - ci-travis
+        - travis-ci
         - coverity
 
 env:
