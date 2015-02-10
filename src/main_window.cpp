@@ -19,6 +19,7 @@
 #include "logging.h"
 #include "pushbutton_delegate.h"
 #include "settings_widget.h"
+#include "version.h"
 
 #include <iostream>
 using namespace std;
@@ -30,6 +31,7 @@ using namespace std;
 #include <QStandardItem>
 #include <QClipboard>
 #include <QCloseEvent>
+#include <QtGlobal>
 
 MainWindow::MainWindow(QWidget *parent) :
 		QMainWindow(parent), m_ui(new Ui::MainWindow),
@@ -613,6 +615,22 @@ void MainWindow::showSettingsWidget() {
 	if (settings_widget.exec() == 1) {
 		//nothing to do...
 	}
+}
+void MainWindow::showAboutWidget() {
+
+	static const char* about_msg =
+	"<p><b>%1 version %2 </b></p>"
+	"<p>%5</p>"
+	"<p>Use and redistribute under the terms of the<br>%6</p>"
+	"<p>Source code: %7</p>"
+	"<p>This version was compiled against Qt %3 and runs under Qt %4</p>";
+
+	QMessageBox::about(this, tr("About %1").arg(APP_NAME),
+		tr(about_msg).arg(APP_NAME).arg(QString::fromStdString(getAppVersion().toStr()))
+		.arg(QT_VERSION_STR).arg(qVersion())
+		.arg("Copyright (c) 2015 Beat Küng <a href=\"mailto:beat-kueng@gmx.net\">beat-kueng@gmx.net</a>")
+		.arg("<a href=\"http://www.gnu.org/licenses/gpl.html\">GNU General Public License Version 3</a>")
+		.arg("<a href=\"https://github.com/bkueng/qMasterPassword\">github.com/bkueng/qMasterPassword</a>"));
 }
 
 void MainWindow::showTrayIcon(bool visible) {

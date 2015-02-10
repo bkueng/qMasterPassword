@@ -90,17 +90,6 @@
         </property>
        </spacer>
       </item>
-      <item>
-       <widget class="QPushButton" name="btnSettings">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="resources.qrc">
-          <normaloff>:/settings.png</normaloff>:/settings.png</iconset>
-        </property>
-       </widget>
-      </item>
      </layout>
     </item>
     <item>
@@ -239,8 +228,32 @@
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>&amp;Edit</string>
+    </property>
+    <addaction name="actSettings"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="actAbout"/>
+   </widget>
+   <addaction name="menuEdit"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actSettings">
+   <property name="text">
+    <string>&amp;Settings</string>
+   </property>
+  </action>
+  <action name="actAbout">
+   <property name="text">
+    <string>&amp;About</string>
+   </property>
+  </action>
  </widget>
  <tabstops>
   <tabstop>btnAddUser</tabstop>
@@ -249,7 +262,6 @@
   <tabstop>cmbUserName</tabstop>
   <tabstop>txtPassword</tabstop>
   <tabstop>btnLoginLogout</tabstop>
-  <tabstop>btnSettings</tabstop>
   <tabstop>txtFilter</tabstop>
   <tabstop>btnAddSite</tabstop>
   <tabstop>btnEditSite</tabstop>
@@ -299,7 +311,7 @@
    <slot>deleteUser()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>198</x>
+     <x>159</x>
      <y>64</y>
     </hint>
     <hint type="destinationlabel">
@@ -405,22 +417,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>btnSettings</sender>
-   <signal>pressed()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>showSettingsWidget()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>865</x>
-     <y>43</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>888</x>
-     <y>50</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>txtFilter</sender>
    <signal>returnPressed()</signal>
    <receiver>tblSites</receiver>
@@ -452,6 +448,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actSettings</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showSettingsWidget()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>444</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actAbout</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showAboutWidget()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>444</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>loginLogoutClicked()</slot>
@@ -463,5 +491,6 @@
   <slot>filterTextChanged(QString)</slot>
   <slot>showSettingsWidget()</slot>
   <slot>editUser()</slot>
+  <slot>showAboutWidget()</slot>
  </slots>
 </ui>

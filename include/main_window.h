@@ -117,6 +117,7 @@ private slots:
 	void showHide();
 	void showTrayIcon(bool visible);
 	void showSettingsWidget();
+	void showAboutWidget();
 public slots:
 	void copyPWToClipboardClicked();
 	void showHidePWClicked();
