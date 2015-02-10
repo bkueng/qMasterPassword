@@ -37,27 +37,34 @@ QWidget* PushButtonDelegate::createEditor(QWidget* parent,
 			item_proxy_model->mapToSource(index)));
 	DEBUG_ASSERT1(table_item);
 
-	QPushButton* btn_copy = new UserPushButton(table_item->site(), "", parent);
-	btn_copy->setIcon(QIcon(":/copy.png"));
-	btn_copy->setFixedWidth(btn_copy->sizeHint().width());
+	auto createButton = [&parent] (UiSite& site, QIcon icon) -> QPushButton* {
+		UserPushButton* button = new UserPushButton(site, "", parent);
+		button->setIcon(icon);
+		button->setStyleSheet("padding: 1px");
+		button->setFixedWidth(button->sizeHint().width());
+		button->setFocusPolicy(Qt::NoFocus);
+		button->setFlat(true);
+		return button;
+	};
+
+	QPushButton* btn_copy = createButton(table_item->site(), QIcon(":/copy.png"));
 	connect(btn_copy, SIGNAL(clicked()), &m_main_window,
 			SLOT(copyPWToClipboardClicked()));
-	btn_copy->setFocusPolicy(Qt::NoFocus);
-	btn_copy->setFlat(true);
 
-	QPushButton* btn_show = new UserPushButton(table_item->site(), "", parent);
-	btn_show->setIcon(QIcon(table_item->site().password_visible ?
-			":/hidden.png" : ":/shown.png"));
-	btn_show->setFixedWidth(btn_show->sizeHint().width());
+	QPushButton* btn_show = createButton(table_item->site(),
+		QIcon(table_item->site().password_visible ? ":/hidden.png" : ":/shown.png"));
 	connect(btn_show, SIGNAL(clicked()), &m_main_window,
 			SLOT(showHidePWClicked()));
-	btn_show->setFocusPolicy(Qt::NoFocus);
-	btn_show->setFlat(true);
+
+	QPushButton* btn_url = createButton(table_item->site(), QIcon(":/internet.png"));
+	connect(btn_url, SIGNAL(clicked()), &m_main_window, SLOT(openUrlClicked()));
+	btn_url->setEnabled(table_item->site().url != "");
 
 	QHBoxLayout* layout = new QHBoxLayout(parent);
 	layout->setMargin(0);
 	layout->addWidget(btn_show);
 	layout->addWidget(btn_copy);
+	layout->addWidget(btn_url);
 	QWidget* widget = new QWidget(parent);
 	widget->setLayout(layout);
 	widget->setFixedWidth(widget->sizeHint().width());

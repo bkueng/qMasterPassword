@@ -145,6 +145,11 @@ void MainWindow::updateModelItem(int row, const UiSite& site) {
 	} else {
 		m_sites_model->item(row, i++)->setText("***");
 	}
+	//update the buttons
+	m_ui->tblSites->closePersistentEditor(m_proxy_model->mapFromSource(
+			m_sites_model->index(row, m_copy_column_idx)));
+	m_ui->tblSites->openPersistentEditor(m_proxy_model->mapFromSource(
+			m_sites_model->index(row, m_copy_column_idx)));
 	++i; //copy button
 	m_sites_model->item(row, i++)->setText(site.comment);
 	m_sites_model->item(row, i++)->setText(QString::fromUtf8(
@@ -357,6 +362,11 @@ void MainWindow::openSelectedUrl() {
 	TableItem* item = getSelectedItem();
 	if (!item || item->site().url == "") return;
 	QDesktopServices::openUrl(QUrl(item->site().url, QUrl::TolerantMode));
+}
+void MainWindow::openUrlClicked() {
+	UserPushButton* button = dynamic_cast<UserPushButton*>(sender());
+	if (!button || button->site().url == "") return;
+	QDesktopServices::openUrl(QUrl(button->site().url, QUrl::TolerantMode));
 }
 
 void MainWindow::saveSettings() {

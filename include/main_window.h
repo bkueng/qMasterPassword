@@ -122,6 +122,7 @@ private slots:
 public slots:
 	void copyPWToClipboardClicked();
 	void showHidePWClicked();
+	void openUrlClicked();
 
 protected:
 	void closeEvent(QCloseEvent *event);
