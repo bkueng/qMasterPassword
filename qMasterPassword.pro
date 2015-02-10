@@ -27,7 +27,7 @@ win32 {
 ICON = icons/app_icon.png
 
 # Input
-HEADERS += include/add_user.h \
+HEADERS += \
 		   include/app_settings.h \
 		   include/command_line.h \
 		   include/config.h \
@@ -44,12 +44,14 @@ HEADERS += include/add_user.h \
 		   include/settings_widget.h \
 		   include/ui_helpers.h \
 		   include/user.h \
-		   include/version.h
-FORMS += ui/add_user.ui \
+		   include/version.h \
+		   include/user_widget.h
+FORMS += \
 		 ui/edit_site_widget.ui \
 		 ui/main_window.ui \
-		 ui/settings_widget.ui
-SOURCES += src/add_user.cpp \
+		 ui/settings_widget.ui \
+		 ui/user_widget.ui
+SOURCES += \
 		   src/command_line.cpp \
 		   src/crypto.cpp \
 		   src/edit_site_widget.cpp \
@@ -62,6 +64,7 @@ SOURCES += src/add_user.cpp \
 		   src/main_window.cpp \
 		   src/pushbutton_delegate.cpp \
 		   src/settings_widget.cpp \
-		   src/user.cpp
+		   src/user.cpp \
+		   src/user_widget.cpp
 RESOURCES += ui/resources.qrc
 win32:RC_FILE = icons/app_icon.rc

@@ -12,15 +12,15 @@
  *
  */
 
-#include "add_user.h"
-#include "ui_add_user.h"
+#include "user_widget.h"
+#include "ui_user_widget.h"
 
 #include <QPushButton>
 #include <QMessageBox>
 
-AddUser::AddUser(Type type, QWidget *parent) :
+UserWidget::UserWidget(Type type, QWidget *parent) :
 	QDialog(parent),
-	ui(new Ui::AddUser)
+	ui(new Ui::UserWidget)
 {
 	ui->setupUi(this);
 	setFixedSize(size());
@@ -32,19 +32,19 @@ AddUser::AddUser(Type type, QWidget *parent) :
 	}
 }
 
-AddUser::~AddUser()
+UserWidget::~UserWidget()
 {
 	delete ui;
 }
 
-QString AddUser::password() const {
+QString UserWidget::password() const {
 	return ui->txtPassword->text();
 }
-QString AddUser::userName() const {
+QString UserWidget::userName() const {
 	return ui->txtUserName->text();
 }
 
-void AddUser::applyData(UiUser& user) {
+void UserWidget::applyData(UiUser& user) {
 	if (ui->chkCheckPassword->isChecked()) {
 		try {
 			user.userData().setStorePasswordHash(
@@ -59,18 +59,18 @@ void AddUser::applyData(UiUser& user) {
 	}
 }
 
-void AddUser::checkInputValidity() {
+void UserWidget::checkInputValidity() {
 	bool is_valid = ui->txtUserName->text().length() > 0
 			&& ui->txtPassword->text().length() > 0
 			&& ui->txtPassword->text() == ui->txtPasswordRepeat->text();
 	ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(is_valid);
 }
 
-bool AddUser::checkPasswordOnLogin() const {
+bool UserWidget::checkPasswordOnLogin() const {
 	return ui->chkCheckPassword->isChecked();
 }
 
-void AddUser::setData(const UiUser& user) {
+void UserWidget::setData(const UiUser& user) {
 	ui->txtUserName->setText(user.getUserName());
 	ui->chkCheckPassword->setChecked(user.userData().storePasswordHash());
 }

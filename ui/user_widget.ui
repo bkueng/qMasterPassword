@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>AddUser</class>
- <widget class="QDialog" name="AddUser">
+ <class>UserWidget</class>
+ <widget class="QDialog" name="UserWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -95,7 +95,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>AddUser</receiver>
+   <receiver>UserWidget</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -111,7 +111,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>AddUser</receiver>
+   <receiver>UserWidget</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -127,7 +127,7 @@
   <connection>
    <sender>txtUserName</sender>
    <signal>textChanged(QString)</signal>
-   <receiver>AddUser</receiver>
+   <receiver>UserWidget</receiver>
    <slot>checkInputValidity()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -143,7 +143,7 @@
   <connection>
    <sender>txtPassword</sender>
    <signal>textChanged(QString)</signal>
-   <receiver>AddUser</receiver>
+   <receiver>UserWidget</receiver>
    <slot>checkInputValidity()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -159,7 +159,7 @@
   <connection>
    <sender>txtPasswordRepeat</sender>
    <signal>textChanged(QString)</signal>
-   <receiver>AddUser</receiver>
+   <receiver>UserWidget</receiver>
    <slot>checkInputValidity()</slot>
    <hints>
     <hint type="sourcelabel">

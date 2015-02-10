@@ -12,17 +12,17 @@
  *
  */
 
-#ifndef ADD_USER_H
-#define ADD_USER_H
+#ifndef HEADER_USER_WIDGET_H
+#define HEADER_USER_WIDGET_H
 
 #include <QDialog>
 #include "user.h"
 
 namespace Ui {
-class AddUser;
+class UserWidget;
 }
 
-class AddUser : public QDialog
+class UserWidget : public QDialog
 {
 	Q_OBJECT
 
@@ -31,8 +31,8 @@ public:
 		Type_edit,
 		Type_new
 	};
-	explicit AddUser(Type type, QWidget *parent = 0);
-	~AddUser();
+	explicit UserWidget(Type type, QWidget *parent = 0);
+	~UserWidget();
 
 	QString password() const;
 	QString userName() const;
@@ -43,9 +43,9 @@ public:
 	bool checkPasswordOnLogin() const;
 
 private:
-	Ui::AddUser *ui;
+	Ui::UserWidget *ui;
 private slots:
 	void checkInputValidity();
 };
 
-#endif // ADD_USER_H
+#endif // HEADER_USER_WIDGET_H

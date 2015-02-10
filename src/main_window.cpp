@@ -14,7 +14,7 @@
 
 #include "main_window.h"
 #include "ui_main_window.h"
-#include "add_user.h"
+#include "user_widget.h"
 #include "edit_site_widget.h"
 #include "logging.h"
 #include "pushbutton_delegate.h"
@@ -241,7 +241,7 @@ void MainWindow::enableUI(bool logged_in) {
 }
 
 void MainWindow::addUser() {
-	AddUser add_user(AddUser::Type_new, this);
+	UserWidget add_user(UserWidget::Type_new, this);
 	if (add_user.exec() == 1) { //accepted
 		QString user_name = add_user.userName();
 		if (m_users.find(user_name) != m_users.end()) {
@@ -262,7 +262,7 @@ void MainWindow::addUser() {
 	}
 }
 void MainWindow::editUser() {
-	AddUser user_widget(AddUser::Type_edit, this);
+	UserWidget user_widget(UserWidget::Type_edit, this);
 
 	QString user_name = m_ui->cmbUserName->currentText();
 	auto iter_user = m_users.find(user_name);
