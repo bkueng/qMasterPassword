@@ -32,6 +32,7 @@ using namespace std;
 #include <QClipboard>
 #include <QCloseEvent>
 #include <QtGlobal>
+#include <QDesktopServices>
 
 MainWindow::MainWindow(QWidget *parent) :
 		QMainWindow(parent), m_ui(new Ui::MainWindow),
@@ -337,6 +338,9 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event) {
 		case Qt::Key_K: //select previous
 			changeSelection(-1);
 			break;
+		case Qt::Key_O:
+			openSelectedUrl();
+			break;
 		case Qt::Key_Q:
 			logout();
 			break;
@@ -347,6 +351,12 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event) {
 		return handled_key;
 	}
 	return false;
+}
+
+void MainWindow::openSelectedUrl() {
+	TableItem* item = getSelectedItem();
+	if (!item || item->site().url == "") return;
+	QDesktopServices::openUrl(QUrl(item->site().url, QUrl::TolerantMode));
 }
 
 void MainWindow::saveSettings() {

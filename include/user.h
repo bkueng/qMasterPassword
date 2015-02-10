@@ -37,6 +37,7 @@ public:
 
 	QList<CategoryId> category_ids;
 	QString user_name;
+	QString url;
 	QString comment;
 
 	QDateTime time_created;

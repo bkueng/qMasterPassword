@@ -78,6 +78,7 @@ private:
 	void copyPWToClipboard(UiSite& site);
 	void activateLogoutTimer();
 	void abortLogoutTimer();
+	void openSelectedUrl();
 
 	MasterPassword m_master_password;
 	QMap<QString /* user name */, UiUser> m_users;

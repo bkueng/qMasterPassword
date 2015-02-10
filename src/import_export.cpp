@@ -51,7 +51,10 @@ void DataImportExport::exportJson(const UiUser& user,
 		site_object["siteName"] = QString::fromUtf8(site->site.getName().c_str());
 		site_object["userName"] = site->user_name;
 		site_object["siteCounter"] = QString::number(site->site.getCounter());
-		site_object["comment"] = site->comment;
+		if (site->url != "")
+			site_object["url"] = site->url;
+		if (site->comment != "")
+			site_object["comment"] = site->comment;
 		sites_array.append(site_object);
 	}
 	QJsonDocument save_doc(sites_array);
@@ -79,6 +82,7 @@ void DataImportExport::importJson(UiUser& user, const QString& file_name) {
 		bool ok;
 		uint32_t site_counter = json_site["siteCounter"].toString().toUInt(&ok);
 		if (!ok) site_counter = 1;
+		QString url = json_site["url"].toString();
 		QString comment = json_site["comment"].toString();
 		if (site_name != "") {
 			string site_name_str = site_name.toUtf8().constData();
@@ -117,6 +121,7 @@ void DataImportExport::importJson(UiUser& user, const QString& file_name) {
 			new_site->site.setName(site_name_str);
 			new_site->user_name = user_name;
 			new_site->site.setCounter(site_counter);
+			new_site->url = url;
 			new_site->comment = comment;
 		}
 	}

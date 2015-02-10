@@ -19,7 +19,8 @@
 using namespace std;
 
 QDataStream& operator <<(QDataStream& stream, const UiSite& site) {
-	stream << (qint8)0; //stream version
+	stream << (qint8)1; //stream version
+	stream << site.url;
 	stream << site.comment;
 	stream << QString::fromUtf8(site.site.getContext().c_str());
 	stream << (qint32)site.site.getCounter();
@@ -38,7 +39,9 @@ QDataStream& operator >>(QDataStream& stream, UiSite& site) {
 	qint32 counter, type, variant;
 	qint8 version;
 	stream >> version;
-	DEBUG_ASSERT1(version == 0);
+	DEBUG_ASSERT1(version == 0 || version == 1);
+	if (version == 1)
+		stream >> site.url;
 	stream >> site.comment >> context >> counter >> name >> type
 			>> site.user_name >> variant >> site.category_ids
 			>> site.time_created >> site.time_edited;

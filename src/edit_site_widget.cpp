@@ -46,6 +46,7 @@ EditSiteWidget::EditSiteWidget(const QMap<CategoryId, QString>& categories,
 		setWindowTitle(tr("Edit Site"));
 		ui->txtSiteName->setText(QString::fromUtf8(m_site.site.getName().c_str()));
 		ui->txtUserName->setText(m_site.user_name);
+		ui->txtUrl->setText(m_site.url);
 		ui->txtComment->setText(m_site.comment);
 		ui->spnSiteCounter->setValue(m_site.site.getCounter());
 		break;
@@ -66,6 +67,7 @@ EditSiteWidget::~EditSiteWidget()
 void EditSiteWidget::applyData() {
 	m_site.site.setName(ui->txtSiteName->text().toUtf8().constData());
 	m_site.user_name = ui->txtUserName->text();
+	m_site.url = ui->txtUrl->text();
 	m_site.comment = ui->txtComment->text();
 	m_site.site.setType(MPSiteTypeFromIdx(ui->cmbPasswordType->currentIndex()));
 	m_site.category_ids.clear();
