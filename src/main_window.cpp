@@ -43,6 +43,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(m_logout_timer, SIGNAL(timeout()), this, SLOT(logout()));
 	m_logout_timer->setSingleShot(true);
 
+	m_clipboard_timer = new QTimer(this);
+	connect(m_clipboard_timer, SIGNAL(timeout()), this,
+			SLOT(clearPasswordFromClipboard()));
+	m_clipboard_timer->setSingleShot(true);
+
 	initSitesView();
 	readSettings();
 	m_ui->btnDeleteUser->setEnabled(m_ui->cmbUserName->count() > 0);
@@ -551,10 +556,27 @@ void MainWindow::copyPWToClipboardClicked() {
 void MainWindow::copyPWToClipboard(UiSite& site) {
 	LOG(DEBUG, "copy pw to clipboard");
 	string password = m_master_password.sitePassword(site.site);
-	QClipboard *clipboard = QApplication::clipboard();
-	QString originalText = clipboard->text();
-	clipboard->setText(QString::fromUtf8(password.c_str()));
+	QClipboard* clipboard = QApplication::clipboard();
+	QString original_text = clipboard->text();
+	QString qpassword = QString::fromUtf8(password.c_str());
+	clipboard->setText(qpassword);
 	statusBar()->showMessage(tr("Copied Password to Clipboard"), 1500);
+	if (m_application_settings.clipboard_pw_timeout > 0) {
+		if (!m_clipboard_timer->isActive())
+			m_clipboard_previous_data = original_text;
+		m_clipboard_pw = qpassword;
+		m_clipboard_timer->start(m_application_settings.clipboard_pw_timeout*1000);
+	}
+}
+void MainWindow::clearPasswordFromClipboard() {
+	LOG(DEBUG, "Clear password from clipboard");
+	QClipboard* clipboard = QApplication::clipboard();
+	QString original_text = clipboard->text();
+	if (original_text == m_clipboard_pw) {
+		clipboard->setText(m_clipboard_previous_data);
+	}
+	m_clipboard_previous_data = "";
+	m_clipboard_pw = "";
 }
 void MainWindow::showHidePWClicked() {
 	LOG(DEBUG, "show/hide PW clicked");

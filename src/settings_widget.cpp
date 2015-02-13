@@ -38,6 +38,13 @@ SettingsWidget::SettingsWidget(ApplicationSettings& settings,
 	ui->chkTrayIcon->setChecked(m_settings.show_systray_icon);
 	ui->chkAutoLogout->setChecked(m_settings.auto_logout_when_hidden);
 	ui->spnAutoLogoutTimeout->setValue(m_settings.auto_logout_timeout);
+	int clipboard_pw_timeout = m_settings.clipboard_pw_timeout;
+	if (clipboard_pw_timeout > 0) {
+		ui->chkClipboardTimeout->setChecked(true);
+		ui->spnClipboardTimeout->setValue(clipboard_pw_timeout);
+	} else {
+		ui->chkClipboardTimeout->setChecked(false);
+	}
 	updateUi();
 }
 
@@ -61,6 +68,20 @@ void SettingsWidget::autoLogout(bool activated) {
 
 void SettingsWidget::autoLogoutValueChanged(int value) {
 	m_settings.auto_logout_timeout = value;
+}
+
+void SettingsWidget::clipboardTimeoutChanged(int timeout) {
+	if (ui->chkClipboardTimeout->isChecked()) {
+		m_settings.clipboard_pw_timeout = timeout;
+	}
+}
+
+void SettingsWidget::clipboardTimeoutClicked(bool activated) {
+	if (activated) {
+		m_settings.clipboard_pw_timeout = ui->spnClipboardTimeout->value();
+	} else {
+		m_settings.clipboard_pw_timeout = 0;
+	}
 }
 
 void SettingsWidget::updateUi() {

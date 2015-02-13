@@ -54,6 +54,8 @@ private slots:
 	void autoLogoutValueChanged(int value);
 	void exportAsJsonClicked();
 	void importFromJsonClicked();
+	void clipboardTimeoutChanged(int timeout);
+	void clipboardTimeoutClicked(bool activated);
 signals:
 	void showTrayIconChanged(bool visible);
 };

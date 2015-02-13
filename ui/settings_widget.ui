@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>572</width>
-    <height>298</height>
+    <width>571</width>
+    <height>307</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -66,6 +66,50 @@
         </item>
         <item>
          <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QCheckBox" name="chkClipboardTimeout">
+          <property name="text">
+           <string>Clipboard: Clear password after</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="spnClipboardTimeout">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>3600</number>
+          </property>
+          <property name="value">
+           <number>30</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>seconds</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_4">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -275,7 +319,7 @@
      <y>105</y>
     </hint>
     <hint type="destinationlabel">
-     <x>571</x>
+     <x>570</x>
      <y>127</y>
     </hint>
    </hints>
@@ -287,8 +331,8 @@
    <slot>exportAsJsonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>512</x>
-     <y>203</y>
+     <x>551</x>
+     <y>246</y>
     </hint>
     <hint type="destinationlabel">
      <x>569</x>
@@ -303,12 +347,44 @@
    <slot>importFromJsonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>75</x>
-     <y>204</y>
+     <x>102</x>
+     <y>246</y>
     </hint>
     <hint type="destinationlabel">
      <x>11</x>
      <y>229</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spnClipboardTimeout</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>SettingsWidget</receiver>
+   <slot>clipboardTimeoutChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>299</x>
+     <y>132</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>567</x>
+     <y>164</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>chkClipboardTimeout</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>SettingsWidget</receiver>
+   <slot>clipboardTimeoutClicked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>174</x>
+     <y>132</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>565</x>
+     <y>152</y>
     </hint>
    </hints>
   </connection>
@@ -320,5 +396,7 @@
   <slot>autoLogoutValueChanged(int)</slot>
   <slot>exportAsJsonClicked()</slot>
   <slot>importFromJsonClicked()</slot>
+  <slot>clipboardTimeoutChanged(int)</slot>
+  <slot>clipboardTimeoutClicked(bool)</slot>
  </slots>
 </ui>

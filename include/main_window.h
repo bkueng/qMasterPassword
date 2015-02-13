@@ -96,6 +96,10 @@ private:
 	ApplicationSettings m_application_settings;
 	DataImportExport m_import_export;
 
+	QString m_clipboard_pw;
+	QString m_clipboard_previous_data;
+	QTimer* m_clipboard_timer = nullptr;
+
 	int m_copy_column_idx;
 
 private slots:
@@ -119,6 +123,7 @@ private slots:
 	void showTrayIcon(bool visible);
 	void showSettingsWidget();
 	void showAboutWidget();
+	void clearPasswordFromClipboard();
 public slots:
 	void copyPWToClipboardClicked();
 	void showHidePWClicked();
