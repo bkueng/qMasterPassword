@@ -17,7 +17,7 @@
 
 # Known bugs:
 #	- If no files are changed by the update_files function and no release note has been added then staged files are commited instead of an empty commit.
-#	- Only files that are allready present in the HEAD's tree can be updated by the update_files function.
+#	- Only files that are already present in the HEAD's tree can be updated by the update_files function.
 
 print() { echo "$1" >&2; }
 inform() { print "$0: $1"; }
@@ -48,11 +48,11 @@ Where:
 
 Notes:
     This script replaces the defines holding the version information, makes a
-    commit with the file and tags the commit with a  tag name of the following
+    commit with the file and tags the commit with a tag name of the following
     form:
     
-        "release/v" <major> "." <minor> [ "-p" <patch> ]
-        | "beta/v" <major> "." <minor> [ "-p" <patch> ] "-RC" <rc>
+        "v" <major> "." <minor> [ "-p" <patch> ]
+        | "v" <major> "." <minor> [ "-p" <patch> ] "-RC" <rc>
     
     This scripts maintains a 'HISTORY' file in the root tree. For every non-RC
     version it asks the user to enter a release note via the $EDITOR environment
@@ -95,7 +95,7 @@ VERSION_RC=$(echo "$VERSION_PARSED" | cut -d " " -f 4)
 [ "$VERSION_PATCH" ] || VERSION_PATCH=0
 [ "$VERSION_RC" ] || VERSION_RC=0
 
-[ $VERSION_RC -eq 0 ] && TAG_NAME="release/$ARG_VERSION" || TAG_NAME="beta/$ARG_VERSION"
+TAG_NAME="$ARG_VERSION"
 git tag -l | grep -qxF "$TAG_NAME" && fail "Tag $TAG_NAME already exists"
 
 update_files "$ARG_VERSION" "$VERSION_MAJOR" "$VERSION_MINOR" "$VERSION_PATCH" "$VERSION_RC" | {
@@ -116,7 +116,6 @@ update_files "$ARG_VERSION" "$VERSION_MAJOR" "$VERSION_MINOR" "$VERSION_PATCH" "
 			[ "$EDITOR" ] || fail "\$EDITOR is not set. Please set the EDITOR environment variable to input the release notes."
 			
 			if ! [ -e "$TEMP_FILE" ]; then
-				NEWEST_RELEASE=$(git tag | grep -E "release/.*" | while IFS= read i; do echo "$(git rev-list "$i..HEAD" | wc -l | grep -oE "[0-9]+") $i"; done | sort -n | head -n 1 | cut -d " " -f 2-)
 				
 				cat << EOF >> "$TEMP_FILE"
 $RELEASE_NOTE
@@ -128,14 +127,12 @@ $RELEASE_NOTE
 
 # To abort the commit, empty this file before exiting your editor.
 EOF
-				if [ "$NEWEST_RELEASE" ]; then
-					cat << EOF >> "$TEMP_FILE"
+				cat << EOF >> "$TEMP_FILE"
 
-# Changes since the last release, $NEWEST_RELEASE:
+# Changes since the last release:
 #
 EOF
-					git diff --stat | sed -r "s/^/#/" >> "$TEMP_FILE"
-				fi
+				git diff --stat | sed -r "s/^/#/" >> "$TEMP_FILE"
 			fi
 			
 			$EDITOR "$TEMP_FILE"
