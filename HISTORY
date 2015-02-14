@@ -1,2 +1,9 @@
++ Release v1.0
++ (optional) password check on login - stores password hash
++ add an Url to site & a button to open it (or key 'O')
++ edit user button
++ clear password from clipboard after timeout option
+
+
 + Release v0.9
 + initial release
