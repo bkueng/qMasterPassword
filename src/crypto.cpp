@@ -14,14 +14,6 @@
  *
  */
 
-
-
-#include "crypto.h"
-#include "crypto_functions.h"
-#include "logging.h"
-
-#include <future>
-
 #if defined(__linux__) || defined(__APPLE__)
 #include <arpa/inet.h>
 #elif defined(_WIN32)
@@ -29,6 +21,12 @@
 #else
 #error "unsupported platform: add include for htonl"
 #endif
+
+#include "crypto.h"
+#include "crypto_functions.h"
+#include "logging.h"
+
+#include <future>
 
 
 using namespace std;
