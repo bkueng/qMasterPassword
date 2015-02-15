@@ -17,9 +17,6 @@
 #include "exception.h"
 #include "logging.h"
 #include <QFile>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QJsonDocument>
 
 using namespace std;
 
@@ -36,6 +33,7 @@ void DataImportExport::exportJson(const UiUser& user,
 		THROW(EFILE_ERROR);
 	}
 
+	/*
 	QJsonArray sites_array;
 	for (const auto& site : user.getSites()) {
 		QJsonObject site_object;
@@ -60,6 +58,7 @@ void DataImportExport::exportJson(const UiUser& user,
 	QJsonDocument save_doc(sites_array);
 	if (save_file.write(save_doc.toJson()) == -1)
 		THROW(EFILE_ERROR);
+	*/
 }
 
 void DataImportExport::importJson(UiUser& user, const QString& file_name) {
@@ -69,6 +68,7 @@ void DataImportExport::importJson(UiUser& user, const QString& file_name) {
 		THROW(EFILE_ERROR);
 	}
 
+	/*
 	QByteArray data_bytes = read_file.readAll();
 
 	QJsonDocument load_doc(QJsonDocument::fromJson(data_bytes));
@@ -125,5 +125,6 @@ void DataImportExport::importJson(UiUser& user, const QString& file_name) {
 			new_site->comment = comment;
 		}
 	}
+	*/
 
 }

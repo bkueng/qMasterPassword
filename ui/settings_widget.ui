@@ -163,6 +163,9 @@
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
          <widget class="QPushButton" name="btnImportJson">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>Import from JSON</string>
           </property>
@@ -183,6 +186,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="btnExportJson">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>Export as JSON</string>
           </property>
