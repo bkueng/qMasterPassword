@@ -33,6 +33,7 @@ using namespace std;
 #include <QCloseEvent>
 #include <QtGlobal>
 #include <QDesktopServices>
+#include <QUrl>
 
 MainWindow::MainWindow(QWidget *parent) :
 		QMainWindow(parent), m_ui(new Ui::MainWindow),
