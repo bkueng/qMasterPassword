@@ -24,7 +24,7 @@ win32 {
 } else {
 	LIBS += -lscrypt -lcrypto
 }
-ICON = icons/app_icon.png
+ICON = data/icons/app_icon.png
 
 # Input
 HEADERS += \
@@ -67,4 +67,4 @@ SOURCES += \
 		   src/user.cpp \
 		   src/user_widget.cpp
 RESOURCES += ui/resources.qrc
-win32:RC_FILE = icons/app_icon.rc
+win32:RC_FILE = data/icons/app_icon.rc
