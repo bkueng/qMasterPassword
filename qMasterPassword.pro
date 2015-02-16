@@ -26,6 +26,9 @@ win32 {
 }
 ICON = data/icons/app_icon.png
 
+target.path = /usr/bin
+INSTALLS += target
+
 # Input
 HEADERS += \
 		   include/app_settings.h \
