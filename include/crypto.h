@@ -158,7 +158,7 @@ private:
 	uint32_t m_counter = 1;
 
 	MPSiteVariant m_variant = MPSiteVariantPassword;
-	MPSiteType m_type = MPSiteTypeGeneratedMedium;
+	MPSiteType m_type = MPSiteTypeGeneratedLong;
 
 	/* optional things */
 	std::string m_context; /** type-specific context */
