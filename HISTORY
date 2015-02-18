@@ -1,3 +1,9 @@
++ Release v1.1
+only minor updates:
++ disable file logging by default
++ set default password type to GeneratedLong
+
+
 + Release v1.0
 + (optional) password check on login - stores password hash
 + add an Url to site & a button to open it (or key 'O')
