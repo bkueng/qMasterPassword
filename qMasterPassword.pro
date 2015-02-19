@@ -8,7 +8,7 @@ DEFINES += APP_NAME=\\\"$(TARGET)\\\"
 CONFIG += debug_and_release \
 	qt \
 	c++11
-QT += widgets
+QT += widgets dbus
 UI_DIR = ui
 
 # enable unit tests

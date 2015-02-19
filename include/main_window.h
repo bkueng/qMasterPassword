@@ -25,6 +25,7 @@
 #include <QSortFilterProxyModel>
 #include <QSystemTrayIcon>
 #include <QTimer>
+#include <QtCore/QObject>
 
 #include "crypto.h"
 #include "user.h"
@@ -120,12 +121,12 @@ private slots:
 	void categoryButtonPressed();
 	void filterTextChanged(QString filter_text);
 	void iconActivated(QSystemTrayIcon::ActivationReason reason);
-	void showHide();
 	void showTrayIcon(bool visible);
 	void showSettingsWidget();
 	void showAboutWidget();
 	void clearPasswordFromClipboard();
 public slots:
+	void showHide();
 	void copyPWToClipboardClicked();
 	void showHidePWClicked();
 	void openUrlClicked();
@@ -134,5 +135,16 @@ protected:
 	void closeEvent(QCloseEvent *event);
 	bool eventFilter(QObject *obj, QEvent *event);
 };
+
+class DBusAdapter : public QObject {
+	Q_OBJECT
+public:
+	DBusAdapter(MainWindow* main_window);
+private:
+	MainWindow* m_main_window;
+public slots:
+	Q_SCRIPTABLE void showHide();
+};
+
 
 #endif // MAIN_WINDOW_H
