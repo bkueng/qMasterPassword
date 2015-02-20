@@ -91,12 +91,6 @@ void SettingsWidget::clipboardTimeoutClicked(bool activated) {
 }
 
 void SettingsWidget::updateUi() {
-	bool enabled = m_settings.show_systray_icon;
-	ui->chkAutoLogout->setEnabled(enabled);
-	ui->spnAutoLogoutTimeout->setEnabled(enabled);
-	ui->lblTimeout->setEnabled(enabled);
-	ui->lblMinutes->setEnabled(enabled);
-	if (!enabled) ui->chkAutoLogout->setChecked(false);
 	ui->btnRemoveCategory->setEnabled(ui->cmbCategories->count() != 0);
 }
 
