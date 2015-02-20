@@ -561,13 +561,15 @@ void MainWindow::copyPWToClipboard(UiSite& site) {
 	QString original_text = clipboard->text();
 	QString qpassword = QString::fromUtf8(password.c_str());
 	clipboard->setText(qpassword);
-	statusBar()->showMessage(tr("Copied Password to Clipboard"), 1500);
+	QString suffix = "";
 	if (m_application_settings.clipboard_pw_timeout > 0) {
 		if (!m_clipboard_timer->isActive())
 			m_clipboard_previous_data = original_text;
 		m_clipboard_pw = qpassword;
 		m_clipboard_timer->start(m_application_settings.clipboard_pw_timeout*1000);
+		suffix = tr(" for %1 seconds").arg(m_application_settings.clipboard_pw_timeout);
 	}
+	statusBar()->showMessage(tr("Copied Password to Clipboard")+suffix, 1500);
 }
 void MainWindow::clearPasswordFromClipboard() {
 	LOG(DEBUG, "Clear password from clipboard");
