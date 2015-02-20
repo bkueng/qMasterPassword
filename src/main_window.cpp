@@ -410,14 +410,10 @@ void MainWindow::readSettings() {
     categories_stream >> m_categories;
 	if (m_categories.isEmpty()) {
 		//add default categories
+		QList<QString> categories = SettingsWidget::defaultCategories();
 		m_categories[m_next_category_id++] = tr("All");
-		m_categories[m_next_category_id++] = tr("Personal");
-		m_categories[m_next_category_id++] = tr("Work");
-		m_categories[m_next_category_id++] = tr("eShopping");
-		m_categories[m_next_category_id++] = tr("Social Networks");
-		m_categories[m_next_category_id++] = tr("Bank");
-		m_categories[m_next_category_id++] = tr("Forum");
-		m_categories[m_next_category_id++] = tr("eMail");
+		for (const auto& category : categories)
+			m_categories[m_next_category_id++] = category;
 	} else {
 		m_next_category_id = 0;
 		for (auto category : m_categories.keys()) {
@@ -514,6 +510,7 @@ void MainWindow::selectionChanged(const QItemSelection& selected,
 }
 
 void MainWindow::addCategory(const QString& name, CategoryId id) {
+	LOG(DEBUG, "Adding Category %s", name.toStdString().c_str());
 	if (id == -1)
 		id = m_next_category_id++;
 	m_categories[id] = name;
@@ -521,6 +518,35 @@ void MainWindow::addCategory(const QString& name, CategoryId id) {
 	button->setCheckable(true);
     connect(button, SIGNAL(clicked()), this, SLOT(categoryButtonPressed()));
 	m_ui->layoutCategories->addWidget(button);
+}
+void MainWindow::removeCategory(CategoryId category_id) {
+	const QString& category_name = m_categories[category_id];
+	LOG(DEBUG, "Removing Category %s", category_name.toStdString().c_str());
+	m_categories.remove(category_id);
+
+	//button
+	for (int i = 0; i < m_ui->layoutCategories->count(); ++i) {
+		CategoryButton* button = dynamic_cast<CategoryButton*>(
+				m_ui->layoutCategories->itemAt(i)->widget());
+		if (button && button->category_id == category_id) {
+			m_ui->layoutCategories->removeWidget(button);
+			button->deleteLater();
+			break;
+		}
+	}
+
+	//in all sites
+	for (auto& user : m_users) {
+		for (auto& site : user.getSites()) {
+			QList<CategoryId>& category_ids = site.get()->category_ids;
+			for (int i = 0; i < category_ids.count(); ++i) {
+				if (category_ids[i] == category_id) {
+					category_ids.removeAt(i);
+					break;
+				}
+			}
+		}
+	}
 }
 
 void MainWindow::selectCategory(CategoryId category) {
@@ -655,7 +681,7 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason) {
 	}
 }
 void MainWindow::showSettingsWidget() {
-	SettingsWidget settings_widget(m_application_settings, m_users,
+	SettingsWidget settings_widget(m_application_settings, m_users, m_categories,
 			m_import_export, this);
 	connect(&settings_widget, SIGNAL(showTrayIconChanged(bool)),
 			this, SLOT(showTrayIcon(bool)));
@@ -663,7 +689,24 @@ void MainWindow::showSettingsWidget() {
 	connect(&settings_widget, SIGNAL(dataImported(QString)), this, SLOT(logout()));
 
 	if (settings_widget.exec() == 1) {
-		//nothing to do...
+		QList<QString> categories = settings_widget.categories();
+		for (const auto& category_id : m_categories.keys()) {
+			if (category_id == 0) continue;
+			const QString& current_category = m_categories[category_id];
+			bool found = false;
+			for (int category = 0; category < categories.count(); ++category) {
+				if (categories[category] == current_category) {
+					found = true;
+					categories.removeAt(category);
+					break;
+				}
+			}
+			if (!found)
+				removeCategory(category_id);
+		}
+		for (const auto& category_name : categories) {
+			addCategory(category_name);
+		}
 	}
 }
 void MainWindow::showAboutWidget() {

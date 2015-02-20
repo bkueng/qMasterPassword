@@ -19,10 +19,9 @@
 #include <QMessageBox>
 
 SettingsWidget::SettingsWidget(ApplicationSettings& settings,
-		QMap<QString, UiUser>& users, DataImportExport& import_export,
-		QWidget *parent) :
-	QDialog(parent),
-	ui(new Ui::SettingsWidget),
+		QMap<QString, UiUser>& users, QMap<CategoryId, QString> categories,
+		DataImportExport& import_export, QWidget *parent) :
+	QDialog(parent), ui(new Ui::SettingsWidget),
 	m_settings(settings), m_users(users), m_import_export(import_export)
 {
 	ui->setupUi(this);
@@ -45,7 +44,14 @@ SettingsWidget::SettingsWidget(ApplicationSettings& settings,
 	} else {
 		ui->chkClipboardTimeout->setChecked(false);
 	}
+
+	for (const auto& category : categories.keys()) {
+		if (category != 0)
+			ui->cmbCategories->addItem(categories[category]);
+	}
+
 	updateUi();
+	categoryNameChanged();
 }
 
 SettingsWidget::~SettingsWidget()
@@ -91,6 +97,7 @@ void SettingsWidget::updateUi() {
 	ui->lblTimeout->setEnabled(enabled);
 	ui->lblMinutes->setEnabled(enabled);
 	if (!enabled) ui->chkAutoLogout->setChecked(false);
+	ui->btnRemoveCategory->setEnabled(ui->cmbCategories->count() != 0);
 }
 
 void SettingsWidget::exportAsJsonClicked() {
@@ -164,4 +171,63 @@ UiUser* SettingsWidget::selectedUser() {
 	if (iter == m_users.end())
 		return nullptr;
 	return &*iter;
+}
+
+void SettingsWidget::removeSelectedCategoryClicked() {
+	int current_index = ui->cmbCategories->currentIndex();
+	if (current_index < 0) return;
+	ui->cmbCategories->removeItem(current_index);
+	updateUi();
+}
+
+void SettingsWidget::addNewCategoryClicked() {
+	QString category_name = ui->txtCategory->text();
+	if (!canAddCategory(category_name)) return;
+	ui->cmbCategories->addItem(category_name);
+	ui->cmbCategories->setCurrentIndex(ui->cmbCategories->count()-1);
+	ui->txtCategory->setText("");
+	updateUi();
+}
+
+void SettingsWidget::categoryNameChanged() {
+	ui->btnAddCategory->setEnabled(canAddCategory(ui->txtCategory->text()));
+}
+
+bool SettingsWidget::canAddCategory(const QString& category_name) {
+	bool can_add = !category_name.isEmpty();
+	for (int i = 0; i < ui->cmbCategories->count(); ++i) {
+		if (ui->cmbCategories->itemText(i) == category_name)
+			can_add = false;
+	}
+	return can_add;
+}
+
+QList<QString> SettingsWidget::defaultCategories() {
+	QList<QString> ret;
+	ret.push_back(tr("Personal"));
+	ret.push_back(tr("Work"));
+	ret.push_back(tr("eShopping"));
+	ret.push_back(tr("Social Networks"));
+	ret.push_back(tr("Bank"));
+	ret.push_back(tr("Forum"));
+	ret.push_back(tr("eMail"));
+	return ret;
+}
+
+QList<QString> SettingsWidget::categories() {
+	QList<QString> ret;
+	for (int i = 0; i < ui->cmbCategories->count(); ++i) {
+		ret.push_back(ui->cmbCategories->itemText(i));
+	}
+	return ret;
+}
+
+void SettingsWidget::restoreDefaultCategories() {
+	while (ui->cmbCategories->count() > 0)
+		ui->cmbCategories->removeItem(0);
+	QList<QString> categories = SettingsWidget::defaultCategories();
+	for (const auto& category : categories) {
+		ui->cmbCategories->addItem(category);
+	}
+	updateUi();
 }

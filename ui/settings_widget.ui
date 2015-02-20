@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>571</width>
-    <height>307</height>
+    <height>409</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -127,6 +127,55 @@
     </widget>
    </item>
    <item>
+    <widget class="QGroupBox" name="groupBox_3">
+     <property name="title">
+      <string>Categories</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QComboBox" name="cmbCategories"/>
+      </item>
+      <item row="0" column="2">
+       <spacer name="horizontalSpacer_5">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="btnRemoveCategory">
+        <property name="text">
+         <string>Remove</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLineEdit" name="txtCategory"/>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="btnAddCategory">
+        <property name="text">
+         <string>Add</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QPushButton" name="btnResoreDefaultCategories">
+        <property name="text">
+         <string>Restore Defaults</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="groupBox_2">
      <property name="title">
       <string>Import/Export</string>
@@ -235,8 +284,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>254</x>
-     <y>288</y>
+     <x>263</x>
+     <y>399</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -251,8 +300,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>322</x>
-     <y>288</y>
+     <x>331</x>
+     <y>399</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
@@ -332,7 +381,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>551</x>
-     <y>246</y>
+     <y>348</y>
     </hint>
     <hint type="destinationlabel">
      <x>569</x>
@@ -347,8 +396,8 @@
    <slot>importFromJsonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>102</x>
-     <y>246</y>
+     <x>129</x>
+     <y>348</y>
     </hint>
     <hint type="destinationlabel">
      <x>11</x>
@@ -388,6 +437,86 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>txtCategory</sender>
+   <signal>returnPressed()</signal>
+   <receiver>btnAddCategory</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>174</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>228</x>
+     <y>237</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnAddCategory</sender>
+   <signal>clicked()</signal>
+   <receiver>SettingsWidget</receiver>
+   <slot>addNewCategoryClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>265</x>
+     <y>237</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>567</x>
+     <y>265</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnRemoveCategory</sender>
+   <signal>clicked()</signal>
+   <receiver>SettingsWidget</receiver>
+   <slot>removeSelectedCategoryClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>265</x>
+     <y>202</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>564</x>
+     <y>212</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>txtCategory</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>SettingsWidget</receiver>
+   <slot>categoryNameChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>93</x>
+     <y>237</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>570</x>
+     <y>295</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnResoreDefaultCategories</sender>
+   <signal>clicked()</signal>
+   <receiver>SettingsWidget</receiver>
+   <slot>restoreDefaultCategories()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>521</x>
+     <y>202</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>567</x>
+     <y>194</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>showPWAfterLogin(bool)</slot>
@@ -398,5 +527,9 @@
   <slot>importFromJsonClicked()</slot>
   <slot>clipboardTimeoutChanged(int)</slot>
   <slot>clipboardTimeoutClicked(bool)</slot>
+  <slot>removeSelectedCategoryClicked()</slot>
+  <slot>addNewCategoryClicked()</slot>
+  <slot>categoryNameChanged()</slot>
+  <slot>restoreDefaultCategories()</slot>
  </slots>
 </ui>

@@ -73,6 +73,7 @@ private:
 	QModelIndex getSelectedRow();
 	void updateModelItem(int row, const UiSite& site);
 	void addCategory(const QString& name, CategoryId id=-1);
+	void removeCategory(CategoryId category_id);
 	void selectCategory(CategoryId category);
 	void uiSitesTableChanged();
 	void copyPWToClipboard(UiSite& site);

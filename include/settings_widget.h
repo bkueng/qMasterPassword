@@ -17,6 +17,7 @@
 
 #include <QDialog>
 #include <QMap>
+#include <QList>
 #include <QString>
 #include "app_settings.h"
 #include "user.h"
@@ -32,10 +33,14 @@ class SettingsWidget : public QDialog
 
 public:
 	explicit SettingsWidget(ApplicationSettings& settings,
-			QMap<QString, UiUser>& users,
+			QMap<QString, UiUser>& users, QMap<CategoryId, QString> categories,
 			DataImportExport& import_export,
 			QWidget *parent = 0);
 	~SettingsWidget();
+
+	static QList<QString> defaultCategories();
+
+	QList<QString> categories();
 
 signals:
 	void dataImported(QString user_name);
@@ -43,6 +48,8 @@ signals:
 private:
 	UiUser* selectedUser();
 	void updateUi();
+	bool canAddCategory(const QString& category_name);
+
 	Ui::SettingsWidget *ui;
 	ApplicationSettings& m_settings;
 	QMap<QString, UiUser>& m_users;
@@ -56,6 +63,11 @@ private slots:
 	void importFromJsonClicked();
 	void clipboardTimeoutChanged(int timeout);
 	void clipboardTimeoutClicked(bool activated);
+
+	void removeSelectedCategoryClicked();
+	void addNewCategoryClicked();
+	void categoryNameChanged();
+	void restoreDefaultCategories();
 signals:
 	void showTrayIconChanged(bool visible);
 };
