@@ -628,8 +628,13 @@ void MainWindow::abortLogoutTimer() {
 
 void MainWindow::showHide() {
 	setVisible(!isVisible());
-	if (isVisible()) abortLogoutTimer();
-	else activateLogoutTimer();
+	if (isVisible()) {
+		abortLogoutTimer();
+		if (m_master_password.isLoggedIn())
+			m_ui->tblSites->setFocus();
+		else
+			m_ui->txtPassword->setFocus();
+	} else activateLogoutTimer();
 }
 void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason) {
 	switch (reason) {
