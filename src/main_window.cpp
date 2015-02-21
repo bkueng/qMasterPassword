@@ -34,7 +34,10 @@ using namespace std;
 #include <QtGlobal>
 #include <QDesktopServices>
 #include <QUrl>
+
+#ifdef Q_OS_LINUX
 #include <QtDBus/QtDBus>
+#endif
 
 DBusAdapter::DBusAdapter(MainWindow* main_window) :
 		QObject(main_window), m_main_window(main_window) {
@@ -71,6 +74,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(QCoreApplication::instance(), SIGNAL(aboutToQuit()),
 			this, SLOT(saveSettings()));
 
+#ifdef Q_OS_LINUX
 	if (!QDBusConnection::sessionBus().isConnected()) {
 		LOG(WARN, "Cannot connect to the D-Bus session bus.\n"
 				"To start it, run: eval `dbus-launch --auto-syntax`\n");
@@ -82,6 +86,7 @@ MainWindow::MainWindow(QWidget *parent) :
 		QDBusConnection::sessionBus().registerObject("/MainWindow", dbus_adapter,
 				QDBusConnection::ExportAllSlots);
 	}
+#endif /* Q_OS_LINUX */
 }
 
 MainWindow::~MainWindow() {

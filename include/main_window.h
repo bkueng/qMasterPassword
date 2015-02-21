@@ -25,7 +25,6 @@
 #include <QSortFilterProxyModel>
 #include <QSystemTrayIcon>
 #include <QTimer>
-#include <QtCore/QObject>
 
 #include "crypto.h"
 #include "user.h"
