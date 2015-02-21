@@ -1,5 +1,7 @@
 /*
  * Copyright (C) 2010-2011 Beat Küng <beat-kueng@gmx.net>
+ * Copyright (C) 2006-2015 Ricardo Villalba <rvm@users.sourceforge.net> (qt translation part)
+ *
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +18,9 @@
 #include "version.h"
 
 #include <QApplication>
+#include <QLocale>
+#include <QTranslator>
+#include <QLibraryInfo>
 #include "main_window.h"
 
 #include <cstdio>
@@ -186,15 +191,51 @@ int CMain::processArgs()
 	bool start_minimized = m_parameters->getSwitch("start-minimized");
 
 	QApplication app(m_argc, m_argv);
+	loadTranslation();
 	MainWindow main_window;
 	if (!start_minimized || !main_window.trayIconEnabled())
 		main_window.show();
 	return app.exec();
 }
 
+void CMain::loadTranslation() {
+	QLocale locale = QLocale::system();
 
+	QString bin_path = qApp->applicationDirPath();
+	QString src_app_trans_path = bin_path + QLatin1String("/data/translations");
+	//installed translation path
+	QString app_trans_path = bin_path + "/../share/" APP_NAME "/translations";
+	QString qt_trans_path = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
 
+#if defined(Q_OS_WIN) || defined(Q_OS_OS2)
+	// In windows and OS2 try to load the qt translation from the app path, as
+	// most users won't have Qt installed.
+	m_qt_trans.load(locale, "qt", "_", app_trans_path);
+	m_qtbase_trans.load(locale, "qtbase", "_", app_trans_path);
+#else
+	// In linux try to load it first from app path (in case there's an updated
+	// translation), if it fails it will try then from the Qt path.
+	if (!m_qt_trans.load(locale, "qt", "_", app_trans_path))
+		m_qt_trans.load(locale, "qt", "_", qt_trans_path);
+	if (!m_qtbase_trans.load(locale, "qtbase", "_", app_trans_path))
+		m_qtbase_trans.load(locale, "qtbase", "_", qt_trans_path);
+#endif
 
+	if (!m_app_trans.load(locale, "translation", "_", src_app_trans_path)) {
+		if (!m_app_trans.load(locale, "translation", "_", app_trans_path)) {
+			if (!locale.name().startsWith("en"))
+				LOG(WARN, "Failed to load translation %s",
+						locale.name().toUtf8().constData());
+		}
+	} else {
+		LOG(DEBUG, "Using translation from %s",
+				src_app_trans_path.toUtf8().constData());
+	}
+
+	qApp->installTranslator(&m_app_trans);
+	qApp->installTranslator(&m_qt_trans);
+	qApp->installTranslator(&m_qtbase_trans);
+}
 
 
 

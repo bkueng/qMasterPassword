@@ -18,6 +18,7 @@
 #include "global.h"
 #include "command_line.h"
 
+#include <QTranslator>
 
 /*********************************************************************//*
  * class CMain
@@ -42,6 +43,11 @@ private:
 	void printHelp();
 	void wrongUsage(const char* fmt, ...);
 	void printVersion();
+
+	void loadTranslation();
+	QTranslator m_app_trans;
+	QTranslator m_qt_trans;
+	QTranslator m_qtbase_trans;
 	
 	int processArgs();
 	

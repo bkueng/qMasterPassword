@@ -72,3 +72,6 @@ SOURCES += \
 		   src/user_widget.cpp
 RESOURCES += ui/resources.qrc
 win32:RC_FILE = data/icons/app_icon.rc
+
+TRANSLATIONS = data/translations/translation_de.ts
+
