@@ -35,6 +35,21 @@ using namespace std;
 #include <QDesktopServices>
 #include <QUrl>
 
+#ifdef Q_OS_LINUX
+#include <QtDBus/QtDBus>
+#endif
+
+DBusAdapter::DBusAdapter(MainWindow* main_window) :
+		QObject(main_window), m_main_window(main_window) {
+}
+void DBusAdapter::showHide() {
+	m_main_window->showHide();
+	if (m_main_window->isVisible()) {
+		m_main_window->activateWindow();
+		m_main_window->raise();
+	}
+}
+
 MainWindow::MainWindow(QWidget *parent) :
 		QMainWindow(parent), m_ui(new Ui::MainWindow),
 		m_import_export(m_categories) {
@@ -58,6 +73,20 @@ MainWindow::MainWindow(QWidget *parent) :
 	setWindowIcon(QIcon(":/app_icon.png"));
 	connect(QCoreApplication::instance(), SIGNAL(aboutToQuit()),
 			this, SLOT(saveSettings()));
+
+#ifdef Q_OS_LINUX
+	if (!QDBusConnection::sessionBus().isConnected()) {
+		LOG(WARN, "Cannot connect to the D-Bus session bus.\n"
+				"To start it, run: eval `dbus-launch --auto-syntax`\n");
+	} else if (!QDBusConnection::sessionBus().registerService(
+			"org.bkueng.qMasterPassword")) {
+		LOG(WARN, "%s", qPrintable(QDBusConnection::sessionBus().lastError().message()));
+	} else {
+		DBusAdapter* dbus_adapter = new DBusAdapter(this);
+		QDBusConnection::sessionBus().registerObject("/MainWindow", dbus_adapter,
+				QDBusConnection::ExportAllSlots);
+	}
+#endif /* Q_OS_LINUX */
 }
 
 MainWindow::~MainWindow() {

@@ -9,6 +9,7 @@ CONFIG += debug_and_release \
 	qt \
 	c++11
 QT += widgets
+unix { QT += dbus }
 UI_DIR = ui
 
 # enable unit tests
