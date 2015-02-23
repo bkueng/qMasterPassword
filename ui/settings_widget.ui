@@ -104,7 +104,7 @@
         <item>
          <widget class="QLabel" name="label_2">
           <property name="text">
-           <string>seconds</string>
+           <string>Seconds</string>
           </property>
          </widget>
         </item>
