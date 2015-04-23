@@ -71,7 +71,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	showTrayIcon(m_application_settings.show_systray_icon);
 	setWindowIcon(QIcon(":/app_icon.png"));
 	connect(QCoreApplication::instance(), SIGNAL(aboutToQuit()),
-			this, SLOT(saveSettings()));
+			this, SLOT(appAboutToQuit()));
 
 	m_status_progress_bar = new QProgressBar(statusBar());
 	m_status_progress_bar->setTextVisible(false);
@@ -278,6 +278,8 @@ void MainWindow::logout() {
 	m_ui->btnLoginLogout->setText(tr("Login"));
 	m_ui->txtPassword->setText("");
 	m_ui->txtFilter->setText("");
+	if (m_clipboard_timer->isActive())
+		clearPasswordFromClipboard();
 	enableUI(false);
 	clearSitesUI();
 	m_ui->txtPassword->setFocus();
@@ -418,7 +420,11 @@ void MainWindow::openUrlClicked() {
 	if (!button || button->site().url == "") return;
 	QDesktopServices::openUrl(QUrl(button->site().url, QUrl::TolerantMode));
 }
-
+void MainWindow::appAboutToQuit() {
+	if (m_clipboard_timer->isActive())
+		clearPasswordFromClipboard();
+	saveSettings();
+}
 void MainWindow::saveSettings() {
 	LOG(DEBUG, "saving settings");
 	QSettings settings("qMasterPassword", "qMasterPassword");

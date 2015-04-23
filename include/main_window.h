@@ -128,6 +128,7 @@ private slots:
 	void showAboutWidget();
 	void clearPasswordFromClipboard();
 	void clearPasswordFromClipboardTimer();
+	void appAboutToQuit();
 public slots:
 	void showHide();
 	void copyPWToClipboardClicked();
