@@ -61,8 +61,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	m_clipboard_timer = new QTimer(this);
 	connect(m_clipboard_timer, SIGNAL(timeout()), this,
-			SLOT(clearPasswordFromClipboard()));
-	m_clipboard_timer->setSingleShot(true);
+			SLOT(clearPasswordFromClipboardTimer()));
 
 	initSitesView();
 	readSettings();
@@ -73,6 +72,14 @@ MainWindow::MainWindow(QWidget *parent) :
 	setWindowIcon(QIcon(":/app_icon.png"));
 	connect(QCoreApplication::instance(), SIGNAL(aboutToQuit()),
 			this, SLOT(saveSettings()));
+
+	m_status_progress_bar = new QProgressBar(statusBar());
+	m_status_progress_bar->setTextVisible(false);
+	m_status_progress_bar->setMinimum(0);
+	m_status_progress_bar->setSizePolicy(QSizePolicy::Minimum,
+			m_status_progress_bar->sizePolicy().verticalPolicy());
+	m_status_progress_bar->hide();
+	statusBar()->addPermanentWidget(m_status_progress_bar);
 
 #ifdef Q_OS_LINUX
 	if (!QDBusConnection::sessionBus().isConnected()) {
@@ -629,10 +636,22 @@ void MainWindow::copyPWToClipboard(UiSite& site) {
 		if (!m_clipboard_timer->isActive())
 			m_clipboard_previous_data = original_text;
 		m_clipboard_pw = qpassword;
-		m_clipboard_timer->start(m_application_settings.clipboard_pw_timeout*1000);
-		suffix = tr(" for %1 seconds").arg(m_application_settings.clipboard_pw_timeout);
+		int timeout = m_application_settings.clipboard_pw_timeout;
+		m_clipboard_timer->start(1000);
+		suffix = tr(" for %1 seconds").arg(timeout);
+		m_clipboard_time_left = timeout;
+		m_status_progress_bar->setMaximum(timeout);
+		m_status_progress_bar->setValue(timeout);
+		m_status_progress_bar->show();
 	}
 	statusBar()->showMessage(tr("Copied Password to Clipboard")+suffix, 1500);
+}
+void MainWindow::clearPasswordFromClipboardTimer() {
+	if (--m_clipboard_time_left <= 0) {
+		clearPasswordFromClipboard();
+	} else {
+		m_status_progress_bar->setValue(m_clipboard_time_left);
+	}
 }
 void MainWindow::clearPasswordFromClipboard() {
 	LOG(DEBUG, "Clear password from clipboard");
@@ -641,8 +660,11 @@ void MainWindow::clearPasswordFromClipboard() {
 	if (original_text == m_clipboard_pw) {
 		clipboard->setText(m_clipboard_previous_data);
 	}
+	m_status_progress_bar->hide();
+	m_clipboard_timer->stop();
 	m_clipboard_previous_data = "";
 	m_clipboard_pw = "";
+	m_clipboard_time_left = 0;
 }
 void MainWindow::showHidePWClicked() {
 	LOG(DEBUG, "show/hide PW clicked");

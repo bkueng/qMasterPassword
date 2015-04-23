@@ -25,6 +25,7 @@
 #include <QSortFilterProxyModel>
 #include <QSystemTrayIcon>
 #include <QTimer>
+#include <QProgressBar>
 
 #include "crypto.h"
 #include "user.h"
@@ -100,6 +101,8 @@ private:
 	QString m_clipboard_pw;
 	QString m_clipboard_previous_data;
 	QTimer* m_clipboard_timer = nullptr;
+	QProgressBar* m_status_progress_bar = nullptr;
+	int m_clipboard_time_left;
 
 	int m_copy_column_idx;
 
@@ -124,6 +127,7 @@ private slots:
 	void showSettingsWidget();
 	void showAboutWidget();
 	void clearPasswordFromClipboard();
+	void clearPasswordFromClipboardTimer();
 public slots:
 	void showHide();
 	void copyPWToClipboardClicked();
