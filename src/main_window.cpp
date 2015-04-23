@@ -361,6 +361,13 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event) {
 		};
 
 		switch (keyEvent->key()) {
+		case Qt::Key_C: //Ctrl-C
+			if (keyEvent->modifiers() == Qt::ControlModifier) {
+				TableItem* item = getSelectedItem();
+				if (item)
+					copyPWToClipboard(item->site());
+			}
+			break;
 		case Qt::Key_Space:
 		case Qt::Key_Y:
 		{
