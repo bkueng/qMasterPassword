@@ -270,6 +270,7 @@ void MainWindow::logout() {
 	m_current_user = nullptr;
 	m_ui->btnLoginLogout->setText(tr("Login"));
 	m_ui->txtPassword->setText("");
+	m_ui->txtFilter->setText("");
 	enableUI(false);
 	clearSitesUI();
 	m_ui->txtPassword->setFocus();
