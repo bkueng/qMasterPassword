@@ -24,6 +24,7 @@ win32 {
 	LIBS += -lws2_32 -lscrypt -llibeay32
 } else {
 	LIBS += -lscrypt -lcrypto
+	LIBS += -L/usr/X11R6/lib -lX11 -lXtst
 }
 ICON = data/icons/app_icon.png
 
@@ -49,7 +50,8 @@ HEADERS += \
 		   include/ui_helpers.h \
 		   include/user.h \
 		   include/version.h \
-		   include/user_widget.h
+		   include/user_widget.h \
+		   include/keypress.h
 FORMS += \
 		 ui/edit_site_widget.ui \
 		 ui/main_window.ui \
@@ -69,6 +71,8 @@ SOURCES += \
 		   src/pushbutton_delegate.cpp \
 		   src/settings_widget.cpp \
 		   src/user.cpp \
-		   src/user_widget.cpp
+		   src/user_widget.cpp \
+		   src/keypress.cpp \
+		   src/keypress_linux.cpp
 RESOURCES += ui/resources.qrc
 win32:RC_FILE = data/icons/app_icon.rc
