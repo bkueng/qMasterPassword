@@ -41,6 +41,7 @@ there are prebuilt binaries under
 #### Usage ####
 Keyboard: When the list view has focus:
 - [Y] / [Space] / [Ctrl]+[C]: copy password of selected entry to clipboard
+- [Ctrl]+[V]: switch to next window and fill out username and password
 - [O]: Open Url
 - [/]: focus the filter input
 - [J] / [K]: Select next/previous item

@@ -385,6 +385,35 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event) {
 				copyPWToClipboard(item->site());
 		}
 			break;
+		case Qt::Key_V: //Ctrl-V
+			if (keyEvent->modifiers() == Qt::ControlModifier) {
+				TableItem* item = getSelectedItem();
+				if (item) {
+					string password = m_master_password.sitePassword(item->site().site);
+					QClipboard* clipboard = QApplication::clipboard();
+					QString original_text = clipboard->text();
+
+					m_keypress.releaseModifiers();
+
+					m_keypress.altTab();
+
+					//wait a bit for the window manager to react
+					thread()->msleep(500);
+
+					QString quser_name = item->site().user_name;
+					if (!quser_name.isEmpty()) {
+						const char* user_name = quser_name.toUtf8().constData();
+						m_keypress.type(user_name);
+						m_keypress.type("\t");
+					}
+					m_keypress.type(password.c_str());
+					m_keypress.type("\n");
+
+					//Note: we don't restore modifiers, because in the meanwhile
+					//the user probably already released them
+				}
+			}
+			break;
 		case Qt::Key_Slash:
 			m_ui->txtFilter->selectAll();
 			m_ui->txtFilter->setFocus();

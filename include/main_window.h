@@ -32,6 +32,7 @@
 #include "ui_helpers.h"
 #include "app_settings.h"
 #include "import_export.h"
+#include "keypress.h"
 
 namespace Ui {
 class MainWindow;
@@ -105,6 +106,8 @@ private:
 	int m_clipboard_time_left;
 
 	int m_copy_column_idx;
+
+	Keypress m_keypress;
 
 private slots:
 	void login();
