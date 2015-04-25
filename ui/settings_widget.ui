@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>571</width>
-    <height>409</height>
+    <width>565</width>
+    <height>435</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -31,6 +31,13 @@
        <widget class="QCheckBox" name="chkTrayIcon">
         <property name="text">
          <string>Show System Tray Icon</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="chkFillFormHideWindow">
+        <property name="text">
+         <string>Fill Form (Ctrl+V): Hide Window instead of using Alt+Tab</string>
         </property>
        </widget>
       </item>
@@ -348,8 +355,8 @@
    <slot>autoLogout(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>252</x>
-     <y>98</y>
+     <x>279</x>
+     <y>134</y>
     </hint>
     <hint type="destinationlabel">
      <x>5</x>
@@ -364,11 +371,11 @@
    <slot>autoLogoutValueChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>422</x>
-     <y>105</y>
+     <x>428</x>
+     <y>137</y>
     </hint>
     <hint type="destinationlabel">
-     <x>570</x>
+     <x>564</x>
      <y>127</y>
     </hint>
    </hints>
@@ -380,11 +387,11 @@
    <slot>exportAsJsonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>551</x>
-     <y>348</y>
+     <x>545</x>
+     <y>374</y>
     </hint>
     <hint type="destinationlabel">
-     <x>569</x>
+     <x>564</x>
      <y>238</y>
     </hint>
    </hints>
@@ -412,11 +419,11 @@
    <slot>clipboardTimeoutChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>299</x>
-     <y>132</y>
+     <x>333</x>
+     <y>170</y>
     </hint>
     <hint type="destinationlabel">
-     <x>567</x>
+     <x>564</x>
      <y>164</y>
     </hint>
    </hints>
@@ -428,11 +435,11 @@
    <slot>clipboardTimeoutClicked(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>174</x>
-     <y>132</y>
+     <x>201</x>
+     <y>167</y>
     </hint>
     <hint type="destinationlabel">
-     <x>565</x>
+     <x>564</x>
      <y>152</y>
     </hint>
    </hints>
@@ -444,12 +451,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>174</x>
-     <y>234</y>
+     <x>171</x>
+     <y>273</y>
     </hint>
     <hint type="destinationlabel">
-     <x>228</x>
-     <y>237</y>
+     <x>262</x>
+     <y>273</y>
     </hint>
    </hints>
   </connection>
@@ -460,11 +467,11 @@
    <slot>addNewCategoryClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>265</x>
-     <y>237</y>
+     <x>262</x>
+     <y>273</y>
     </hint>
     <hint type="destinationlabel">
-     <x>567</x>
+     <x>564</x>
      <y>265</y>
     </hint>
    </hints>
@@ -476,8 +483,8 @@
    <slot>removeSelectedCategoryClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>265</x>
-     <y>202</y>
+     <x>262</x>
+     <y>240</y>
     </hint>
     <hint type="destinationlabel">
      <x>564</x>
@@ -492,11 +499,11 @@
    <slot>categoryNameChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>93</x>
-     <y>237</y>
+     <x>119</x>
+     <y>273</y>
     </hint>
     <hint type="destinationlabel">
-     <x>570</x>
+     <x>564</x>
      <y>295</y>
     </hint>
    </hints>
@@ -508,12 +515,28 @@
    <slot>restoreDefaultCategories()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>521</x>
-     <y>202</y>
+     <x>546</x>
+     <y>240</y>
     </hint>
     <hint type="destinationlabel">
-     <x>567</x>
+     <x>564</x>
      <y>194</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>chkFillFormHideWindow</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>SettingsWidget</receiver>
+   <slot>formFillHideWindow(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>498</x>
+     <y>94</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>562</x>
+     <y>92</y>
     </hint>
    </hints>
   </connection>
@@ -531,5 +554,6 @@
   <slot>addNewCategoryClicked()</slot>
   <slot>categoryNameChanged()</slot>
   <slot>restoreDefaultCategories()</slot>
+  <slot>formFillHideWindow(bool)</slot>
  </slots>
 </ui>

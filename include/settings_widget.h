@@ -59,6 +59,7 @@ private slots:
 	void showTrayIcon(bool show);
 	void autoLogout(bool activated);
 	void autoLogoutValueChanged(int value);
+	void formFillHideWindow(bool activated);
 	void exportAsJsonClicked();
 	void importFromJsonClicked();
 	void clipboardTimeoutChanged(int timeout);

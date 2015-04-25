@@ -395,7 +395,10 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event) {
 
 					m_keypress.releaseModifiers();
 
-					m_keypress.altTab();
+					if (m_application_settings.form_fill_hide_window)
+						showHide();
+					else
+						m_keypress.altTab();
 
 					//wait a bit for the window manager to react
 					thread()->msleep(500);

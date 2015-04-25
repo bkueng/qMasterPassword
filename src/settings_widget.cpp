@@ -35,6 +35,7 @@ SettingsWidget::SettingsWidget(ApplicationSettings& settings,
 
 	ui->chkShowPasswords->setChecked(m_settings.show_pw_after_login);
 	ui->chkTrayIcon->setChecked(m_settings.show_systray_icon);
+	ui->chkFillFormHideWindow->setChecked(m_settings.form_fill_hide_window);
 	ui->chkAutoLogout->setChecked(m_settings.auto_logout_when_hidden);
 	ui->spnAutoLogoutTimeout->setValue(m_settings.auto_logout_timeout);
 	int clipboard_pw_timeout = m_settings.clipboard_pw_timeout;
@@ -91,6 +92,9 @@ void SettingsWidget::clipboardTimeoutClicked(bool activated) {
 }
 
 void SettingsWidget::updateUi() {
+	bool icon_enabled = ui->chkTrayIcon->isChecked();
+	ui->chkFillFormHideWindow->setEnabled(icon_enabled);
+	if (!icon_enabled) ui->chkFillFormHideWindow->setChecked(false);
 	ui->btnRemoveCategory->setEnabled(ui->cmbCategories->count() != 0);
 }
 
@@ -224,4 +228,8 @@ void SettingsWidget::restoreDefaultCategories() {
 		ui->cmbCategories->addItem(category);
 	}
 	updateUi();
+}
+
+void SettingsWidget::formFillHideWindow(bool activated) {
+	m_settings.form_fill_hide_window = activated;
 }
