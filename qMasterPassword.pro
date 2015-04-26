@@ -22,6 +22,22 @@ CONFIG(debug, debug|release) {
 
 win32 {
 	LIBS += -lws2_32 -lscrypt -llibeay32
+	INCLUDEPATH += include/3rdparty
+	HEADERS += \
+			include/3rdparty/IInputSimulator.h \
+			include/3rdparty/InputBuilder.h \
+			include/3rdparty/InputSimulator.h \
+			include/3rdparty/KeyboardSimulator.h \
+			include/3rdparty/MouseSimulator.h \
+			include/3rdparty/VirtualKeyCode.h \
+			include/3rdparty/WindowsInputDeviceStateAdaptor.h \
+			include/3rdparty/stdafx.h
+	SOURCES += \
+			src/3rdparty/InputBuilder.cpp \
+			src/3rdparty/InputSimulator.cpp \
+			src/3rdparty/KeyboardSimulator.cpp \
+			src/3rdparty/MouseSimulator.cpp \
+			src/3rdparty/WindowsInputDeviceStateAdaptor.cpp
 } else {
 	LIBS += -lscrypt -lcrypto
 	LIBS += -L/usr/X11R6/lib -lX11 -lXtst
