@@ -34,6 +34,7 @@ using namespace std;
 #include <QtGlobal>
 #include <QDesktopServices>
 #include <QUrl>
+#include <QThread>
 
 #ifdef Q_OS_LINUX
 #include <QtDBus/QtDBus>
