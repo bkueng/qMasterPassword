@@ -153,6 +153,7 @@ private slots:
 	void showTrayIcon(bool visible);
 	void showSettingsWidget();
 	void showAboutWidget();
+	void showShortcutsWidget();
 	void clearPasswordFromClipboard();
 	void clearPasswordFromClipboardTimer();
 	void appAboutToQuit();

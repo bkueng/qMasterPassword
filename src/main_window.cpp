@@ -19,6 +19,7 @@
 #include "logging.h"
 #include "pushbutton_delegate.h"
 #include "settings_widget.h"
+#include "shortcuts_widget.h"
 #include "version.h"
 
 #include <iostream>
@@ -854,6 +855,10 @@ void MainWindow::showAboutWidget() {
 		.arg("Copyright (c) 2015 Beat Küng <a href=\"mailto:beat-kueng@gmx.net\">beat-kueng@gmx.net</a>")
 		.arg("<a href=\"http://www.gnu.org/licenses/gpl.html\">GNU General Public License Version 3</a>")
 		.arg("<a href=\"https://github.com/bkueng/qMasterPassword\">github.com/bkueng/qMasterPassword</a>"));
+}
+void MainWindow::showShortcutsWidget() {
+	ShortcutsWidget shortcuts_widget(*this);
+	shortcuts_widget.exec();
 }
 
 void MainWindow::showTrayIcon(bool visible) {
