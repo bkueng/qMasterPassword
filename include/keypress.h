@@ -42,6 +42,9 @@ private:
 	void* m_display = nullptr;
 	xdo_t* m_xdo = nullptr;
 	void* m_active_mods = nullptr;
+#elif defined(_WIN32)
+	void* m_simulator = nullptr;
+	bool m_keys_pressed[5];
 #endif /* defined(__linux__) */
 
 };

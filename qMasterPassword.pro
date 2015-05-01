@@ -37,7 +37,8 @@ win32 {
 			src/3rdparty/InputSimulator.cpp \
 			src/3rdparty/KeyboardSimulator.cpp \
 			src/3rdparty/MouseSimulator.cpp \
-			src/3rdparty/WindowsInputDeviceStateAdaptor.cpp
+			src/3rdparty/WindowsInputDeviceStateAdaptor.cpp \
+			src/keypress_windows.cpp
 } else {
 	LIBS += -lscrypt -lcrypto -lX11 -lXtst
 }
