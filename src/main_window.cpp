@@ -847,7 +847,10 @@ void MainWindow::showAboutWidget() {
 	"<p>%5</p>"
 	"<p>Use and redistribute under the terms of the<br>%6</p>"
 	"<p>Source code: %7</p>"
-	"<p>This version was compiled against Qt %3 and runs under Qt %4</p>";
+	"<p>This version was compiled against Qt %3 and runs under Qt %4</p>"
+	"<p>Part of the keypress code was taken from xdotool (linux):<br/>"
+	"Copyright (c) 2007, 2008, 2009: Jordan Sissel <br/>"
+	"and Windows Input Simulator (Windows):<br/> Copyright(c) 1998-2012, Arnaud Colin</p>";
 
 	QMessageBox::about(this, tr("About %1").arg(APP_NAME),
 		tr(about_msg).arg(APP_NAME).arg(QString::fromStdString(getAppVersion().toStr()))
