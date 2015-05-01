@@ -39,8 +39,7 @@ win32 {
 			src/3rdparty/MouseSimulator.cpp \
 			src/3rdparty/WindowsInputDeviceStateAdaptor.cpp
 } else {
-	LIBS += -lscrypt -lcrypto
-	LIBS += -L/usr/X11R6/lib -lX11 -lXtst
+	LIBS += -lscrypt -lcrypto -lX11 -lXtst
 }
 ICON = data/icons/app_icon.png
 
