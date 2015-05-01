@@ -156,8 +156,3 @@
 			SendSimulatedInput(inputList.AddMouseVerticalWheelScroll(scrollAmountInClicks * MouseWheelClickSize));
         }
 
-         void CMouseSimulator::HorizontalScroll(int scrollAmountInClicks)
-        {
-			CInputBuilder inputList;
-			SendSimulatedInput(inputList.AddMouseHorizontalWheelScroll(scrollAmountInClicks * MouseWheelClickSize));
-        }

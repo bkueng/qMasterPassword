@@ -119,7 +119,7 @@ CInputBuilder& CInputBuilder::AddKeyPress(std::vector<VirtualKeyCode>* pkeyCodes
             return *this;
         }
 
-CInputBuilder& CInputBuilder::AddCharacter(char character)
+CInputBuilder& CInputBuilder::AddCharacter(wchar_t character)
         {
 
 			UINT16 scanCode = character;
@@ -154,10 +154,10 @@ CInputBuilder& CInputBuilder::AddCharacter(char character)
             return *this;
         }
 
-CInputBuilder& CInputBuilder::AddCharacters(std::vector<char> characters)
+CInputBuilder& CInputBuilder::AddCharacters(std::vector<wchar_t> characters)
         {
 
-			for(std::vector<char>::iterator character = characters.begin(); character != characters.end();++character)
+			for(std::vector<wchar_t>::iterator character = characters.begin(); character != characters.end();++character)
 			{
 				 AddCharacter(*character);
 		
@@ -169,14 +169,12 @@ CInputBuilder& CInputBuilder::AddCharacters(std::vector<char> characters)
 CInputBuilder& CInputBuilder::AddCharacters(LPCTSTR characters)
         {
 			
-			bool bResult = true;
 			LPCWSTR wstr = characters; 
 			int count = wcslen(wstr);
 			wchar_t* pwchr = const_cast<wchar_t*> (&wstr[0]);
 			for(int j = 0; j < count; ++j)
 			{
-				char c = static_cast<char> (*pwchr);   
-				AddCharacter(c);
+				AddCharacter(*pwchr);
 				 pwchr++;
 			} 
 
@@ -308,19 +306,6 @@ CInputBuilder& CInputBuilder::AddMouseVerticalWheelScroll(int scrollAmount)
 				_inputList.insert( _inputList.end(), scroll);	
 
             return *this;
-        }
-
-CInputBuilder& CInputBuilder:: AddMouseHorizontalWheelScroll(int scrollAmount)
-        {
-
-		INPUT scroll;
-				scroll.type = INPUT_MOUSE;
-				scroll.mi.dwFlags = MOUSEEVENTF_HWHEEL ;
-				scroll.mi.mouseData = scrollAmount;
-				_inputList.insert( _inputList.end(), scroll);	
-
-            return *this;
-
         }
 
 

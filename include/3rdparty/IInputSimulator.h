@@ -65,7 +65,6 @@ class  IMouseSimulator
 		virtual void XButtonClick(int buttonId)= 0;
 		virtual void XButtonDoubleClick(int buttonId)= 0;
 		virtual void VerticalScroll(int scrollAmountInClicks)= 0;
-		virtual void HorizontalScroll(int scrollAmountInClicks)= 0;
     };
 
 

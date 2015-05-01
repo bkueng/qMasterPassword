@@ -138,11 +138,8 @@
     }
 
 
-#include <intsafe.h>
     void CKeyboardSimulator::TextEntry(LPCTSTR text)
     {
-		if( wcslen(text) > (UINT32_MAX /2)) throw "";
-
 		  CInputBuilder inputList;
         SendSimulatedInput(inputList.AddCharacters(text));
     }

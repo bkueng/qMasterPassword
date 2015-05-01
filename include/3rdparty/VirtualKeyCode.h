@@ -22,6 +22,7 @@
  */
 
 
+#include <windows.h>
 #include <WinUser.h>
 
 #if _MSC_VER > 1600 

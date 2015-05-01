@@ -55,5 +55,4 @@ public:
     void XButtonClick(int buttonId);
     void XButtonDoubleClick(int buttonId);
     void VerticalScroll(int scrollAmountInClicks);
-    void HorizontalScroll(int scrollAmountInClicks);
     };

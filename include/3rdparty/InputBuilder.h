@@ -50,8 +50,8 @@ public:
 	CInputBuilder& AddKeyDown( std::vector<VirtualKeyCode>* pmodifierKeyCodes);
 	CInputBuilder& AddKeyPress( std::vector<VirtualKeyCode>* pkeyCodes);
 
-    CInputBuilder& AddCharacter(char character);
-    CInputBuilder& AddCharacters(std::vector<char> characters);
+    CInputBuilder& AddCharacter(wchar_t character);
+    CInputBuilder& AddCharacters(std::vector<wchar_t> characters);
 	CInputBuilder& AddCharacters(LPCTSTR characters);
 
 
@@ -67,7 +67,6 @@ public:
     CInputBuilder& AddMouseButtonDoubleClick(MouseButton button);
     CInputBuilder& AddMouseXButtonDoubleClick(int xButtonId);
     CInputBuilder& AddMouseVerticalWheelScroll(int scrollAmount);
-    CInputBuilder& AddMouseHorizontalWheelScroll(int scrollAmount);
 
 
 	CInputBuilder& AddHardware( DWORD msg, DWORD paramh, DWORD paraml);

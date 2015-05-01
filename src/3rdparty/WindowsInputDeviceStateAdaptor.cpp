@@ -22,7 +22,7 @@
 
 bool CWindowsInputDeviceStateAdaptor::IsKeyDown(VirtualKeyCode keyCode)
         {
-			UINT16 result = GetKeyState( (UINT16) keyCode);
+			SHORT result = GetKeyState( (UINT16) keyCode);
             return (result < 0);
         }
 
@@ -34,7 +34,7 @@ bool CWindowsInputDeviceStateAdaptor::IsKeyDown(VirtualKeyCode keyCode)
 
         bool CWindowsInputDeviceStateAdaptor::IsHardwareKeyDown(VirtualKeyCode keyCode)
         {
-            UINT16 result = GetAsyncKeyState((UINT16) keyCode);
+            SHORT result = GetAsyncKeyState((UINT16) keyCode);
             return (result < 0);
         }
 
