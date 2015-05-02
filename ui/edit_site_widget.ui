@@ -167,6 +167,9 @@
   <tabstop>txtSiteName</tabstop>
   <tabstop>cmbPasswordType</tabstop>
   <tabstop>spnSiteCounter</tabstop>
+  <tabstop>txtUserName</tabstop>
+  <tabstop>txtUrl</tabstop>
+  <tabstop>txtComment</tabstop>
  </tabstops>
  <resources/>
  <connections>
