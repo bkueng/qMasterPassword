@@ -63,7 +63,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(m_clipboard_timer, SIGNAL(timeout()), this,
 			SLOT(clearPasswordFromClipboardTimer()));
 	m_hide_identicon_timer = new QTimer(this);
-	connect(m_hide_identicon_timer, SIGNAL(timeout()), m_ui->lblIdenticon, SLOT(hide()));
+	connect(m_hide_identicon_timer, SIGNAL(timeout()), m_ui->lblIdenticon, SLOT(clear()));
 	m_hide_identicon_timer->setSingleShot(true);
 
 	initSitesView();
@@ -817,9 +817,7 @@ void MainWindow::uiLoginChanged() {
 	QString password = m_ui->txtPassword->text();
 	if (!m_application_settings.show_identicon || password.isEmpty()) {
 		m_ui->lblIdenticon->setText("");
-		m_ui->lblIdenticon->hide();
 	} else {
-		m_ui->lblIdenticon->show();
 		QColor identicon_color;
 		QString identicon;
 		m_identicon.setUserName(m_ui->cmbUserName->currentText());
