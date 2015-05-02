@@ -78,6 +78,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QLabel" name="lblIdenticon">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -480,6 +487,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>cmbUserName</sender>
+   <signal>currentTextChanged(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>uiLoginChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>302</x>
+     <y>41</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>348</x>
+     <y>23</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>txtPassword</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>uiLoginChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>468</x>
+     <y>43</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>498</x>
+     <y>25</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>loginLogoutClicked()</slot>
@@ -492,5 +531,6 @@
   <slot>showSettingsWidget()</slot>
   <slot>editUser()</slot>
   <slot>showAboutWidget()</slot>
+  <slot>uiLoginChanged()</slot>
  </slots>
 </ui>

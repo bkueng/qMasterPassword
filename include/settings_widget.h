@@ -63,6 +63,7 @@ private slots:
 	void importFromJsonClicked();
 	void clipboardTimeoutChanged(int timeout);
 	void clipboardTimeoutClicked(bool activated);
+	void showIdenticonClicked(bool activated);
 
 	void removeSelectedCategoryClicked();
 	void addNewCategoryClicked();

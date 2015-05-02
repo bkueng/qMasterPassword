@@ -17,6 +17,7 @@
 
 #include <QDialog>
 #include "user.h"
+#include "identicon.h"
 
 namespace Ui {
 class UserWidget;
@@ -44,8 +45,10 @@ public:
 
 private:
 	Ui::UserWidget *ui;
+	Identicon m_identicon;
 private slots:
 	void checkInputValidity();
+	void identiconHelp();
 };
 
 #endif // HEADER_USER_WIDGET_H

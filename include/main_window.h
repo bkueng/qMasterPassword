@@ -32,6 +32,7 @@
 #include "ui_helpers.h"
 #include "app_settings.h"
 #include "import_export.h"
+#include "identicon.h"
 
 namespace Ui {
 class MainWindow;
@@ -83,6 +84,8 @@ private:
 	void openSelectedUrl();
 
 	MasterPassword m_master_password;
+	Identicon m_identicon;
+	QTimer* m_hide_identicon_timer = nullptr;
 	QMap<QString /* user name */, UiUser> m_users;
 	QMap<CategoryId, QString> m_categories;
 	CategoryId m_next_category_id = 0;
@@ -129,6 +132,7 @@ private slots:
 	void clearPasswordFromClipboard();
 	void clearPasswordFromClipboardTimer();
 	void appAboutToQuit();
+	void uiLoginChanged();
 public slots:
 	void showHide();
 	void copyPWToClipboardClicked();

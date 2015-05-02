@@ -62,6 +62,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	m_clipboard_timer = new QTimer(this);
 	connect(m_clipboard_timer, SIGNAL(timeout()), this,
 			SLOT(clearPasswordFromClipboardTimer()));
+	m_hide_identicon_timer = new QTimer(this);
+	connect(m_hide_identicon_timer, SIGNAL(timeout()), m_ui->lblIdenticon, SLOT(hide()));
+	m_hide_identicon_timer->setSingleShot(true);
 
 	initSitesView();
 	readSettings();
@@ -80,6 +83,10 @@ MainWindow::MainWindow(QWidget *parent) :
 			m_status_progress_bar->sizePolicy().verticalPolicy());
 	m_status_progress_bar->hide();
 	statusBar()->addPermanentWidget(m_status_progress_bar);
+
+	QFont label_font = m_ui->lblIdenticon->font();
+	label_font.setPointSizeF(label_font.pointSizeF()*1.3f);
+	m_ui->lblIdenticon->setFont(label_font);
 
 #ifdef Q_OS_LINUX
 	if (!QDBusConnection::sessionBus().isConnected()) {
@@ -248,6 +255,8 @@ void MainWindow::login() {
 		//clear the password: no need to store it anymore
 		m_ui->txtPassword->setText("");
 		m_ui->tblSites->setFocus();
+		if (m_application_settings.show_identicon)
+			m_hide_identicon_timer->start(2000);
 
 	} catch(CryptoException& e) {
 		QString error_msg;
@@ -801,6 +810,25 @@ void MainWindow::showTrayIcon(bool visible) {
 			delete m_tray_icon;
 			m_tray_icon = nullptr;
 		}
+	}
+}
+
+void MainWindow::uiLoginChanged() {
+	QString password = m_ui->txtPassword->text();
+	if (!m_application_settings.show_identicon || password.isEmpty()) {
+		m_ui->lblIdenticon->setText("");
+		m_ui->lblIdenticon->hide();
+	} else {
+		m_ui->lblIdenticon->show();
+		QColor identicon_color;
+		QString identicon;
+		m_identicon.setUserName(m_ui->cmbUserName->currentText());
+		m_identicon.getIdenticon(password, identicon, identicon_color);
+		m_ui->lblIdenticon->setText(identicon);
+
+		QPalette palette = m_ui->lblIdenticon->palette();
+		palette.setColor(QPalette::WindowText, identicon_color);
+		m_ui->lblIdenticon->setPalette(palette);
 	}
 }
 

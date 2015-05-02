@@ -9,5 +9,6 @@
         <file alias="hidden.png">../data/icons/hidden.png</file>
         <file alias="app_icon.png">../data/icons/app_icon.png</file>
         <file alias="settings.png">../data/icons/settings.png</file>
+        <file alias="help.png">../data/icons/help.png</file>
     </qresource>
 </RCC>

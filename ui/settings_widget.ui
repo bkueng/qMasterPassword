@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>571</width>
-    <height>409</height>
+    <height>435</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -122,6 +122,13 @@
          </spacer>
         </item>
        </layout>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="chkShowIdenticon">
+        <property name="text">
+         <string>Show Identicon. Useful to notice typos in the entered master password.</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -272,7 +279,16 @@
   <tabstop>chkTrayIcon</tabstop>
   <tabstop>chkAutoLogout</tabstop>
   <tabstop>spnAutoLogoutTimeout</tabstop>
+  <tabstop>chkClipboardTimeout</tabstop>
+  <tabstop>spnClipboardTimeout</tabstop>
+  <tabstop>chkShowIdenticon</tabstop>
+  <tabstop>cmbCategories</tabstop>
+  <tabstop>btnRemoveCategory</tabstop>
+  <tabstop>txtCategory</tabstop>
+  <tabstop>btnAddCategory</tabstop>
+  <tabstop>btnResoreDefaultCategories</tabstop>
   <tabstop>cmbExportedUser</tabstop>
+  <tabstop>btnImportJson</tabstop>
   <tabstop>btnExportJson</tabstop>
  </tabstops>
  <resources/>
@@ -445,11 +461,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>174</x>
-     <y>234</y>
+     <y>273</y>
     </hint>
     <hint type="destinationlabel">
-     <x>228</x>
-     <y>237</y>
+     <x>265</x>
+     <y>273</y>
     </hint>
    </hints>
   </connection>
@@ -461,7 +477,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>265</x>
-     <y>237</y>
+     <y>273</y>
     </hint>
     <hint type="destinationlabel">
      <x>567</x>
@@ -477,7 +493,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>265</x>
-     <y>202</y>
+     <y>240</y>
     </hint>
     <hint type="destinationlabel">
      <x>564</x>
@@ -492,8 +508,8 @@
    <slot>categoryNameChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>93</x>
-     <y>237</y>
+     <x>119</x>
+     <y>273</y>
     </hint>
     <hint type="destinationlabel">
      <x>570</x>
@@ -508,12 +524,28 @@
    <slot>restoreDefaultCategories()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>521</x>
-     <y>202</y>
+     <x>552</x>
+     <y>240</y>
     </hint>
     <hint type="destinationlabel">
      <x>567</x>
      <y>194</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>chkShowIdenticon</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>SettingsWidget</receiver>
+   <slot>showIdenticonClicked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>515</x>
+     <y>164</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>567</x>
+     <y>102</y>
     </hint>
    </hints>
   </connection>
@@ -531,5 +563,6 @@
   <slot>addNewCategoryClicked()</slot>
   <slot>categoryNameChanged()</slot>
   <slot>restoreDefaultCategories()</slot>
+  <slot>showIdenticonClicked(bool)</slot>
  </slots>
 </ui>

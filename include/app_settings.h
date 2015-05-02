@@ -33,12 +33,15 @@ public:
 
 	int clipboard_pw_timeout = 0; //[sec], if 0, no timeout
 
+	bool show_identicon = true;
+
 	void saveSettings(QSettings& settings) {
 		settings.setValue("app_settings/show_systray_icon", show_systray_icon);
 		settings.setValue("app_settings/show_password_after_login", show_pw_after_login);
 		settings.setValue("app_settings/auto_logout_when_hidden", auto_logout_when_hidden);
 		settings.setValue("app_settings/auto_logout_timeout", auto_logout_timeout);
 		settings.setValue("app_settings/clipboard_pw_timeout", clipboard_pw_timeout);
+		settings.setValue("app_settings/show_identicon", show_identicon);
 	}
 	void restoreSettings(QSettings& settings) {
 		show_systray_icon = settings.value("app_settings/show_systray_icon",
@@ -51,6 +54,8 @@ public:
 				auto_logout_timeout).toInt();
 		clipboard_pw_timeout = settings.value("app_settings/clipboard_pw_timeout",
 				clipboard_pw_timeout).toInt();
+		show_identicon = settings.value("app_settings/show_identicon",
+				show_identicon).toBool();
 	}
 
 private:

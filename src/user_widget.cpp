@@ -17,6 +17,8 @@
 
 #include <QPushButton>
 #include <QMessageBox>
+#include <QWhatsThis>
+#include <QCursor>
 
 UserWidget::UserWidget(Type type, QWidget *parent) :
 	QDialog(parent),
@@ -25,6 +27,10 @@ UserWidget::UserWidget(Type type, QWidget *parent) :
 	ui->setupUi(this);
 	setFixedSize(size());
 	checkInputValidity();
+
+	QFont label_font = ui->txtIdenticon->font();
+	label_font.setPointSizeF(label_font.pointSizeF()*1.3f);
+	ui->txtIdenticon->setFont(label_font);
 
 	if (type == Type_edit) {
 		ui->txtUserName->setEnabled(false);
@@ -60,10 +66,25 @@ void UserWidget::applyData(UiUser& user) {
 }
 
 void UserWidget::checkInputValidity() {
+	QString password = ui->txtPassword->text();
 	bool is_valid = ui->txtUserName->text().length() > 0
-			&& ui->txtPassword->text().length() > 0
-			&& ui->txtPassword->text() == ui->txtPasswordRepeat->text();
+			&& password.length() > 0
+			&& password == ui->txtPasswordRepeat->text();
 	ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(is_valid);
+
+	if (password.isEmpty()) {
+		ui->txtIdenticon->setText("");
+	} else {
+		QColor identicon_color;
+		QString identicon;
+		m_identicon.setUserName(ui->txtUserName->text());
+		m_identicon.getIdenticon(password, identicon, identicon_color);
+		ui->txtIdenticon->setText(identicon);
+
+		QPalette palette = ui->txtIdenticon->palette();
+		palette.setColor(QPalette::Text, identicon_color);
+		ui->txtIdenticon->setPalette(palette);
+	}
 }
 
 bool UserWidget::checkPasswordOnLogin() const {
@@ -73,4 +94,12 @@ bool UserWidget::checkPasswordOnLogin() const {
 void UserWidget::setData(const UiUser& user) {
 	ui->txtUserName->setText(user.getUserName());
 	ui->chkCheckPassword->setChecked(user.userData().storePasswordHash());
+}
+
+void UserWidget::identiconHelp() {
+	QWhatsThis::showText(QCursor::pos(),
+		tr("<p>The identicon is a visual help calculated from the user name and the master password.</p>"
+			"<p>Remember it and if it is the same when logging in, you most likely didn't make a typo.</p>"
+			"<p>This avoids the need to explicitly store the hash of the password (password check option below).</p>"
+			"<p>It can be disabled under Edit -> Settings.</p>"), this);
 }

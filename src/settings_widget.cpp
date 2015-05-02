@@ -44,6 +44,7 @@ SettingsWidget::SettingsWidget(ApplicationSettings& settings,
 	} else {
 		ui->chkClipboardTimeout->setChecked(false);
 	}
+	ui->chkShowIdenticon->setChecked(m_settings.show_identicon);
 
 	for (const auto& category : categories.keys()) {
 		if (category != 0)
@@ -89,6 +90,10 @@ void SettingsWidget::clipboardTimeoutClicked(bool activated) {
 		m_settings.clipboard_pw_timeout = 0;
 	}
 }
+void SettingsWidget::showIdenticonClicked(bool activated) {
+	m_settings.show_identicon = activated;
+}
+
 
 void SettingsWidget::updateUi() {
 	ui->btnRemoveCategory->setEnabled(ui->cmbCategories->count() != 0);

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>426</width>
-    <height>172</height>
+    <width>373</width>
+    <height>260</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -69,12 +69,49 @@
        </property>
       </widget>
      </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Identicon:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QLineEdit" name="txtIdenticon">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::ClickFocus</enum>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnIdenticonHelp">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/help.png</normaloff>:/help.png</iconset>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
     </layout>
    </item>
    <item>
     <widget class="QCheckBox" name="chkCheckPassword">
      <property name="text">
-      <string>Check Password when logging in</string>
+      <string>Check Password when logging in.
+(if enabled, the hash of the
+password needs to be stored)</string>
      </property>
     </widget>
    </item>
@@ -90,7 +127,17 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <tabstops>
+  <tabstop>txtUserName</tabstop>
+  <tabstop>txtPassword</tabstop>
+  <tabstop>txtPasswordRepeat</tabstop>
+  <tabstop>btnIdenticonHelp</tabstop>
+  <tabstop>chkCheckPassword</tabstop>
+  <tabstop>txtIdenticon</tabstop>
+ </tabstops>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>
@@ -99,8 +146,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>227</x>
-     <y>124</y>
+     <x>236</x>
+     <y>213</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -115,8 +162,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>295</x>
-     <y>130</y>
+     <x>304</x>
+     <y>213</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
@@ -172,8 +219,25 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>btnIdenticonHelp</sender>
+   <signal>clicked()</signal>
+   <receiver>UserWidget</receiver>
+   <slot>identiconHelp()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>402</x>
+     <y>135</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>147</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>checkInputValidity()</slot>
+  <slot>identiconHelp()</slot>
  </slots>
 </ui>
