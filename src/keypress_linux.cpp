@@ -674,7 +674,8 @@ int xdo_type(const xdo_t *xdo, const char *string, useconds_t delay) {
 	xdo_active_mods_t *current_mods = xdo_get_active_modifiers(xdo);
 	charcodemap_t key;
 	setlocale(LC_CTYPE, "");
-	mbstate_t ps = { 0 };
+	mbstate_t ps;
+	memset(&ps, 0, sizeof(mbstate_t));
 	ssize_t len;
 	while ((len = mbsrtowcs(&key.key, &string, 1, &ps))) {
 		if (len == -1) {
