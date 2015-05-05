@@ -19,6 +19,7 @@
 #include "logging.h"
 #include "pushbutton_delegate.h"
 #include "settings_widget.h"
+#include "shortcuts_widget.h"
 #include "version.h"
 
 #include <iostream>
@@ -34,6 +35,7 @@ using namespace std;
 #include <QtGlobal>
 #include <QDesktopServices>
 #include <QUrl>
+#include <QThread>
 
 #ifdef Q_OS_LINUX
 #include <QtDBus/QtDBus>
@@ -87,6 +89,30 @@ MainWindow::MainWindow(QWidget *parent) :
 	QFont label_font = m_ui->lblIdenticon->font();
 	label_font.setPointSizeF(label_font.pointSizeF()*1.3f);
 	m_ui->lblIdenticon->setFont(label_font);
+
+	/* default key bindings */
+	m_table_shortcuts[(int)ShortcutAction::CopyToClipboard].push_back(
+			QKeySequence(QKeySequence::Copy));
+	m_table_shortcuts[(int)ShortcutAction::CopyToClipboard].push_back(
+			QKeySequence(Qt::Key_Space));
+	m_table_shortcuts[(int)ShortcutAction::CopyToClipboard].push_back(
+			QKeySequence(Qt::Key_Y));
+	m_table_shortcuts[(int)ShortcutAction::FillForm].push_back(
+			QKeySequence(QKeySequence::Paste));
+	m_table_shortcuts[(int)ShortcutAction::FillForm].push_back(
+			QKeySequence(Qt::Key_P));
+	m_table_shortcuts[(int)ShortcutAction::FillFormPasswordOnly].push_back(
+			QKeySequence(Qt::SHIFT + Qt::Key_P));
+	m_table_shortcuts[(int)ShortcutAction::SelectFilter].push_back(
+			QKeySequence(Qt::Key_Slash));
+	m_table_shortcuts[(int)ShortcutAction::PreviousItem].push_back(
+			QKeySequence(Qt::Key_K));
+	m_table_shortcuts[(int)ShortcutAction::NextItem].push_back(
+			QKeySequence(Qt::Key_J));
+	m_table_shortcuts[(int)ShortcutAction::OpenURL].push_back(
+			QKeySequence(Qt::Key_O));
+	m_table_shortcuts[(int)ShortcutAction::Logout].push_back(
+			QKeySequence(Qt::Key_Q));
 
 #ifdef Q_OS_LINUX
 	if (!QDBusConnection::sessionBus().isConnected()) {
@@ -368,7 +394,7 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 bool MainWindow::eventFilter(QObject* obj, QEvent* event) {
 	if (obj == m_ui->tblSites && event->type() == QEvent::KeyPress) {
 		QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
-		bool handled_key = true;
+		bool handled_key = false;
 		auto changeSelection = [this] (int offset) {
 			QModelIndex selected_row = getSelectedRow();
 			if (selected_row.isValid()) {
@@ -377,46 +403,86 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event) {
 					% m_proxy_model->rowCount());
 			}
 		};
+		int key = keyEvent->key();
+		if (key == Qt::Key_Control || key == Qt::Key_Shift || key == Qt::Key_Alt
+				|| key == Qt::Key_Meta || key == Qt::Key_unknown)
+			return false;
 
-		switch (keyEvent->key()) {
-		case Qt::Key_C: //Ctrl-C
-			if (keyEvent->modifiers() == Qt::ControlModifier) {
-				TableItem* item = getSelectedItem();
-				if (item)
-					copyPWToClipboard(item->site());
+		QKeySequence key_sequence = QKeySequence(keyEvent->modifiers() | key);
+
+		for (int i = 0; i < m_table_shortcuts.size(); ++i) {
+			for (auto& key_shortcut : m_table_shortcuts[i]) {
+				if (key_shortcut.matches(key_sequence) == QKeySequence::ExactMatch) {
+					switch ((ShortcutAction)i) {
+					case ShortcutAction::CopyToClipboard:
+					{
+						TableItem* item = getSelectedItem();
+						if (item)
+							copyPWToClipboard(item->site());
+					}
+						break;
+					case ShortcutAction::FillForm:
+						fillForm();
+						break;
+					case ShortcutAction::FillFormPasswordOnly:
+						fillForm(true);
+						break;
+					case ShortcutAction::SelectFilter:
+						m_ui->txtFilter->selectAll();
+						m_ui->txtFilter->setFocus();
+						break;
+					case ShortcutAction::PreviousItem:
+						changeSelection(-1);
+						break;
+					case ShortcutAction::NextItem:
+						changeSelection(+1);
+						break;
+					case ShortcutAction::OpenURL:
+						openSelectedUrl();
+						break;
+					case ShortcutAction::Logout:
+						logout();
+						break;
+					default:
+						THROW(EINVALID_PARAMETER);
+					}
+					handled_key = true;
+				}
 			}
-			break;
-		case Qt::Key_Space:
-		case Qt::Key_Y:
-		{
-			TableItem* item = getSelectedItem();
-			if (item)
-				copyPWToClipboard(item->site());
-		}
-			break;
-		case Qt::Key_Slash:
-			m_ui->txtFilter->selectAll();
-			m_ui->txtFilter->setFocus();
-			break;
-		case Qt::Key_J: //select next
-			changeSelection(+1);
-			break;
-		case Qt::Key_K: //select previous
-			changeSelection(-1);
-			break;
-		case Qt::Key_O:
-			openSelectedUrl();
-			break;
-		case Qt::Key_Q:
-			logout();
-			break;
-		default:
-			handled_key = false;
-			break;
 		}
 		return handled_key;
 	}
 	return false;
+}
+void MainWindow::fillForm(bool password_only) {
+	TableItem* item = getSelectedItem();
+	if (item) {
+		string password = m_master_password.sitePassword(item->site().site);
+		QClipboard* clipboard = QApplication::clipboard();
+		QString original_text = clipboard->text();
+
+		m_keypress.releaseModifiers();
+
+		if (m_application_settings.form_fill_hide_window)
+			showHide();
+		else
+			m_keypress.altTab();
+
+		//wait a bit for the window manager to react
+		thread()->msleep(500);
+
+		QString quser_name = item->site().user_name;
+		if (!quser_name.isEmpty() && !password_only) {
+			const char* user_name = quser_name.toUtf8().constData();
+			m_keypress.type(user_name);
+			m_keypress.type("\t");
+		}
+		m_keypress.type(password.c_str());
+		m_keypress.type("\n");
+
+		//Note: we don't restore modifiers, because in the meanwhile
+		//the user probably already released them
+	}
 }
 
 void MainWindow::openSelectedUrl() {
@@ -790,7 +856,10 @@ void MainWindow::showAboutWidget() {
 	"<p>%5</p>"
 	"<p>Use and redistribute under the terms of the<br>%6</p>"
 	"<p>Source code: %7</p>"
-	"<p>This version was compiled against Qt %3 and runs under Qt %4</p>";
+	"<p>This version was compiled against Qt %3 and runs under Qt %4</p>"
+	"<p>Part of the keypress code was taken from xdotool (linux):<br/>"
+	"Copyright (c) 2007, 2008, 2009: Jordan Sissel <br/>"
+	"and Windows Input Simulator (Windows):<br/> Copyright(c) 1998-2012, Arnaud Colin</p>";
 
 	QMessageBox::about(this, tr("About %1").arg(APP_NAME),
 		tr(about_msg).arg(APP_NAME).arg(QString::fromStdString(getAppVersion().toStr()))
@@ -798,6 +867,10 @@ void MainWindow::showAboutWidget() {
 		.arg("Copyright (c) 2015 Beat Küng <a href=\"mailto:beat-kueng@gmx.net\">beat-kueng@gmx.net</a>")
 		.arg("<a href=\"http://www.gnu.org/licenses/gpl.html\">GNU General Public License Version 3</a>")
 		.arg("<a href=\"https://github.com/bkueng/qMasterPassword\">github.com/bkueng/qMasterPassword</a>"));
+}
+void MainWindow::showShortcutsWidget() {
+	ShortcutsWidget shortcuts_widget(*this);
+	shortcuts_widget.exec();
 }
 
 void MainWindow::showTrayIcon(bool visible) {
@@ -844,3 +917,25 @@ bool MySortFilterProxyModel::filterAcceptsRow(int source_row,
 	return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
 }
 
+QString MainWindow::description(ShortcutAction action) {
+	switch (action) {
+	case ShortcutAction::CopyToClipboard:
+		return tr("Copy password of selected item to clipboard");
+	case ShortcutAction::FillForm:
+		return tr("Auto fill form: select next window and fill in user name (if set) and password");
+	case ShortcutAction::FillFormPasswordOnly:
+		return tr("Auto fill form (password only)");
+	case ShortcutAction::SelectFilter:
+		return tr("Focus the filter text");
+	case ShortcutAction::PreviousItem:
+		return tr("Select previous item");
+	case ShortcutAction::NextItem:
+		return tr("Select next item");
+	case ShortcutAction::OpenURL:
+		return tr("Open URL of selected item");
+	case ShortcutAction::Logout:
+		return tr("Logout");
+	default:
+		THROW(EINVALID_PARAMETER);
+	}
+}

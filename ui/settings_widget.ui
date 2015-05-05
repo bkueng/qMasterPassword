@@ -35,6 +35,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QCheckBox" name="chkFillFormHideWindow">
+        <property name="text">
+         <string>Fill Form (Ctrl+V): Hide Window instead of using Alt+Tab</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
          <widget class="QCheckBox" name="chkAutoLogout">
@@ -364,8 +371,8 @@
    <slot>autoLogout(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>252</x>
-     <y>98</y>
+     <x>279</x>
+     <y>134</y>
     </hint>
     <hint type="destinationlabel">
      <x>5</x>
@@ -380,11 +387,11 @@
    <slot>autoLogoutValueChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>422</x>
-     <y>105</y>
+     <x>428</x>
+     <y>137</y>
     </hint>
     <hint type="destinationlabel">
-     <x>570</x>
+     <x>564</x>
      <y>127</y>
     </hint>
    </hints>
@@ -396,11 +403,11 @@
    <slot>exportAsJsonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>551</x>
-     <y>348</y>
+     <x>545</x>
+     <y>374</y>
     </hint>
     <hint type="destinationlabel">
-     <x>569</x>
+     <x>564</x>
      <y>238</y>
     </hint>
    </hints>
@@ -428,11 +435,11 @@
    <slot>clipboardTimeoutChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>299</x>
-     <y>132</y>
+     <x>333</x>
+     <y>170</y>
     </hint>
     <hint type="destinationlabel">
-     <x>567</x>
+     <x>564</x>
      <y>164</y>
     </hint>
    </hints>
@@ -444,11 +451,11 @@
    <slot>clipboardTimeoutClicked(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>174</x>
-     <y>132</y>
+     <x>201</x>
+     <y>167</y>
     </hint>
     <hint type="destinationlabel">
-     <x>565</x>
+     <x>564</x>
      <y>152</y>
     </hint>
    </hints>
@@ -480,7 +487,7 @@
      <y>273</y>
     </hint>
     <hint type="destinationlabel">
-     <x>567</x>
+     <x>564</x>
      <y>265</y>
     </hint>
    </hints>
@@ -512,7 +519,7 @@
      <y>273</y>
     </hint>
     <hint type="destinationlabel">
-     <x>570</x>
+     <x>564</x>
      <y>295</y>
     </hint>
    </hints>
@@ -528,7 +535,7 @@
      <y>240</y>
     </hint>
     <hint type="destinationlabel">
-     <x>567</x>
+     <x>564</x>
      <y>194</y>
     </hint>
    </hints>
@@ -549,6 +556,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>chkFillFormHideWindow</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>SettingsWidget</receiver>
+   <slot>formFillHideWindow(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>498</x>
+     <y>94</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>562</x>
+     <y>92</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>showPWAfterLogin(bool)</slot>
@@ -564,5 +587,6 @@
   <slot>categoryNameChanged()</slot>
   <slot>restoreDefaultCategories()</slot>
   <slot>showIdenticonClicked(bool)</slot>
+  <slot>formFillHideWindow(bool)</slot>
  </slots>
 </ui>

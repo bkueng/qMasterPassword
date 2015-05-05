@@ -257,6 +257,8 @@
     <property name="title">
      <string>&amp;Help</string>
     </property>
+    <addaction name="actShortcuts"/>
+    <addaction name="separator"/>
     <addaction name="actAbout"/>
    </widget>
    <addaction name="menuEdit"/>
@@ -271,6 +273,11 @@
   <action name="actAbout">
    <property name="text">
     <string>&amp;About</string>
+   </property>
+  </action>
+  <action name="actShortcuts">
+   <property name="text">
+    <string>Shortcuts</string>
    </property>
   </action>
  </widget>
@@ -531,6 +538,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actShortcuts</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showShortcutsWidget()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>444</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>loginLogoutClicked()</slot>
@@ -544,5 +567,6 @@
   <slot>editUser()</slot>
   <slot>showAboutWidget()</slot>
   <slot>uiLoginChanged()</slot>
+  <slot>showShortcutsWidget()</slot>
  </slots>
 </ui>

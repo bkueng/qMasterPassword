@@ -22,8 +22,25 @@ CONFIG(debug, debug|release) {
 
 win32 {
 	LIBS += -lws2_32 -lscrypt -llibeay32
+	INCLUDEPATH += include/3rdparty
+	HEADERS += \
+			include/3rdparty/IInputSimulator.h \
+			include/3rdparty/InputBuilder.h \
+			include/3rdparty/InputSimulator.h \
+			include/3rdparty/KeyboardSimulator.h \
+			include/3rdparty/MouseSimulator.h \
+			include/3rdparty/VirtualKeyCode.h \
+			include/3rdparty/WindowsInputDeviceStateAdaptor.h \
+			include/3rdparty/stdafx.h
+	SOURCES += \
+			src/3rdparty/InputBuilder.cpp \
+			src/3rdparty/InputSimulator.cpp \
+			src/3rdparty/KeyboardSimulator.cpp \
+			src/3rdparty/MouseSimulator.cpp \
+			src/3rdparty/WindowsInputDeviceStateAdaptor.cpp \
+			src/keypress_windows.cpp
 } else {
-	LIBS += -lscrypt -lcrypto
+	LIBS += -lscrypt -lcrypto -lX11 -lXtst
 }
 ICON = data/icons/app_icon.png
 
@@ -50,12 +67,15 @@ HEADERS += \
 		   include/user.h \
 		   include/version.h \
 		   include/user_widget.h \
-		   include/identicon.h
+		   include/identicon.h \
+		   include/keypress.h \
+		   include/shortcuts_widget.h
 FORMS += \
 		 ui/edit_site_widget.ui \
 		 ui/main_window.ui \
 		 ui/settings_widget.ui \
-		 ui/user_widget.ui
+		 ui/user_widget.ui \
+		 ui/shortcuts_widget.ui
 SOURCES += \
 		   src/command_line.cpp \
 		   src/crypto.cpp \
@@ -71,6 +91,9 @@ SOURCES += \
 		   src/settings_widget.cpp \
 		   src/user.cpp \
 		   src/user_widget.cpp \
-		   src/identicon.cpp
+		   src/identicon.cpp \
+		   src/keypress.cpp \
+		   src/keypress_linux.cpp \
+		   src/shortcuts_widget.cpp
 RESOURCES += ui/resources.qrc
 win32:RC_FILE = data/icons/app_icon.rc

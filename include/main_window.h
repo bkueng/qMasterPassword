@@ -26,6 +26,9 @@
 #include <QSystemTrayIcon>
 #include <QTimer>
 #include <QProgressBar>
+#include <QKeySequence>
+
+#include <array>
 
 #include "crypto.h"
 #include "user.h"
@@ -33,6 +36,7 @@
 #include "app_settings.h"
 #include "import_export.h"
 #include "identicon.h"
+#include "keypress.h"
 
 namespace Ui {
 class MainWindow;
@@ -62,6 +66,22 @@ public:
 	explicit MainWindow(QWidget *parent = 0);
 	~MainWindow();
 
+	enum class ShortcutAction {
+		CopyToClipboard,
+		FillForm,
+		FillFormPasswordOnly,
+		SelectFilter,
+		PreviousItem,
+		NextItem,
+		OpenURL,
+		Logout,
+
+		Count
+	};
+	static QString description(ShortcutAction action);
+	const vector<QKeySequence>& shortcuts(ShortcutAction action) const {
+		return m_table_shortcuts[(int)action]; }
+
 	CategoryId selectedCategory() const { return m_selected_category; }
 	QStandardItemModel* model() const { return m_sites_model; }
 	bool trayIconEnabled() const { return m_application_settings.show_systray_icon; }
@@ -82,6 +102,7 @@ private:
 	void activateLogoutTimer();
 	void abortLogoutTimer();
 	void openSelectedUrl();
+	void fillForm(bool password_only = false);
 
 	MasterPassword m_master_password;
 	Identicon m_identicon;
@@ -109,6 +130,12 @@ private:
 
 	int m_copy_column_idx;
 
+	Keypress m_keypress;
+
+	/** key bindings for actions on selected item. an action can have multiple
+	 *  shortcuts */
+	std::array<vector<QKeySequence>, (int)ShortcutAction::Count> m_table_shortcuts;
+
 private slots:
 	void login();
 	void logout();
@@ -129,6 +156,7 @@ private slots:
 	void showTrayIcon(bool visible);
 	void showSettingsWidget();
 	void showAboutWidget();
+	void showShortcutsWidget();
 	void clearPasswordFromClipboard();
 	void clearPasswordFromClipboardTimer();
 	void appAboutToQuit();

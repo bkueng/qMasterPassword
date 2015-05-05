@@ -34,6 +34,8 @@ public:
 	int clipboard_pw_timeout = 0; //[sec], if 0, no timeout
 
 	bool show_identicon = true;
+	bool form_fill_hide_window = false; //when filling a form, hide window
+									//instead of using alt+tab
 
 	void saveSettings(QSettings& settings) {
 		settings.setValue("app_settings/show_systray_icon", show_systray_icon);
@@ -42,6 +44,7 @@ public:
 		settings.setValue("app_settings/auto_logout_timeout", auto_logout_timeout);
 		settings.setValue("app_settings/clipboard_pw_timeout", clipboard_pw_timeout);
 		settings.setValue("app_settings/show_identicon", show_identicon);
+		settings.setValue("app_settings/form_fill_hide_window", form_fill_hide_window);
 	}
 	void restoreSettings(QSettings& settings) {
 		show_systray_icon = settings.value("app_settings/show_systray_icon",
@@ -56,6 +59,8 @@ public:
 				clipboard_pw_timeout).toInt();
 		show_identicon = settings.value("app_settings/show_identicon",
 				show_identicon).toBool();
+		form_fill_hide_window = settings.value("app_settings/form_fill_hide_window",
+				form_fill_hide_window).toBool();
 	}
 
 private:
