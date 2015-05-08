@@ -211,6 +211,7 @@ public:
 
 	std::string sitePassword(const Site& site);
 
+	static std::string charactersFromClass(char character_class);
 private:
 	static std::string getScope(MPSiteVariant variant);
 

@@ -251,44 +251,25 @@ std::string MasterPassword::templateForType(MPSiteType type,
 	}
 }
 
+string MasterPassword::charactersFromClass(char character_class) {
+	switch (character_class) {
+	case 'V': return "AEIOU";
+	case 'C': return "BCDFGHJKLMNPQRSTVWXYZ";
+	case 'v': return "aeiou";
+	case 'c': return "bcdfghjklmnpqrstvwxyz";
+	case 'A': return "AEIOUBCDFGHJKLMNPQRSTVWXYZ";
+	case 'a': return "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz";
+	case 'n': return "0123456789";
+	case 'o': return "@&%?,=[]_:-+*$#!'^~;()/.";
+	case 'x': return "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz0123456789!@#$%^&*()";
+	case ' ': return " ";
+	}
+	THROW(EINVALID_PARAMETER);
+}
+
 char MasterPassword::characterFromClass(char character_class,
 		uint8_t seed_byte) {
 
-	string classCharacters;
-	switch (character_class) {
-	case 'V':
-		classCharacters = "AEIOU";
-		break;
-	case 'C':
-		classCharacters = "BCDFGHJKLMNPQRSTVWXYZ";
-		break;
-	case 'v':
-		classCharacters = "aeiou";
-		break;
-	case 'c':
-		classCharacters = "bcdfghjklmnpqrstvwxyz";
-		break;
-	case 'A':
-		classCharacters = "AEIOUBCDFGHJKLMNPQRSTVWXYZ";
-		break;
-	case 'a':
-		classCharacters = "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz";
-		break;
-	case 'n':
-		classCharacters = "0123456789";
-		break;
-	case 'o':
-		classCharacters = "@&%?,=[]_:-+*$#!'^~;()/.";
-		break;
-	case 'x':
-		classCharacters = "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz0123456789!@#$%^&*()";
-		break;
-	case ' ':
-		classCharacters = " ";
-		break;
-	default:
-		THROW(EINVALID_PARAMETER);
-	}
-
+	string classCharacters = charactersFromClass(character_class);
     return classCharacters[seed_byte % classCharacters.length()];
 }
