@@ -14,6 +14,7 @@
 
 #include "user_widget.h"
 #include "ui_user_widget.h"
+#include "password_generator_widget.h"
 
 #include <QPushButton>
 #include <QMessageBox>
@@ -102,4 +103,13 @@ void UserWidget::identiconHelp() {
 			"<p>Remember it and if it is the same when logging in, you most likely didn't make a typo.</p>"
 			"<p>This avoids the need to explicitly store the hash of the password (password check option below).</p>"
 			"<p>It can be disabled under Edit -> Settings.</p>"), this);
+}
+
+void UserWidget::generatePasswordClicked() {
+	PasswordGeneratorWidget password_generator(this);
+	password_generator.exec();
+	QString password;
+	password_generator.getPassword(password);
+	if (!password.isEmpty())
+		ui->txtPassword->setText(password);
 }

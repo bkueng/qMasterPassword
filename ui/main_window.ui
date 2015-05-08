@@ -251,6 +251,8 @@
     <property name="title">
      <string>&amp;Edit</string>
     </property>
+    <addaction name="actPasswordGenerator"/>
+    <addaction name="separator"/>
     <addaction name="actSettings"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -280,6 +282,11 @@
     <string>Shortcuts</string>
    </property>
   </action>
+  <action name="actPasswordGenerator">
+   <property name="text">
+    <string>Password Generator</string>
+   </property>
+  </action>
  </widget>
  <tabstops>
   <tabstop>btnAddUser</tabstop>
@@ -305,7 +312,7 @@
    <slot>loginLogoutClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>592</x>
+     <x>579</x>
      <y>60</y>
     </hint>
     <hint type="destinationlabel">
@@ -357,7 +364,7 @@
      <y>53</y>
     </hint>
     <hint type="destinationlabel">
-     <x>617</x>
+     <x>579</x>
      <y>60</y>
     </hint>
    </hints>
@@ -554,6 +561,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actPasswordGenerator</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showGeneratePasswordDialog()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>444</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>loginLogoutClicked()</slot>
@@ -568,5 +591,6 @@
   <slot>showAboutWidget()</slot>
   <slot>uiLoginChanged()</slot>
   <slot>showShortcutsWidget()</slot>
+  <slot>showGeneratePasswordDialog()</slot>
  </slots>
 </ui>

@@ -20,6 +20,7 @@
 #include "pushbutton_delegate.h"
 #include "settings_widget.h"
 #include "shortcuts_widget.h"
+#include "password_generator_widget.h"
 #include "version.h"
 
 #include <iostream>
@@ -382,6 +383,11 @@ void MainWindow::deleteUser() {
 		m_ui->btnDeleteUser->setEnabled(false);
 		m_ui->btnEditUser->setEnabled(false);
 	}
+}
+
+void MainWindow::showGeneratePasswordDialog() {
+	PasswordGeneratorWidget password_generator(this);
+	password_generator.exec();
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {

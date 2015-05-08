@@ -161,6 +161,7 @@ private slots:
 	void clearPasswordFromClipboardTimer();
 	void appAboutToQuit();
 	void uiLoginChanged();
+	void showGeneratePasswordDialog();
 public slots:
 	void showHide();
 	void copyPWToClipboardClicked();

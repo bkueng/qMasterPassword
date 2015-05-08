@@ -49,6 +49,7 @@ private:
 private slots:
 	void checkInputValidity();
 	void identiconHelp();
+	void generatePasswordClicked();
 };
 
 #endif // HEADER_USER_WIDGET_H

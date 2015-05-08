@@ -69,13 +69,15 @@ HEADERS += \
 		   include/user_widget.h \
 		   include/identicon.h \
 		   include/keypress.h \
-		   include/shortcuts_widget.h
+		   include/shortcuts_widget.h \
+		   include/password_generator_widget.h
 FORMS += \
 		 ui/edit_site_widget.ui \
 		 ui/main_window.ui \
 		 ui/settings_widget.ui \
 		 ui/user_widget.ui \
-		 ui/shortcuts_widget.ui
+		 ui/shortcuts_widget.ui \
+		 ui/password_generator_widget.ui
 SOURCES += \
 		   src/command_line.cpp \
 		   src/crypto.cpp \
@@ -94,6 +96,7 @@ SOURCES += \
 		   src/identicon.cpp \
 		   src/keypress.cpp \
 		   src/keypress_linux.cpp \
-		   src/shortcuts_widget.cpp
+		   src/shortcuts_widget.cpp \
+		   src/password_generator_widget.cpp
 RESOURCES += ui/resources.qrc
 win32:RC_FILE = data/icons/app_icon.rc
