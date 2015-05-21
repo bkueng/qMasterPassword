@@ -110,6 +110,8 @@ void UserWidget::generatePasswordClicked() {
 	password_generator.exec();
 	QString password;
 	password_generator.getPassword(password);
-	if (!password.isEmpty())
+	if (!password.isEmpty()) {
+		ui->txtPassword->setEchoMode(QLineEdit::Normal);
 		ui->txtPassword->setText(password);
+	}
 }
