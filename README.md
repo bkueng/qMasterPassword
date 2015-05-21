@@ -30,6 +30,7 @@ there are prebuilt binaries under
 * OpenSSL (libcrypto library)
 * libscrypt library (https://github.com/technion/libscrypt for Linux/OSX,
   https://github.com/barrysteyn/scrypt-windows for Windows)
+* Linux: libX11 libXtst
 
 
 #### Build ####
