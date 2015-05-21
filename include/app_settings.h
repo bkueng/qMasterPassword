@@ -26,7 +26,7 @@ class ApplicationSettings {
 public:
 
 	bool show_systray_icon = false;
-	bool show_pw_after_login = true;
+	bool show_pw_after_login = false;
 
 	bool auto_logout_when_hidden = false;
 	int auto_logout_timeout = 0; //[min]
