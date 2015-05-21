@@ -115,16 +115,16 @@
        </item>
       </layout>
      </item>
-    </layout>
-   </item>
-   <item>
-    <widget class="QCheckBox" name="chkCheckPassword">
-     <property name="text">
-      <string>Check Password when logging in.
+     <item row="4" column="1">
+      <widget class="QCheckBox" name="chkCheckPassword">
+       <property name="text">
+        <string>Check Password when logging in.
 (if enabled, the hash of the
 password needs to be stored)</string>
-     </property>
-    </widget>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
@@ -144,7 +144,6 @@ password needs to be stored)</string>
   <tabstop>btnGenerate</tabstop>
   <tabstop>txtPasswordRepeat</tabstop>
   <tabstop>btnIdenticonHelp</tabstop>
-  <tabstop>chkCheckPassword</tabstop>
  </tabstops>
  <resources>
   <include location="resources.qrc"/>
