@@ -418,7 +418,7 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event) {
 
 		QKeySequence key_sequence = QKeySequence(keyEvent->modifiers() | key);
 
-		for (int i = 0; i < m_table_shortcuts.size(); ++i) {
+		for (int i = 0; i < (int)m_table_shortcuts.size(); ++i) {
 			for (auto& key_shortcut : m_table_shortcuts[i]) {
 				if (key_shortcut.matches(key_sequence) == QKeySequence::ExactMatch) {
 					switch ((ShortcutAction)i) {
