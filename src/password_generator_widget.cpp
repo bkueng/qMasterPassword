@@ -273,7 +273,16 @@ void PasswordGeneratorWidget::getPassword(QString& password) {
 
 void PasswordGeneratorWidget::showMethodExplanation() {
 	QWhatsThis::showText(QCursor::pos(),
-		tr("<p>The character-based method is purely random for the chosen characters and thus harder to guess.</p>"
-			"<p>The template-based method on the other hand is a bit less random but its passwords are easier to remember.</p>"
+		tr(
+		"<p><b>Method</b><br>"
+		"The character-based method is purely random for the chosen characters and thus harder to guess.<br>"
+		"The template-based method on the other hand is a bit less random but its passwords are easier to remember."
+		"</p>"
+		"<p><b>Password Strength</b><br>"
+		"Shows the entropy bits, where an increase of 1 means twice the amount of brute-force attempts is needed.<br>"
+		"Note that the statement holds for general passwords. "
+		"A master password in qMasterPassword is harder to crack (compared to for example web passwords), "
+		"because the algorithm was specifically designed to be CPU intensive."
+		"</p>"
 			), this);
 }
