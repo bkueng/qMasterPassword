@@ -1,3 +1,13 @@
++ Release v1.2
++ add password generator (2 methods: random + templates) with password strength
+  indicator
++ editable categories
++ redesigned app icon
++ add identicon
++ add 'fill form' shortcut (for linux + windows)
++ add keybindings help window
+
+
 + Release v1.1
 only minor updates:
 + disable file logging by default
