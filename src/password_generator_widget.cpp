@@ -24,6 +24,7 @@ PasswordGeneratorWidget::PasswordGeneratorWidget(QWidget *parent) :
 	QSize window_size = size();
 	window_size.setHeight(minimumHeight());
 	resize(window_size);
+	ui->cmbMethod->setCurrentIndex(1);
 	uiChanged();
 }
 
