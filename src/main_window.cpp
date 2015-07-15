@@ -302,6 +302,9 @@ void MainWindow::login() {
 		case CryptoException::Type_thread_exception:
 			error_msg = tr("Multithreadding exception");
 			break;
+		case CryptoException::Type_random_failed:
+			error_msg = tr("Random number generation failed");
+			break;
 		}
 		QMessageBox::critical(this, tr("Cryptographic exception"),
 			tr("Error: %1.\n"
