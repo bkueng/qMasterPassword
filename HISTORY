@@ -1,3 +1,9 @@
++ Release v1.2.1
+only some minor changes:
++ update appdata.xml for correct validation
++ password generator: set default method to templates
+
+
 + Release v1.2
 + add password generator (2 methods: random + templates) with password strength
   indicator
