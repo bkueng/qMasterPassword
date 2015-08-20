@@ -7,17 +7,17 @@
 #
 # 	The version argument is parsed according to the following EBNF expression:
 #		
-#		version := "v" <major> : non-negative-number "." <minor> : non-negative-number [ "-p" <patch> : positive-number ] [ "-RC" <rc> : positive-number ]
+#		version := "v" <major> : non-negative-number "." <minor> : non-negative-number [ "." <patch> : positive-number ] [ "-RC" <rc> : positive-number ]
 #			non-negative-number := "0" | positive-number
 #			positive-number := ( digit { digit } ) ^ ( "0" ? )
 #			digit := "0" .. "9"
 #	
 #		Or this regular expression:
-#			v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-p([1-9][0-9]*))?(-RC([1-9][0-9]*))?
+#			v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(\.([1-9][0-9]*))?(-RC([1-9][0-9]*))?
 
 # Known bugs:
 #	- If no files are changed by the update_files function and no release note has been added then staged files are commited instead of an empty commit.
-#	- Only files that are allready present in the HEAD's tree can be updated by the update_files function.
+#	- Only files that are already present in the HEAD's tree can be updated by the update_files function.
 
 print() { echo "$1" >&2; }
 inform() { print "$0: $1"; }
@@ -48,11 +48,11 @@ Where:
 
 Notes:
     This script replaces the defines holding the version information, makes a
-    commit with the file and tags the commit with a  tag name of the following
+    commit with the file and tags the commit with a tag name of the following
     form:
     
-        "release/v" <major> "." <minor> [ "-p" <patch> ]
-        | "beta/v" <major> "." <minor> [ "-p" <patch> ] "-RC" <rc>
+        "v" <major> "." <minor> [ "." <patch> ]
+        | "beta/v" <major> "." <minor> [ "." <patch> ] "-RC" <rc>
     
     This scripts maintains a 'HISTORY' file in the root tree. For every non-RC
     version it asks the user to enter a release note via the $EDITOR environment
@@ -83,7 +83,7 @@ OPT_MAINTAIN_HISTORY_FILE=1
 [ "$1" ] && ARG_VERSION=$1 || usage "Version specification missing!"
 [ "$2" ] && usage "Too many arguments!"
 
-VERSION_PARSER="v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-p([1-9][0-9]*))?(-RC([1-9][0-9]*))?"
+VERSION_PARSER="v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(\.([1-9][0-9]*))?(-RC([1-9][0-9]*))?"
 echo "$ARG_VERSION" | grep -qxE "$VERSION_PARSER" || fail "Invalid version specification: $ARG_VERSION"
 VERSION_PARSED=$(echo "$ARG_VERSION" | sed -r "s/$VERSION_PARSER/\1 \2 \4 \6/")
 
@@ -95,7 +95,7 @@ VERSION_RC=$(echo "$VERSION_PARSED" | cut -d " " -f 4)
 [ "$VERSION_PATCH" ] || VERSION_PATCH=0
 [ "$VERSION_RC" ] || VERSION_RC=0
 
-[ $VERSION_RC -eq 0 ] && TAG_NAME="release/$ARG_VERSION" || TAG_NAME="beta/$ARG_VERSION"
+[ $VERSION_RC -eq 0 ] && TAG_NAME="$ARG_VERSION" || TAG_NAME="beta/$ARG_VERSION"
 git tag -l | grep -qxF "$TAG_NAME" && fail "Tag $TAG_NAME already exists"
 
 update_files "$ARG_VERSION" "$VERSION_MAJOR" "$VERSION_MINOR" "$VERSION_PATCH" "$VERSION_RC" | {
@@ -116,7 +116,7 @@ update_files "$ARG_VERSION" "$VERSION_MAJOR" "$VERSION_MINOR" "$VERSION_PATCH" "
 			[ "$EDITOR" ] || fail "\$EDITOR is not set. Please set the EDITOR environment variable to input the release notes."
 			
 			if ! [ -e "$TEMP_FILE" ]; then
-				NEWEST_RELEASE=$(git tag | grep -E "release/.*" | while IFS= read i; do echo "$(git rev-list "$i..HEAD" | wc -l | grep -oE "[0-9]+") $i"; done | sort -n | head -n 1 | cut -d " " -f 2-)
+				NEWEST_RELEASE=$(git tag | grep -E "v[0-9].*" | while IFS= read i; do echo "$(git rev-list "$i..HEAD" | wc -l | grep -oE "[0-9]+") $i"; done | sort -n | head -n 1 | cut -d " " -f 2-)
 				
 				cat << EOF >> "$TEMP_FILE"
 $RELEASE_NOTE
