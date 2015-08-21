@@ -33,7 +33,8 @@ using namespace std;
 
 struct VERSION {
 	VERSION() : bSet(false) {}
-	VERSION(int vmajor, int vminor, int vpatch) : bSet(true) {
+	VERSION(int vmajor, int vminor, int vpatch) : bSet(true)
+	{
 		this->major = vmajor; this->minor = vminor; this->patch = vpatch;
 	}
 	
@@ -44,12 +45,13 @@ struct VERSION {
 	int patch;
 	
 	
-	string toStr() {
+	string toStr()
+	{
 		// version has the format: v<major>.<minor>[-p<patch>]
 		if (!bSet) return "";
 		ostringstream stream;
 		stream << "v" << major << "." << minor;
-		if (patch != 0) stream << "-p" << patch;
+		if (patch != 0) stream << "." << patch;
 		return stream.str();
 	}
 };
