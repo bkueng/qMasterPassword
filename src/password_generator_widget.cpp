@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <QPainter>
 #include <QWhatsThis>
+#include <cmath>
 
 PasswordGeneratorWidget::PasswordGeneratorWidget(QWidget *parent) :
 	QDialog(parent),
