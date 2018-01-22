@@ -64,7 +64,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	m_clipboard_timer = new QTimer(this);
 	connect(m_clipboard_timer, SIGNAL(timeout()), this,
-			SLOT(clearPasswordFromClipboardTimer()));
+			SLOT(clearDataFromClipboardTimer()));
 	m_hide_identicon_timer = new QTimer(this);
 	connect(m_hide_identicon_timer, SIGNAL(timeout()), m_ui->lblIdenticon, SLOT(clear()));
 	m_hide_identicon_timer->setSingleShot(true);
@@ -92,12 +92,14 @@ MainWindow::MainWindow(QWidget *parent) :
 	m_ui->lblIdenticon->setFont(label_font);
 
 	/* default key bindings */
-	m_table_shortcuts[(int)ShortcutAction::CopyToClipboard].push_back(
+	m_table_shortcuts[(int)ShortcutAction::CopyPWToClipboard].push_back(
 			QKeySequence(QKeySequence::Copy));
-	m_table_shortcuts[(int)ShortcutAction::CopyToClipboard].push_back(
+	m_table_shortcuts[(int)ShortcutAction::CopyPWToClipboard].push_back(
 			QKeySequence(Qt::Key_Space));
-	m_table_shortcuts[(int)ShortcutAction::CopyToClipboard].push_back(
+	m_table_shortcuts[(int)ShortcutAction::CopyPWToClipboard].push_back(
 			QKeySequence(Qt::Key_Y));
+	m_table_shortcuts[(int)ShortcutAction::CopyUserToClipboard].push_back(
+			QKeySequence(Qt::Key_U));
 	m_table_shortcuts[(int)ShortcutAction::FillForm].push_back(
 			QKeySequence(QKeySequence::Paste));
 	m_table_shortcuts[(int)ShortcutAction::FillForm].push_back(
@@ -320,7 +322,7 @@ void MainWindow::logout() {
 	m_ui->txtPassword->setText("");
 	m_ui->txtFilter->setText("");
 	if (m_clipboard_timer->isActive())
-		clearPasswordFromClipboard();
+		clearDataFromClipboard();
 	enableUI(false);
 	clearSitesUI();
 	m_ui->txtPassword->setFocus();
@@ -425,11 +427,18 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event) {
 			for (auto& key_shortcut : m_table_shortcuts[i]) {
 				if (key_shortcut.matches(key_sequence) == QKeySequence::ExactMatch) {
 					switch ((ShortcutAction)i) {
-					case ShortcutAction::CopyToClipboard:
+					case ShortcutAction::CopyPWToClipboard:
 					{
 						TableItem* item = getSelectedItem();
 						if (item)
 							copyPWToClipboard(item->site());
+					}
+						break;
+					case ShortcutAction::CopyUserToClipboard:
+					{
+						TableItem* item = getSelectedItem();
+						if (item)
+							copyUserToClipboard(item->site());
 					}
 						break;
 					case ShortcutAction::FillForm:
@@ -508,7 +517,7 @@ void MainWindow::openUrlClicked() {
 }
 void MainWindow::appAboutToQuit() {
 	if (m_clipboard_timer->isActive())
-		clearPasswordFromClipboard();
+		clearDataFromClipboard();
 	saveSettings();
 }
 void MainWindow::saveSettings() {
@@ -716,46 +725,65 @@ void MainWindow::copyPWToClipboardClicked() {
 	if (!button) return;
 	copyPWToClipboard(button->site());
 }
-void MainWindow::copyPWToClipboard(UiSite& site) {
+void MainWindow::copyPWToClipboard(const UiSite& site) {
 	LOG(DEBUG, "copy pw to clipboard");
 	string password = m_master_password.sitePassword(site.site);
+	int timeout = copyToClipboard(QString::fromUtf8(password.c_str()));
+	QString suffix = "";
+	if (timeout > 0)
+		suffix = tr(" for %1 seconds").arg(timeout);
+	statusBar()->showMessage(tr("Copied Password to Clipboard")+suffix, 1500);
+}
+
+void MainWindow::copyUserToClipboard(const UiSite& site) {
+	if (site.user_name.isEmpty())
+		return;
+	LOG(DEBUG, "copy login name to clipboard");
+	int timeout = copyToClipboard(site.user_name);
+	QString suffix = "";
+	if (timeout > 0)
+		suffix = tr(" for %1 seconds").arg(timeout);
+	statusBar()->showMessage(tr("Copied login name to Clipboard")+suffix, 1500);
+}
+
+int MainWindow::copyToClipboard(const QString& str) {
 	QClipboard* clipboard = QApplication::clipboard();
 	QString original_text = clipboard->text();
-	QString qpassword = QString::fromUtf8(password.c_str());
-	clipboard->setText(qpassword);
+	clipboard->setText(str);
 	QString suffix = "";
 	if (m_application_settings.clipboard_pw_timeout > 0) {
 		if (!m_clipboard_timer->isActive())
 			m_clipboard_previous_data = original_text;
-		m_clipboard_pw = qpassword;
+		m_clipboard_data = str;
 		int timeout = m_application_settings.clipboard_pw_timeout;
 		m_clipboard_timer->start(1000);
-		suffix = tr(" for %1 seconds").arg(timeout);
 		m_clipboard_time_left = timeout;
 		m_status_progress_bar->setMaximum(timeout);
 		m_status_progress_bar->setValue(timeout);
 		m_status_progress_bar->show();
+		return timeout;
 	}
-	statusBar()->showMessage(tr("Copied Password to Clipboard")+suffix, 1500);
+	return 0;
 }
-void MainWindow::clearPasswordFromClipboardTimer() {
+
+void MainWindow::clearDataFromClipboardTimer() {
 	if (--m_clipboard_time_left <= 0) {
-		clearPasswordFromClipboard();
+		clearDataFromClipboard();
 	} else {
 		m_status_progress_bar->setValue(m_clipboard_time_left);
 	}
 }
-void MainWindow::clearPasswordFromClipboard() {
-	LOG(DEBUG, "Clear password from clipboard");
+void MainWindow::clearDataFromClipboard() {
+	LOG(DEBUG, "Clear data from clipboard");
 	QClipboard* clipboard = QApplication::clipboard();
 	QString original_text = clipboard->text();
-	if (original_text == m_clipboard_pw) {
+	if (original_text == m_clipboard_data) {
 		clipboard->setText(m_clipboard_previous_data);
 	}
 	m_status_progress_bar->hide();
 	m_clipboard_timer->stop();
 	m_clipboard_previous_data = "";
-	m_clipboard_pw = "";
+	m_clipboard_data = "";
 	m_clipboard_time_left = 0;
 }
 void MainWindow::showHidePWClicked() {
@@ -930,8 +958,10 @@ bool MySortFilterProxyModel::filterAcceptsRow(int source_row,
 
 QString MainWindow::description(ShortcutAction action) {
 	switch (action) {
-	case ShortcutAction::CopyToClipboard:
+	case ShortcutAction::CopyPWToClipboard:
 		return tr("Copy password of selected item to clipboard");
+	case ShortcutAction::CopyUserToClipboard:
+		return tr("Copy login/user name of selected item to clipboard");
 	case ShortcutAction::FillForm:
 		return tr("Auto fill form: select next window and fill in user name (if set) and password");
 	case ShortcutAction::FillFormPasswordOnly:

@@ -67,7 +67,8 @@ public:
 	~MainWindow();
 
 	enum class ShortcutAction {
-		CopyToClipboard,
+		CopyPWToClipboard,
+		CopyUserToClipboard,
 		FillForm,
 		FillFormPasswordOnly,
 		SelectFilter,
@@ -98,7 +99,9 @@ private:
 	void removeCategory(CategoryId category_id);
 	void selectCategory(CategoryId category);
 	void uiSitesTableChanged();
-	void copyPWToClipboard(UiSite& site);
+	void copyPWToClipboard(const UiSite& site);
+	void copyUserToClipboard(const UiSite& site);
+	int copyToClipboard(const QString& str);
 	void activateLogoutTimer();
 	void abortLogoutTimer();
 	void openSelectedUrl();
@@ -122,7 +125,7 @@ private:
 	ApplicationSettings m_application_settings;
 	DataImportExport m_import_export;
 
-	QString m_clipboard_pw;
+	QString m_clipboard_data;
 	QString m_clipboard_previous_data;
 	QTimer* m_clipboard_timer = nullptr;
 	QProgressBar* m_status_progress_bar = nullptr;
@@ -157,8 +160,8 @@ private slots:
 	void showSettingsWidget();
 	void showAboutWidget();
 	void showShortcutsWidget();
-	void clearPasswordFromClipboard();
-	void clearPasswordFromClipboardTimer();
+	void clearDataFromClipboard();
+	void clearDataFromClipboardTimer();
 	void appAboutToQuit();
 	void uiLoginChanged();
 	void showGeneratePasswordDialog();
