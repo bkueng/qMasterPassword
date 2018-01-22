@@ -1,17 +1,12 @@
 
-// stdafx.h : fichier Include pour les fichiers Include système standard,
-// ou les fichiers Include spécifiques aux projets qui sont utilisés fréquemment,
-// et sont rarement modifiés
-
 #pragma once
 
 #ifndef VC_EXTRALEAN
-#define VC_EXTRALEAN            // Exclure les en-têtes Windows rarement utilisés
+#define VC_EXTRALEAN
 #endif
 
-#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // certains constructeurs CString seront explicites
+#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS
 
-// désactive le masquage MFC de certains messages d'avertissement courants et par ailleurs souvent ignorés
 #define _AFX_ALL_WARNINGS
 
 
