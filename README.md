@@ -42,6 +42,7 @@ there are prebuilt binaries under
 #### Usage ####
 Keyboard: When the list view has focus:
 - [Y] / [Space] / [Ctrl]+[C]: copy password of selected entry to clipboard
+- [U]: Copy login/user name of selected entry to clipboard
 - [P] / [Ctrl]+[V]: switch to next window and fill out username and password
 - [SHIFT] + [P]: switch to next window and fill out password
 - [O]: Open Url
@@ -61,5 +62,5 @@ if you have any improvements or suggestions you are welcome to implement them
 and/or contact me.
 
 
-Copyright 2015 Beat Küng <beat-kueng@gmx.net>
+Copyright 2015-2018 Beat Küng <beat-kueng@gmx.net>
 
