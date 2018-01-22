@@ -24,8 +24,10 @@ ShortcutsWidget::ShortcutsWidget(MainWindow& main_window) :
 			shortcuts += shortcut.toString() + ", ";
 		shortcuts = shortcuts.mid(0, shortcuts.length() - 2);
 		QTableWidgetItem* new_item = new QTableWidgetItem(shortcuts);
+		new_item->setFlags(new_item->flags() & ~Qt::ItemIsEditable);
 		shortcut_table->setItem(i, 0, new_item);
 		new_item = new QTableWidgetItem(MainWindow::description(action));
+		new_item->setFlags(new_item->flags() & ~Qt::ItemIsEditable);
 		shortcut_table->setItem(i, 1, new_item);
 	}
 	shortcut_table->resizeColumnsToContents();
