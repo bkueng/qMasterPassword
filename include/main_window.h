@@ -156,6 +156,7 @@ private slots:
 	void categoryButtonPressed();
 	void filterTextChanged(QString filter_text);
 	void iconActivated(QSystemTrayIcon::ActivationReason reason);
+	void iconAboutToShow();
 	void showTrayIcon(bool visible);
 	void showSettingsWidget();
 	void showAboutWidget();

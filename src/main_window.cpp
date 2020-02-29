@@ -184,6 +184,8 @@ void MainWindow::initTrayIcon() {
 	m_tray_icon->setIcon(QIcon(":/app_icon.png"));
 	m_tray_icon->setToolTip("qMasterPassword");
 
+	connect(trayIconMenu, SIGNAL(aboutToShow()), this, SLOT(iconAboutToShow()));
+
 	connect(m_tray_icon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
 			this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 }
@@ -841,19 +843,21 @@ void MainWindow::showHide() {
 			m_ui->txtPassword->setFocus();
 	} else activateLogoutTimer();
 }
+
+void MainWindow::iconAboutToShow() {
+	if (m_tray_icon_show_action) {
+		if (isVisible()) {
+			m_tray_icon_show_action->setText(tr("&Hide"));
+		} else {
+			m_tray_icon_show_action->setText(tr("&Show"));
+		}
+	}
+}
+
 void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason) {
 	switch (reason) {
 	case QSystemTrayIcon::Trigger:
 		showHide();
-		break;
-	case QSystemTrayIcon::Context:
-		if (m_tray_icon_show_action) {
-			if (isVisible()) {
-				m_tray_icon_show_action->setText(tr("&Hide"));
-			} else {
-				m_tray_icon_show_action->setText(tr("&Show"));
-			}
-		}
 		break;
 	default:
 		break;
