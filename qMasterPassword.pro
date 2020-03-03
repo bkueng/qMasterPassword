@@ -44,6 +44,11 @@ win32 {
 }
 ICON = data/icons/app_icon.png
 
+# use 'lupdate-pro qMasterPassword.pro' to generate/update .ts files
+# 'linguist <file.ts>' to translate
+# 'lrelease <file.ts>' to generate .qm files
+TRANSLATIONS = data/translations/translation_pl.ts
+
 target.path = /usr/bin
 INSTALLS += target
 

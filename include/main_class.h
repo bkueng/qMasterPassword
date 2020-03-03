@@ -15,6 +15,7 @@
 #ifndef MAIN_CLASS_H_
 #define MAIN_CLASS_H_
 
+#include <QTranslator>
 #include "global.h"
 #include "command_line.h"
 
@@ -45,6 +46,10 @@ private:
 	
 	int processArgs();
 	
+	void loadTranslation();
+	QTranslator m_app_trans;
+	QTranslator m_qt_trans;
+	QTranslator m_qtbase_trans;
 	
 	CCommandLineParser* m_parameters;
 	ECLParsingResult m_cl_parse_result;
