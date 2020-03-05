@@ -180,6 +180,8 @@ void CMain::loadTranslation() {
 		if (!m_app_trans.load(locale, "translation", "_", app_trans_path)) {
 			if (!locale.name().startsWith("en"))
 				LOG(WARN, "Failed to load translation %s", locale.name().toUtf8().constData());
+		} else {
+			LOG(DEBUG, "Using translation from %s", app_trans_path.toUtf8().constData());
 		}
 	} else {
 		LOG(DEBUG, "Using translation from %s", src_app_trans_path.toUtf8().constData());
