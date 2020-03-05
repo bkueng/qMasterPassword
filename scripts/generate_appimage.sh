@@ -36,6 +36,8 @@ qmake-qt5 "$REPO_ROOT"
 make -j$(nproc)
 make install INSTALL_ROOT=AppDir
 
+lrelease-qt5 "$REPO_ROOT"/qMasterPassword.pro
+
 # now, build AppImage using linuxdeploy and linuxdeploy-plugin-qt
 # download linuxdeploy and its Qt plugin
 wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
@@ -47,6 +49,9 @@ chmod +x linuxdeploy*.AppImage
 # make sure Qt plugin finds QML sources so it can deploy the imported files
 export QML_SOURCES_PATHS="$REPO_ROOT"/src
 
+TRANSLATION_DIR="$BUILD_DIR"/AppDir/usr/share/qMasterPassword/translations
+mkdir -p "$TRANSLATION_DIR"
+cp "$REPO_ROOT"/data/translations/*.qm "$TRANSLATION_DIR"
 cp "$REPO_ROOT"/data/icons/app_icon.png "$BUILD_DIR"/qmasterpassword.png
 
 # initialize AppDir, bundle shared libraries, add desktop file and icon, use Qt plugin to bundle additional resources, and build AppImage, all in one command
