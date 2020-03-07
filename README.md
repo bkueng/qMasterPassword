@@ -58,9 +58,9 @@ Run unit tests:
 
 
 #### Miscellaneous ####
-if you have any improvements or suggestions you are welcome to implement them
+If you have any improvements or suggestions you are welcome to implement them
 and/or contact me.
 
 
-Copyright 2015-2018 Beat Küng <beat-kueng@gmx.net>
+Copyright 2015-2020 Beat Küng <beat-kueng@gmx.net>
 
