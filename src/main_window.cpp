@@ -287,7 +287,7 @@ void MainWindow::login() {
 		m_ui->txtPassword->setText("");
 		for (int i = 0; i < password.length(); ++i)
 			password[i] = 0;
-		m_ui->tblSites->setFocus();
+		m_ui->txtFilter->setFocus();
 		if (m_application_settings.show_identicon)
 			m_hide_identicon_timer->start(2000);
 
