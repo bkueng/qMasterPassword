@@ -604,6 +604,7 @@ void MainWindow::addSite() {
 		edit_site.applyData();
 		m_current_user->getSites().append(site);
 		addSiteToUI(*site.get());
+		saveSettings();
 	}
 }
 
@@ -616,6 +617,7 @@ void MainWindow::deleteSite() {
 			iter != m_current_user->getSites().end(); ++iter) {
 		if(iter->get() == &item->site()) {
 			m_current_user->getSites().erase(iter);
+			saveSettings();
 			break;
 		}
 	}
@@ -631,6 +633,7 @@ void MainWindow::editSite() {
 	if (edit_site.exec() == 1) { //accepted
 		edit_site.applyData();
 		updateModelItem(item->row(), site);
+		saveSettings();
 	}
 }
 
