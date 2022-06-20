@@ -37,6 +37,7 @@ using namespace std;
 #include <QDesktopServices>
 #include <QUrl>
 #include <QThread>
+#include <QRegularExpression>
 
 #ifdef Q_OS_LINUX
 #include <QtDBus/QtDBus>
@@ -105,7 +106,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	m_table_shortcuts[(int)ShortcutAction::FillForm].push_back(
 			QKeySequence(Qt::Key_P));
 	m_table_shortcuts[(int)ShortcutAction::FillFormPasswordOnly].push_back(
-			QKeySequence(Qt::SHIFT + Qt::Key_P));
+			QKeySequence(Qt::SHIFT | Qt::Key_P));
 	m_table_shortcuts[(int)ShortcutAction::SelectFilter].push_back(
 			QKeySequence(Qt::Key_Slash));
 	m_table_shortcuts[(int)ShortcutAction::PreviousItem].push_back(
@@ -286,7 +287,7 @@ void MainWindow::login() {
 		//clear the password: no need to store it anymore
 		m_ui->txtPassword->setText("");
 		for (int i = 0; i < password.length(); ++i)
-			password[i] = 0;
+			password[i] = '\0';
 		m_ui->txtFilter->setFocus();
 		if (m_application_settings.show_identicon)
 			m_hide_identicon_timer->start(2000);
@@ -719,8 +720,8 @@ void MainWindow::categoryButtonPressed() {
 }
 
 void MainWindow::filterTextChanged(QString filter_text) {
-	m_proxy_model->setFilterRegExp(
-			QRegExp(filter_text, Qt::CaseInsensitive, QRegExp::FixedString));
+	m_proxy_model->setFilterRegularExpression(
+			QRegularExpression(QRegularExpression::escape(filter_text), QRegularExpression::CaseInsensitiveOption));
 	m_proxy_model->setFilterKeyColumn(0);
 	uiSitesTableChanged();
 }

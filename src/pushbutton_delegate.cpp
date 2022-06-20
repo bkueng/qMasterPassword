@@ -61,7 +61,7 @@ QWidget* PushButtonDelegate::createEditor(QWidget* parent,
 	btn_url->setEnabled(table_item->site().url != "");
 
 	QHBoxLayout* layout = new QHBoxLayout(parent);
-	layout->setMargin(0);
+	layout->setContentsMargins(0, 0, 0, 0);
 	layout->addWidget(btn_show);
 	layout->addWidget(btn_copy);
 	layout->addWidget(btn_url);
