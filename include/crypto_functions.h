@@ -84,10 +84,7 @@ static inline const unsigned char* HMAC_SHA256(const uint8_t *key, size_t key_le
  * @return 1 on success, 0 if unsecure pseudo numbers were used, -1 on error
  */
 static inline int secureRandomBytes(unsigned char* buffer, int num) {
-	int ret = RAND_bytes(buffer, num);
-	if (ret != 1)
-		return RAND_pseudo_bytes(buffer, num);
-	return ret;
+	return RAND_bytes(buffer, num);
 }
 
 #endif /* _HEADER_CRYPTO_FUNCTIONS_H_ */
