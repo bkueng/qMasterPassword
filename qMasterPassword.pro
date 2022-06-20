@@ -20,6 +20,10 @@ CONFIG(debug, debug|release) {
 	HEADERS   += test/test.h
 }
 
+linux {
+	QMAKE_CXXFLAGS = -Wno-unused-parameter
+}
+
 win32 {
 	LIBS += -lws2_32 -lscrypt -llibeay32
 	INCLUDEPATH += include/3rdparty
