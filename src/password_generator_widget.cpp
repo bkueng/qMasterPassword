@@ -36,7 +36,7 @@ PasswordGeneratorWidget::~PasswordGeneratorWidget()
 
 void PasswordGeneratorWidget::uiChanged() {
 	int num_chars;
-	double entropy_bits;
+	double entropy_bits{};
 
 	ui->txtPassword->clear();
 
