@@ -1,3 +1,7 @@
++ Release v1.2.4
+- Qt6 support
+
+
 + Release v1.2.3
 - adding polish + german translations
 - save settings directly after site editing
