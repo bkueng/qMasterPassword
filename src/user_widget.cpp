@@ -26,7 +26,6 @@ UserWidget::UserWidget(Type type, QWidget *parent) :
 	ui(new Ui::UserWidget)
 {
 	ui->setupUi(this);
-	setFixedSize(size());
 	checkInputValidity();
 
 	QFont label_font = ui->txtIdenticon->font();
