@@ -33,3 +33,4 @@ moc_*.cpp
 ui/ui_*.h
 *.pro.user
 
+/.qtc_clangd
