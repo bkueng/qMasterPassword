@@ -19,6 +19,9 @@
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QPushButton" name="btnAddUser">
+        <property name="toolTip">
+         <string>Add User</string>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -26,10 +29,19 @@
          <iconset resource="resources.qrc">
           <normaloff>:/user_add.png</normaloff>:/user_add.png</iconset>
         </property>
+        <property name="iconSize">
+         <size>
+          <width>32</width>
+          <height>32</height>
+         </size>
+        </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="btnEditUser">
+        <property name="toolTip">
+         <string>Edit User</string>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -37,16 +49,31 @@
          <iconset resource="resources.qrc">
           <normaloff>:/user_edit.png</normaloff>:/user_edit.png</iconset>
         </property>
+        <property name="iconSize">
+         <size>
+          <width>32</width>
+          <height>32</height>
+         </size>
+        </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="btnDeleteUser">
+        <property name="toolTip">
+         <string>Delete User</string>
+        </property>
         <property name="text">
          <string/>
         </property>
         <property name="icon">
          <iconset resource="resources.qrc">
           <normaloff>:/user_delete.png</normaloff>:/user_delete.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>32</width>
+          <height>32</height>
+         </size>
         </property>
        </widget>
       </item>
@@ -244,7 +271,7 @@
      <x>0</x>
      <y>0</y>
      <width>889</width>
-     <height>21</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuEdit">
