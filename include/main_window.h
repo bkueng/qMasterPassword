@@ -110,6 +110,7 @@ private:
 	MasterPassword m_master_password;
 	Identicon m_identicon;
 	QTimer* m_hide_identicon_timer = nullptr;
+	QTimer* m_delayed_identicon_update_timer = nullptr;
 	QMap<QString /* user name */, UiUser> m_users;
 	QMap<CategoryId, QString> m_categories;
 	CategoryId m_next_category_id = 0;
@@ -166,6 +167,7 @@ private slots:
 	void appAboutToQuit();
 	void uiLoginChanged();
 	void showGeneratePasswordDialog();
+	void delayedIdenticonUpdate();
 public slots:
 	void showHide();
 	void copyPWToClipboardClicked();

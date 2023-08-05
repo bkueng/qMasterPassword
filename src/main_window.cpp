@@ -70,6 +70,10 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(m_hide_identicon_timer, SIGNAL(timeout()), m_ui->lblIdenticon, SLOT(clear()));
 	m_hide_identicon_timer->setSingleShot(true);
 
+	m_delayed_identicon_update_timer = new QTimer(this);
+	connect(m_delayed_identicon_update_timer, SIGNAL(timeout()), this, SLOT(delayedIdenticonUpdate()));
+	m_delayed_identicon_update_timer->setSingleShot(true);
+
 	initSitesView();
 	readSettings();
 	m_ui->btnDeleteUser->setEnabled(m_ui->cmbUserName->count() > 0);
@@ -934,12 +938,20 @@ void MainWindow::showTrayIcon(bool visible) {
 }
 
 void MainWindow::uiLoginChanged() {
-	QString password = m_ui->txtPassword->text();
-	if (!m_application_settings.show_identicon || password.isEmpty()) {
-		m_ui->lblIdenticon->setText("");
+	if (!m_application_settings.show_identicon || m_ui->txtPassword->text().isEmpty()) {
+		m_ui->lblIdenticon->clear();
 	} else {
-		QColor identicon_color;
-		QString identicon;
+		m_delayed_identicon_update_timer->start(300);
+	}
+}
+
+void MainWindow::delayedIdenticonUpdate() {
+	QColor identicon_color;
+	QString identicon;
+	const QString& password = m_ui->txtPassword->text();
+	if (password.isEmpty()) {
+		m_ui->lblIdenticon->clear();
+	} else {
 		m_identicon.setUserName(m_ui->cmbUserName->currentText());
 		m_identicon.getIdenticon(password, identicon, identicon_color);
 		m_ui->lblIdenticon->setText(identicon);
