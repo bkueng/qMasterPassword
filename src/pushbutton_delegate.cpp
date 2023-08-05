@@ -48,16 +48,19 @@ QWidget* PushButtonDelegate::createEditor(QWidget* parent,
 	};
 
 	QPushButton* btn_copy = createButton(table_item->site(), QIcon(":/copy.png"));
+	btn_copy->setToolTip(tr("Copy password to clipboard"));
 	connect(btn_copy, SIGNAL(clicked()), &m_main_window,
 			SLOT(copyPWToClipboardClicked()));
 
 	QPushButton* btn_show = createButton(table_item->site(),
 		QIcon(table_item->site().password_visible ? ":/hidden.png" : ":/shown.png"));
+	btn_show->setToolTip(tr("Show/hide password"));
 	connect(btn_show, SIGNAL(clicked()), &m_main_window,
 			SLOT(showHidePWClicked()));
 
 	QPushButton* btn_url = createButton(table_item->site(), QIcon(":/internet.png"));
 	connect(btn_url, SIGNAL(clicked()), &m_main_window, SLOT(openUrlClicked()));
+	btn_url->setToolTip(tr("Open URL"));
 	btn_url->setEnabled(table_item->site().url != "");
 
 	QHBoxLayout* layout = new QHBoxLayout(parent);
