@@ -249,10 +249,13 @@ void MainWindow::clearSitesUI() {
 }
 
 void MainWindow::loginLogoutClicked() {
-	if (m_master_password.isLoggedIn())
+	m_delayed_identicon_update_timer->stop();
+	if (m_master_password.isLoggedIn()) {
 		logout();
-	else
+	} else {
+		delayedIdenticonUpdate();
 		login();
+	}
 }
 
 void MainWindow::login() {
@@ -949,7 +952,7 @@ void MainWindow::delayedIdenticonUpdate() {
 	QColor identicon_color;
 	QString identicon;
 	const QString& password = m_ui->txtPassword->text();
-	if (password.isEmpty()) {
+	if (!m_application_settings.show_identicon || password.isEmpty()) {
 		m_ui->lblIdenticon->clear();
 	} else {
 		m_identicon.setUserName(m_ui->cmbUserName->currentText());
