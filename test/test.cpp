@@ -48,10 +48,10 @@ void UnitTests::runTests_data() {
 	DataTree test_cases;
 
 	QVERIFY(xml.readNextStartElement());
-	QVERIFY(xml.name() == "tests");
+	QVERIFY(xml.name().toString() == "tests");
 
 	while (xml.readNextStartElement()) {
-		if (xml.name() == "case") {
+		if (xml.name().toString() == "case") {
 			TestNode node;
 			QString id = xml.attributes().value("id").toString();
 			node.parent = xml.attributes().value("parent").toString();
