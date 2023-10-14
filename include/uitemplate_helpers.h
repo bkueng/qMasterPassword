@@ -14,8 +14,8 @@
 
 /** @file helper classes for that extend ui classes to contain additional data */
 
-#ifndef _HEADER_UI_HELPERS_H
-#define _HEADER_UI_HELPERS_H
+#ifndef _HEADER_UITEMPLATE_HELPERS_H
+#define _HEADER_UITEMPLATE_HELPERS_H
 
 #include "user.h"
 #include <QStandardItem>
@@ -56,4 +56,4 @@ typedef CategoryUiTemplate<QPushButton> CategoryButton;
 
 
 
-#endif // _HEADER_UI_HELPERS_H
+#endif // _HEADER_UITEMPLATE_HELPERS_H

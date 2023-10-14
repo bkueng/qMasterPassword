@@ -32,7 +32,7 @@
 
 #include "crypto.h"
 #include "user.h"
-#include "ui_helpers.h"
+#include "uitemplate_helpers.h"
 #include "app_settings.h"
 #include "import_export.h"
 #include "identicon.h"

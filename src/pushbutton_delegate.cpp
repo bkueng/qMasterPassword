@@ -13,7 +13,7 @@
  */
 
 #include "pushbutton_delegate.h"
-#include "ui_helpers.h"
+#include "uitemplate_helpers.h"
 #include "main_window.h"
 
 #include <QIcon>

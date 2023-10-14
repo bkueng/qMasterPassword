@@ -73,7 +73,7 @@ HEADERS += \
 		   include/main_window.h \
 		   include/pushbutton_delegate.h \
 		   include/settings_widget.h \
-		   include/ui_helpers.h \
+		   include/uitemplate_helpers.h \
 		   include/user.h \
 		   include/version.h \
 		   include/user_widget.h \
