@@ -36,12 +36,22 @@ there are prebuilt binaries under
 * Linux: libX11 libXtst
 
 
-#### Build
+#### Build with `qmake`
 ```shell
 qmake
 make
 ./qMasterPassword
 ```
+
+
+#### Build with `cmake`
+```shell
+cmake [-GNinja] -B build .
+cmake --build build
+./build/qMasterPassword
+```
+
+Add `-GNinja` if you want to build with `ninja` instead of `make`.
 
 
 #### Usage
@@ -56,14 +66,24 @@ Keyboard: When the list view has focus:
 - [Q]: Logout
 
 
-#### Testing
+#### Testing with `qmake`
 ```shell
 make debug
 ```
+
 Run unit tests:  
 ```shell
 ./qMasterPassword --test test/tests.xml
 ```
+
+
+#### Testing with `cmake`
+```shell
+cmake [-GNinja] -DCMAKE_BUILD_TYPE=Debug -B build .
+cmake --build build --target test
+```
+
+Add `-GNinja` if you want to build with `ninja` instead of `make`.
 
 
 #### Miscellaneous
