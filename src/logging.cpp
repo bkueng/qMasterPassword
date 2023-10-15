@@ -136,7 +136,7 @@ string CLog::getDate()
 	sprintf(timestr, "%02i.%02i.%02i",
 			(int)ptm->tm_mday,
 			(int)ptm->tm_mon + 1,
-			(int)ptm->tm_year - 100);
+			(int)ptm->tm_year % 100);
 	return timestr;
 	
 }
