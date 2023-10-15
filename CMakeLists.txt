@@ -5,7 +5,6 @@ project(${TARGET}
 )
 
 set(CMAKE_AUTOUIC_SEARCH_PATHS ui)
-set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_SKIP_RPATH ON)
@@ -14,9 +13,23 @@ find_package(QT NAMES Qt5 Qt6 REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Gui Widgets)
 find_package(Qt${QT_VERSION_MAJOR} OPTIONAL_COMPONENTS DBus Test)
 
-qt_standard_project_setup()
+if(QT_VERSION LESS 6.3.0)
+    # manual project setup for older Qt versions
+    set(CMAKE_AUTOMOC ON)
+    set(CMAKE_AUTOUIC ON)
+    set(USE_FOLDERS ON)
+    set(QT_TARGET_FOLDER QtInternalTargets)
+    include(GNUInstallDirs)
 
-qt_add_executable(${TARGET} WIN32)
+    add_executable(${TARGET} WIN32)
+
+else()
+    # only available in qt >= 6.3.0
+    qt_standard_project_setup()
+
+    qt_add_executable(${TARGET} WIN32)
+endif()
+
 add_subdirectory(include)
 add_subdirectory(src)
 add_subdirectory(test)
