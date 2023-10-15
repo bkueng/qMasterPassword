@@ -397,7 +397,7 @@ int xdo_active_keys_to_keycode_list(const xdo_t *xdo, charcodemap_t **keys,
 
 			if (*nkeys == keys_size) {
 				keys_size *= 2;
-				*keys = (charcodemap_t*) realloc(keys,
+				*keys = (charcodemap_t*) realloc(*keys,
 						keys_size * sizeof(charcodemap_t));
 			}
 		}
