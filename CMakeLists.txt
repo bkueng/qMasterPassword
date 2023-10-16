@@ -10,8 +10,14 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_SKIP_RPATH ON)
 
 find_package(QT NAMES Qt5 Qt6 REQUIRED COMPONENTS Core)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Gui Widgets)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Gui Widgets LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} OPTIONAL_COMPONENTS DBus Test)
+
+# exposes ${TS_FILES}
+add_subdirectory(data/translations)
+set_source_files_properties(${TS_FILES}
+    PROPERTIES OUTPUT_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/translations"
+)
 
 if(QT_VERSION LESS 6.3.0)
     # manual project setup for older Qt versions
@@ -21,13 +27,24 @@ if(QT_VERSION LESS 6.3.0)
     set(QT_TARGET_FOLDER QtInternalTargets)
     include(GNUInstallDirs)
 
-    add_executable(${TARGET} WIN32)
+    if(QT_VERSION LESS 6.0.0)
+        qt5_add_translation(QM_FILES ${TS_FILES})
+    else()
+        qt6_add_translation(QM_FILES ${TS_FILES})
+    endif()
 
+    add_executable(${TARGET} WIN32
+        ${QM_FILES}
+    )
 else()
     # only available in qt >= 6.3.0
     qt_standard_project_setup()
 
     qt_add_executable(${TARGET} WIN32)
+
+    qt_add_lrelease(${TARGET}
+	TS_FILES ${TS_FILES}
+    )
 endif()
 
 add_subdirectory(include)

@@ -157,7 +157,7 @@ void CMain::loadTranslation() {
 	QLocale locale = QLocale::system();
 
 	QString bin_path = qApp->applicationDirPath();
-	QString src_app_trans_path = bin_path + QLatin1String("/data/translations");
+	QString src_app_trans_path = bin_path + QLatin1String("/translations");
 	//installed translation path
 	QString app_trans_path = bin_path + "/../share/" APP_NAME "/translations";
 	QString qt_trans_path =
