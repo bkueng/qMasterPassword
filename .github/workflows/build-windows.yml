@@ -1,0 +1,34 @@
+---
+name: build-windows
+
+on:
+   workflow_call:
+
+jobs:
+  build-windows:
+    name: Build against Qt ${{ matrix.qt }} on Windows
+    runs-on: windows-latest
+
+    strategy:
+      matrix:
+        qt: [5.15.*, 6.6.*]
+      fail-fast: false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version:      ${{ matrix.qt }}
+          host:         windows
+          target:       desktop
+          dir:          ${{ runner.temp }}/qt
+          setup-python: false
+
+      - name: Configure
+        run: cmake -B ${{ runner.temp }}/build .
+
+      - name: Build
+        run: cmake --build ${{ runner.temp }}/build
