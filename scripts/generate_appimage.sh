@@ -26,17 +26,15 @@ trap cleanup EXIT
 REPO_ROOT=$(readlink -f $(dirname $(dirname $0)))
 OLD_CWD=$(readlink -f .)
 
-# switch to build dir
-pushd "$BUILD_DIR"
-
-# configure build files with qmake
-qmake-qt5 "$REPO_ROOT"
+# configure build files with cmake
+cmake -B        "${BUILD_DIR}" "${REPO_ROOT}"
 
 # build project and install files into AppDir
-make -j$(nproc)
-make install INSTALL_ROOT=AppDir
+cmake --build   "${BUILD_DIR}" -j$(nproc)
+cmake --install "${BUILD_DIR}" --prefix "${BUILD_DIR}/AppDir"
 
-lrelease-qt5 "$REPO_ROOT"/qMasterPassword.pro
+# switch to build dir
+pushd "$BUILD_DIR"
 
 # now, build AppImage using linuxdeploy and linuxdeploy-plugin-qt
 # download linuxdeploy and its Qt plugin
@@ -51,7 +49,8 @@ export QML_SOURCES_PATHS="$REPO_ROOT"/src
 
 TRANSLATION_DIR="$BUILD_DIR"/AppDir/usr/share/qMasterPassword/translations
 mkdir -p "$TRANSLATION_DIR"
-cp "$REPO_ROOT"/data/translations/*.qm "$TRANSLATION_DIR"
+mkdir -p "${BUILD_DIR}"/AppDir/usr/translations
+cp "${BUILD_DIR}"/translations/*.qm "${TRANSLATION_DIR}"
 cp "$REPO_ROOT"/data/icons/app_icon.png "$BUILD_DIR"/qmasterpassword.png
 
 # initialize AppDir, bundle shared libraries, add desktop file and icon, use Qt plugin to bundle additional resources, and build AppImage, all in one command

@@ -20,7 +20,7 @@
 #include <QMap>
 #include "user.h"
 #include "crypto.h"
-#include "ui_helpers.h"
+#include "uitemplate_helpers.h"
 
 namespace Ui {
 class EditSiteWidget;

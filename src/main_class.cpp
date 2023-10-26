@@ -157,23 +157,28 @@ void CMain::loadTranslation() {
 	QLocale locale = QLocale::system();
 
 	QString bin_path = qApp->applicationDirPath();
-	QString src_app_trans_path = bin_path + QLatin1String("/data/translations");
+	QString src_app_trans_path = bin_path + QLatin1String("/translations");
 	//installed translation path
 	QString app_trans_path = bin_path + "/../share/" APP_NAME "/translations";
-	QString qt_trans_path = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+	QString qt_trans_path =
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+		QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+#else
+		QLibraryInfo::path(QLibraryInfo::TranslationsPath);
+#endif
 
 #if defined(Q_OS_WIN) || defined(Q_OS_OS2)
 	// In windows and OS2 try to load the qt translation from the app path, as
 	// most users won't have Qt installed.
-	m_qt_trans.load(locale, "qt", "_", app_trans_path);
-	m_qtbase_trans.load(locale, "qtbase", "_", app_trans_path);
+	(void) m_qt_trans.load(locale, "qt", "_", app_trans_path);
+	(void) m_qtbase_trans.load(locale, "qtbase", "_", app_trans_path);
 #else
 	// In linux try to load it first from app path (in case there's an updated
 	// translation), if it fails it will try then from the Qt path.
 	if (!m_qt_trans.load(locale, "qt", "_", app_trans_path))
-		m_qt_trans.load(locale, "qt", "_", qt_trans_path);
+		(void) m_qt_trans.load(locale, "qt", "_", qt_trans_path);
 	if (!m_qtbase_trans.load(locale, "qtbase", "_", app_trans_path))
-		m_qtbase_trans.load(locale, "qtbase", "_", qt_trans_path);
+		(void) m_qtbase_trans.load(locale, "qtbase", "_", qt_trans_path);
 #endif
 
 	if (!m_app_trans.load(locale, "translation", "_", src_app_trans_path)) {

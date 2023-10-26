@@ -28,6 +28,7 @@ there are prebuilt binaries under
 
 #### Dependencies
 * Qt 5.2 or higher (see branch qt4.8 for older Qt version support)
+* cmake, make or ninja
 * OpenSSL (libcrypto library)
 * libscrypt library (https://github.com/technion/libscrypt for Linux/OSX,
   https://github.com/barrysteyn/scrypt-windows for Windows).
@@ -38,10 +39,12 @@ there are prebuilt binaries under
 
 #### Build
 ```shell
-qmake
-make
-./qMasterPassword
+cmake [-GNinja] -B build .
+cmake --build build
+./build/qMasterPassword
 ```
+
+Add `-GNinja` if you want to build with `ninja` instead of `make`.
 
 
 #### Usage
@@ -58,12 +61,11 @@ Keyboard: When the list view has focus:
 
 #### Testing
 ```shell
-make debug
+cmake [-GNinja] -DCMAKE_BUILD_TYPE=Debug -B build .
+cmake --build build --target test
 ```
-Run unit tests:  
-```shell
-./qMasterPassword --test test/tests.xml
-```
+
+Add `-GNinja` if you want to build with `ninja` instead of `make`.
 
 
 #### Miscellaneous
