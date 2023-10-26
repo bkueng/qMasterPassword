@@ -50,12 +50,9 @@ jobs:
 
       - name: Add packages for AppImage Build
         run: |
-          echo "APPIMAGE_PACKAGES=ca-certificates curl file nodejs" >>${GITHUB_ENV}
+          echo "APPIMAGE_PACKAGES=curl file nodejs" >>${GITHUB_ENV}
         if: |
           matrix.appimage
-
-      - name: Checkout
-        uses: actions/checkout@v3
 
       - name: Update for Debian systems
         run: |
@@ -67,6 +64,8 @@ jobs:
       - name: Install dependencies for Debian systems
         run: >
           apt-get install --no-install-recommends -q -y
+          ca-certificates
+          git
           cmake
           ninja-build
           g++
@@ -88,6 +87,8 @@ jobs:
       - name: Install dependencies for RedHat systems
         run: >
           dnf install --setopt=install_weak_deps=False -y
+          ca-certificates
+          git
           cmake
           ninja-build
           gcc-c++
@@ -102,24 +103,28 @@ jobs:
         if: |
           env.OS_RELEASE_ID == 'fedora'
 
+      # NOTE: execute *AFTER* dependency installation to ensure that it uses a git checkout!
+      - name: Checkout
+        uses: actions/checkout@v3
+
       - name: Configure
         run: |
-          rm -rf ${{ runner.temp }}/build
-          cmake -GNinja -B ${{ runner.temp }}/build .
+          rm -rf ${RUNNER_TEMP}/build
+          cmake -GNinja -B ${RUNNER_TEMP}/build .
 
       - name: Build
-        run: cmake --build ${{ runner.temp }}/build
+        run: cmake --build ${RUNNER_TEMP}/build
 
       - name: Install
         run: |
-          rm -rf ${{ runner.temp }}/install
-          cmake --install ${{ runner.temp }}/build --prefix ${{ runner.temp }}/install
-          cp -pr ${{ runner.temp }}/build/translations ${{ runner.temp }}/install/
+          rm -rf ${RUNNER_TEMP}/install
+          cmake --install ${RUNNER_TEMP}/build --prefix ${RUNNER_TEMP}/install
+          cp -pr ${RUNNER_TEMP}/build/translations ${RUNNER_TEMP}/install/
 
       - name: Test
         run: |
-          cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -B ${{ runner.temp }}/build .
-          cmake --build ${{ runner.temp }}/build --target test
+          cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -B ${RUNNER_TEMP}/build .
+          cmake --build ${RUNNER_TEMP}/build --target test
 
       - name: Prepare AppImage Build
         env:
@@ -132,10 +137,10 @@ jobs:
 
           cp -p data/qMasterPassword.appdata.xml ${LINUXDEPLOY_DIR}/AppDir/usr/share/metainfo/
 
-          cp -p ${{ runner.temp }}/install/bin/qMasterPassword ${LINUXDEPLOY_DIR}/
+          cp -p ${RUNNER_TEMP}/install/bin/qMasterPassword ${LINUXDEPLOY_DIR}/
 
           cp -pr \
-            ${{ runner.temp }}/install/translations \
+            ${RUNNER_TEMP}/install/translations \
             ${LINUXDEPLOY_DIR}/AppDir/usr/share/qMasterPassword/
         if: |
           matrix.appimage
@@ -162,9 +167,9 @@ jobs:
           ./linuxdeploy-x86_64.AppImage
           --verbosity=2
           --appdir=AppDir
-          --desktop-file=${{ github.workspace }}/data/qMasterPassword.desktop
+          --desktop-file=${GITHUB_WORKSPACE}/data/qMasterPassword.desktop
           --executable=qMasterPassword
-          --icon-file=${{ github.workspace }}/data/icons/app_icon.png
+          --icon-file=${GITHUB_WORKSPACE}/data/icons/app_icon.png
           --icon-filename=qmasterpassword
           --plugin=qt
           --output=appimage &&
