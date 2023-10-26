@@ -1,0 +1,183 @@
+---
+name: build-linux
+
+on:
+   workflow_call:
+
+jobs:
+  build-linux:
+    name: Build against Qt ${{ matrix.qt }} on ${{ matrix.container }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        container:
+          - debian:stable
+          - debian:testing
+          - fedora:38
+          - fedora:39
+          - fedora:rawhide
+          - ubuntu:latest
+          - ubuntu:rolling
+        qt: [5, 6]
+
+        include:
+          # add appimage to matrix
+          # NOTE: AppImage build fails for Qt6 on Debian-like systems
+          - container: ubuntu:latest
+            qt:        5
+            appimage:  true
+          - container: fedora:38
+            qt:        6
+            appimage:  true
+
+      fail-fast: false
+
+    container:
+      image: ${{ matrix.container }}
+
+    env:
+      DEBIAN_FRONTEND:     noninteractive
+      DEBIAN_QT5_PACKAGES: qtbase5-dev qttools5-dev
+      DEBIAN_QT6_PACKAGES: qt6-base-dev qt6-tools-dev qt6-tools-dev-tools qt6-l10n-tools libgl1-mesa-dev
+      REDHAT_QT5_PACKAGES: qt5-linguist
+      REDHAT_QT6_PACKAGES: qt6-qttools-devel
+
+    steps:
+      - name: Detect OS release
+        run: |
+          . /etc/os-release && echo "OS_RELEASE_ID=${ID}" >>${GITHUB_ENV}
+
+      - name: Add packages for AppImage Build
+        run: |
+          echo "APPIMAGE_PACKAGES=ca-certificates curl file nodejs" >>${GITHUB_ENV}
+        if: |
+          matrix.appimage
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Update for Debian systems
+        run: |
+          apt-get update -q -y
+          apt-get upgrade -q -y
+        if: |
+          env.OS_RELEASE_ID == 'debian' || env.OS_RELEASE_ID == 'ubuntu'
+
+      - name: Install dependencies for Debian systems
+        run: >
+          apt-get install --no-install-recommends -q -y
+          cmake
+          ninja-build
+          g++
+          libscrypt-dev
+          libssl-dev
+          libx11-dev
+          libxkbcommon-x11-dev
+          libxtst-dev
+          ${DEBIAN_QT${{ matrix.qt }}_PACKAGES}
+          ${APPIMAGE_PACKAGES}
+        if: |
+          env.OS_RELEASE_ID == 'debian' || env.OS_RELEASE_ID == 'ubuntu'
+
+      - name: Update for RedHat systems
+        run: dnf upgrade -y
+        if: |
+          env.OS_RELEASE_ID == 'fedora'
+
+      - name: Install dependencies for RedHat systems
+        run: >
+          dnf install --setopt=install_weak_deps=False -y
+          cmake
+          ninja-build
+          gcc-c++
+          libscrypt-devel
+          libX11-devel
+          libXtst-devel
+          libxkbcommon-x11-devel
+          openssl-devel
+          qt${{ matrix.qt }}-qtbase-devel
+          ${REDHAT_QT${{ matrix.qt }}_PACKAGES}
+          ${APPIMAGE_PACKAGES}
+        if: |
+          env.OS_RELEASE_ID == 'fedora'
+
+      - name: Configure
+        run: |
+          rm -rf ${{ runner.temp }}/build
+          cmake -GNinja -B ${{ runner.temp }}/build .
+
+      - name: Build
+        run: cmake --build ${{ runner.temp }}/build
+
+      - name: Install
+        run: |
+          rm -rf ${{ runner.temp }}/install
+          cmake --install ${{ runner.temp }}/build --prefix ${{ runner.temp }}/install
+          cp -pr ${{ runner.temp }}/build/translations ${{ runner.temp }}/install/
+
+      - name: Test
+        run: |
+          cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -B ${{ runner.temp }}/build .
+          cmake --build ${{ runner.temp }}/build --target test
+
+      - name: Prepare AppImage Build
+        env:
+          LINUXDEPLOY_DIR: ${{ runner.temp }}/linuxdeploy
+        run: |
+          mkdir -p \
+            ${LINUXDEPLOY_DIR}/AppDir/usr/share/metainfo \
+            ${LINUXDEPLOY_DIR}/AppDir/usr/share/qMasterPassword \
+            ${LINUXDEPLOY_DIR}/AppDir/usr/translations
+
+          cp -p data/qMasterPassword.appdata.xml ${LINUXDEPLOY_DIR}/AppDir/usr/share/metainfo/
+
+          cp -p ${{ runner.temp }}/install/bin/qMasterPassword ${LINUXDEPLOY_DIR}/
+
+          cp -pr \
+            ${{ runner.temp }}/install/translations \
+            ${LINUXDEPLOY_DIR}/AppDir/usr/share/qMasterPassword/
+        if: |
+          matrix.appimage
+
+      - name: Download linuxdeploy
+        working-directory: ${{ runner.temp }}/linuxdeploy
+        run: >
+          curl
+          --silent --show-error
+          --location --remote-name-all
+          https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+          https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
+        if: |
+          matrix.appimage
+
+      - name: Build AppImage
+        working-directory: ${{ runner.temp }}/linuxdeploy
+        env:
+          APPIMAGE_EXTRACT_AND_RUN: 1
+          QML_SOURCES_PATHS:        ${{ github.workspace }}/src
+        run: >
+          chmod +x ./*.AppImage &&
+
+          ./linuxdeploy-x86_64.AppImage
+          --verbosity=2
+          --appdir=AppDir
+          --desktop-file=${{ github.workspace }}/data/qMasterPassword.desktop
+          --executable=qMasterPassword
+          --icon-file=${{ github.workspace }}/data/icons/app_icon.png
+          --icon-filename=qmasterpassword
+          --plugin=qt
+          --output=appimage &&
+
+          file qMasterPassword-x86_64.AppImage
+        if: |
+          matrix.appimage
+
+      - name: Upload AppImage
+        uses: actions/upload-artifact@v3
+        with:
+          name: appimage-qt${{ matrix.qt }}
+          path: ${{ runner.temp }}/linuxdeploy/qMasterPassword-x86_64.AppImage
+        # skip step when running under act-cli
+        if: |
+          matrix.appimage && env.ACT != 'true'
