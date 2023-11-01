@@ -207,6 +207,16 @@ Sollte es wieder vorkommen, dann gibt es ein ernstes Problem mit dieser Installa
     </message>
     <message>
         <location filename="../../src/main_window.cpp" line="380"/>
+        <source>Add User</source>
+        <translation>Person hinzufügen</translation>
+    </message>
+    <message>
+        <location filename="../../src/main_window.cpp" line="380"/>
+        <source>Edit User</source>
+        <translation>Person bearbeiten</translation>
+    </message>
+    <message>
+        <location filename="../../src/main_window.cpp" line="380"/>
         <source>Delete User</source>
         <translation>Person löschen</translation>
     </message>
