@@ -52,7 +52,7 @@ public:
 
     CInputBuilder& AddCharacter(wchar_t character);
     CInputBuilder& AddCharacters(std::vector<wchar_t> characters);
-	CInputBuilder& AddCharacters(LPCTSTR characters);
+	CInputBuilder& AddCharacters(LPCWSTR characters);
 
 
     CInputBuilder& AddRelativeMouseMovement(int x, int y);

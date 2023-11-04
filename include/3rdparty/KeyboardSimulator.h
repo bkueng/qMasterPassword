@@ -52,7 +52,7 @@ public:
          void ModifiedKeyStroke(std::vector<VirtualKeyCode>* modifierKeyCodes, VirtualKeyCode keyCode);
          void ModifiedKeyStroke(VirtualKeyCode modifierKey, std::vector<VirtualKeyCode>* keyCodes);
          void ModifiedKeyStroke(std::vector<VirtualKeyCode>* modifierKeyCodes, std::vector<VirtualKeyCode>* keyCodes);
-         void TextEntry(LPCTSTR text);
+         void TextEntry(LPCWSTR text);
 
 };
 
