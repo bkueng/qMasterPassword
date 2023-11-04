@@ -124,11 +124,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
 #ifdef Q_OS_LINUX
 	if (!QDBusConnection::sessionBus().isConnected()) {
-		LOG(WARN, "Cannot connect to the D-Bus session bus.\n"
+		LOG(LogLevel::Warn, "Cannot connect to the D-Bus session bus.\n"
 				"To start it, run: eval `dbus-launch --auto-syntax`\n");
 	} else if (!QDBusConnection::sessionBus().registerService(
 			"org.bkueng.qMasterPassword")) {
-		LOG(WARN, "%s", qPrintable(QDBusConnection::sessionBus().lastError().message()));
+		LOG(LogLevel::Warn, "%s", qPrintable(QDBusConnection::sessionBus().lastError().message()));
 	} else {
 		DBusAdapter* dbus_adapter = new DBusAdapter(this);
 		QDBusConnection::sessionBus().registerObject("/MainWindow", dbus_adapter,
@@ -259,7 +259,7 @@ void MainWindow::loginLogoutClicked() {
 }
 
 void MainWindow::login() {
-	LOG(DEBUG, "Login");
+	LOG(LogLevel::Debug, "Login");
 	QString user_name = m_ui->cmbUserName->currentText();
 	QString password = m_ui->txtPassword->text();
 	auto iter_user = m_users.find(user_name);
@@ -325,7 +325,7 @@ void MainWindow::login() {
 }
 
 void MainWindow::logout() {
-	LOG(DEBUG, "Logout");
+	LOG(LogLevel::Debug, "Logout");
 	m_master_password.logout();
 	m_current_user = nullptr;
 	m_ui->btnLoginLogout->setText(tr("Login"));
@@ -531,7 +531,7 @@ void MainWindow::appAboutToQuit() {
 	saveSettings();
 }
 void MainWindow::saveSettings() {
-	LOG(DEBUG, "saving settings");
+	LOG(LogLevel::Debug, "saving settings");
 	QSettings settings("qMasterPassword", "qMasterPassword");
 	settings.setValue("main_window/geometry", saveGeometry());
 	settings.setValue("main_window/window_state", saveState());
@@ -576,7 +576,7 @@ void MainWindow::readSettings() {
 				m_next_category_id = category;
 		}
 		++m_next_category_id;
-		LOG(DEBUG, "next category id: %i", (int )m_next_category_id);
+		LOG(LogLevel::Debug, "next category id: %i", (int )m_next_category_id);
     }
 	for (auto iter = m_categories.begin(); iter != m_categories.end(); ++iter) {
 		addCategory(iter.value(), iter.key());
@@ -589,7 +589,7 @@ void MainWindow::readSettings() {
     stream >> m_users;
     int selected_index = -1;
 	for (auto& user : m_users) {
-		LOG(DEBUG, "Read user: %s (%i sites)",
+		LOG(LogLevel::Debug, "Read user: %s (%i sites)",
 			user.getUserName().toUtf8().constData(), user.getSites().count());
 
 		m_ui->cmbUserName->addItem(user.getUserName());
@@ -668,7 +668,7 @@ void MainWindow::selectionChanged(const QItemSelection& selected,
 }
 
 void MainWindow::addCategory(const QString& name, CategoryId id) {
-	LOG(DEBUG, "Adding Category %s", name.toStdString().c_str());
+	LOG(LogLevel::Debug, "Adding Category %s", name.toStdString().c_str());
 	if (id == -1)
 		id = m_next_category_id++;
 	m_categories[id] = name;
@@ -679,7 +679,7 @@ void MainWindow::addCategory(const QString& name, CategoryId id) {
 }
 void MainWindow::removeCategory(CategoryId category_id) {
 	const QString& category_name = m_categories[category_id];
-	LOG(DEBUG, "Removing Category %s", category_name.toStdString().c_str());
+	LOG(LogLevel::Debug, "Removing Category %s", category_name.toStdString().c_str());
 	m_categories.remove(category_id);
 
 	//button
@@ -739,7 +739,7 @@ void MainWindow::copyPWToClipboardClicked() {
 	copyPWToClipboard(button->site());
 }
 void MainWindow::copyPWToClipboard(const UiSite& site) {
-	LOG(DEBUG, "copy pw to clipboard");
+	LOG(LogLevel::Debug, "copy pw to clipboard");
 	string password = m_master_password.sitePassword(site.site);
 	int timeout = copyToClipboard(QString::fromUtf8(password.c_str()));
 	QString suffix = "";
@@ -751,7 +751,7 @@ void MainWindow::copyPWToClipboard(const UiSite& site) {
 void MainWindow::copyUserToClipboard(const UiSite& site) {
 	if (site.user_name.isEmpty())
 		return;
-	LOG(DEBUG, "copy login name to clipboard");
+	LOG(LogLevel::Debug, "copy login name to clipboard");
 	int timeout = copyToClipboard(site.user_name);
 	QString suffix = "";
 	if (timeout > 0)
@@ -787,7 +787,7 @@ void MainWindow::clearDataFromClipboardTimer() {
 	}
 }
 void MainWindow::clearDataFromClipboard() {
-	LOG(DEBUG, "Clear data from clipboard");
+	LOG(LogLevel::Debug, "Clear data from clipboard");
 	QClipboard* clipboard = QApplication::clipboard();
 	QString original_text = clipboard->text();
 	if (original_text == m_clipboard_data) {
@@ -800,7 +800,7 @@ void MainWindow::clearDataFromClipboard() {
 	m_clipboard_time_left = 0;
 }
 void MainWindow::showHidePWClicked() {
-	LOG(DEBUG, "show/hide PW clicked");
+	LOG(LogLevel::Debug, "show/hide PW clicked");
 	UserPushButton* button = dynamic_cast<UserPushButton*>(sender());
 	if (!button) return;
 	UiSite& site = button->site();
@@ -832,14 +832,14 @@ void MainWindow::activateLogoutTimer() {
 	if (!m_master_password.isLoggedIn() ||
 		!m_application_settings.auto_logout_when_hidden) return;
 
-	LOG(DEBUG, "Activating Logout Timer (%i min)",
+	LOG(LogLevel::Debug, "Activating Logout Timer (%i min)",
 			m_application_settings.auto_logout_timeout);
 	m_logout_timer->start(m_application_settings.auto_logout_timeout*60*1000);
 }
 
 void MainWindow::abortLogoutTimer() {
 	if (m_logout_timer->isActive()) {
-		LOG(DEBUG, "Aborting Logout Timer");
+		LOG(LogLevel::Debug, "Aborting Logout Timer");
 		m_logout_timer->stop();
 	}
 }

@@ -61,7 +61,7 @@ void PasswordGeneratorWidget::uiChanged() {
 		QString chars;
 		//Note: we assume each template contains only passwords that are in no
 		//other of the templates
-		LOG(DEBUG, "Number of pw templates: %i", (int)templates.size());
+		LOG(LogLevel::Debug, "Number of pw templates: %i", (int)templates.size());
 		for (int j = 0; j < (int)templates.size(); ++j) {
 			double num = 1;
 			for (int i = 0; i < templates[j].length(); ++i) {
@@ -148,7 +148,7 @@ PasswordGeneratorWidget::Method PasswordGeneratorWidget::selectedMethod() {
 
 void PasswordGeneratorWidget::getRandomBytes(unsigned char* buffer, int num) {
 	int ret = secureRandomBytes(buffer, num);
-	if (ret == 0) LOG(WARN, "Used less secure pseudo-random function for random numbers!");
+	if (ret == 0) LOG(LogLevel::Warn, "Used less secure pseudo-random function for random numbers!");
 	else if (ret == -1) {
 		QMessageBox::critical(this, tr("Error"), tr("Failed to get random data"));
 		throw 0;

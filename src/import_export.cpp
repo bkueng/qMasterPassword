@@ -91,12 +91,12 @@ void DataImportExport::importJson(UiUser& user, const QString& file_name) {
 			for (auto& site : user.getSites()) {
 				if (site->site.getName() == site_name_str) {
 					new_site = site;
-					LOG(DEBUG, "Import: found site %s", site_name_str.c_str());
+					LOG(LogLevel::Debug, "Import: found site %s", site_name_str.c_str());
 					break;
 				}
 			}
 			if (!new_site.get()) {
-				LOG(DEBUG, "Import: new site %s", site_name_str.c_str());
+				LOG(LogLevel::Debug, "Import: new site %s", site_name_str.c_str());
 				new_site = make_shared<UiSite>();
 				user.getSites().push_back(new_site);
 			}
@@ -115,7 +115,7 @@ void DataImportExport::importJson(UiUser& user, const QString& file_name) {
 			try {
 				new_site->site.setType(password_type_str.toUtf8().constData());
 			} catch (Exception& e) {
-				LOG(WARN, "Import: unknown password type %s",
+				LOG(LogLevel::Warn, "Import: unknown password type %s",
 						password_type_str.toUtf8().constData());
 			}
 			new_site->site.setName(site_name_str);

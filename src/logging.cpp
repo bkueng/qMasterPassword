@@ -29,32 +29,32 @@
  *//*********************************************************************/
 
 
-string CLog::toStr(ELOG level)
+string CLog::toStr(LogLevel level)
 {
 	switch (level) {
-	case ERROR: return ("ERROR");
-	case WARN: return ("WARN");
-	case INFO: return ("INFO");
-	case DEBUG: return ("DEBUG");
-	case NONE:
+	case LogLevel::Error: return ("ERROR");
+	case LogLevel::Warn: return ("Warn");
+	case LogLevel::Info: return ("Info");
+	case LogLevel::Debug: return ("Debug");
+	case LogLevel::None:
 	default:
 		return ("UNKNOWN LEVEL");
 	}
 }
 
-bool CLog::parseLevel(const string& level, ELOG& level_out)
+bool CLog::parseLevel(const string& level, LogLevel& level_out)
 {
 	string str = toLower(level);
-	if (str == "error" || str == "e") level_out = ERROR;
-	else if (str == "warn" || str == "w") level_out = WARN;
-	else if (str == "info" || str == "i") level_out = INFO;
-	else if (str == "debug" || str == "d") level_out = DEBUG;
-	else if (str == "none" || str == "n") level_out = NONE;
+	if (str == "error" || str == "e") level_out = LogLevel::Error;
+	else if (str == "warn" || str == "w") level_out = LogLevel::Warn;
+	else if (str == "info" || str == "i") level_out = LogLevel::Info;
+	else if (str == "debug" || str == "d") level_out = LogLevel::Debug;
+	else if (str == "none" || str == "n") level_out = LogLevel::None;
 	else return false;
 	return true;
 }
 
-void CLog::Log(ELOG level, const char* file, const char* function, int line,
+void CLog::Log(LogLevel level, const char* file, const char* function, int line,
 			   const char* fmt, ...)
 {
 
@@ -67,7 +67,7 @@ void CLog::Log(ELOG level, const char* file, const char* function, int line,
 	if (level <= m_file_log) {
 		FILE* pFile = fopen(LOG_FILE, "a+");
 		if (pFile) {
-			if (m_bLog_src_file[level] && file) {
+			if (m_bLog_src_file[static_cast<int>(level)] && file) {
 				/* be more verbose in debug mode */
 #ifdef _DEBUG
 				fprintf(pFile, "%s: %s() Line %d: ", file, function, line);
@@ -80,12 +80,12 @@ void CLog::Log(ELOG level, const char* file, const char* function, int line,
 			fprintf(pFile, "%s: %s\n", toStr(level).c_str(), buffer);
 			fclose(pFile);
 		}
-		++m_file_log_count[level];
+		++m_file_log_count[static_cast<int>(level)];
 	}
 	
 	if (level <= m_console_log) {
-		if (level == ERROR) {
-			if (m_bLog_src_file[level] && file) {
+		if (level == LogLevel::Error) {
+			if (m_bLog_src_file[static_cast<int>(level)] && file) {
 #ifdef _DEBUG
 				fprintf(stderr, "%s: %s() Line %d: ", file, function, line);
 #else
@@ -96,7 +96,7 @@ void CLog::Log(ELOG level, const char* file, const char* function, int line,
 												 getTime().c_str());
 			fprintf(stderr, "%s\n", buffer);
 		} else {
-			if (m_bLog_src_file[level] && file) {
+			if (m_bLog_src_file[static_cast<int>(level)] && file) {
 #ifdef _DEBUG
 				printf("%s: %s() Line %d: ", file, function, line);
 #else
@@ -107,7 +107,7 @@ void CLog::Log(ELOG level, const char* file, const char* function, int line,
 												getTime().c_str());
 			printf("%s\n", buffer);
 		}
-		++m_console_log_count[level];
+		++m_console_log_count[static_cast<int>(level)];
 	}
 	
 }
@@ -154,7 +154,7 @@ string CLog::getTime()
 
 
 CLog::CLog() : m_bLog_time_file(true), m_bLog_time_console(false)
-	, m_console_log(INFO), m_file_log(INFO)
+	, m_console_log(LogLevel::Info), m_file_log(LogLevel::Info)
 {
 	memset(m_console_log_count, 0, sizeof(m_console_log_count));
 	memset(m_file_log_count, 0, sizeof(m_file_log_count));

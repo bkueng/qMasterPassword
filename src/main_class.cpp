@@ -184,12 +184,12 @@ void CMain::loadTranslation() {
 	if (!m_app_trans.load(locale, "translation", "_", src_app_trans_path)) {
 		if (!m_app_trans.load(locale, "translation", "_", app_trans_path)) {
 			if (!locale.name().startsWith("en"))
-				LOG(WARN, "Failed to load translation %s", locale.name().toUtf8().constData());
+				LOG(LogLevel::Warn, "Failed to load translation %s", locale.name().toUtf8().constData());
 		} else {
-			LOG(DEBUG, "Using translation from %s", app_trans_path.toUtf8().constData());
+			LOG(LogLevel::Debug, "Using translation from %s", app_trans_path.toUtf8().constData());
 		}
 	} else {
-		LOG(DEBUG, "Using translation from %s", src_app_trans_path.toUtf8().constData());
+		LOG(LogLevel::Debug, "Using translation from %s", src_app_trans_path.toUtf8().constData());
 	}
 
 	qApp->installTranslator(&m_app_trans);
@@ -204,19 +204,19 @@ int CMain::processArgs()
 	//set console log level
 	string level;
 	if (m_parameters->getSwitch("verbose"))
-		CLog::getInstance().setConsoleLevel(DEBUG);
+		CLog::getInstance().setConsoleLevel(LogLevel::Debug);
 	else if (m_parameters->getSwitch("no-log"))
-		CLog::getInstance().setConsoleLevel(NONE);
+		CLog::getInstance().setConsoleLevel(LogLevel::None);
 	else if (m_parameters->getParam("log", level)) {
-		ELOG log_level;
+		LogLevel log_level;
 		if (CLog::parseLevel(level, log_level))
 			CLog::getInstance().setConsoleLevel(log_level);
 	}
 	//set file log level
 	if (m_parameters->getSwitch("no-file-log"))
-		CLog::getInstance().setFileLevel(NONE);
+		CLog::getInstance().setFileLevel(LogLevel::None);
 	else if (m_parameters->getParam("file-log", level)) {
-		ELOG log_level;
+		LogLevel log_level;
 		if (CLog::parseLevel(level, log_level))
 			CLog::getInstance().setFileLevel(log_level);
 	}
@@ -224,7 +224,7 @@ int CMain::processArgs()
 #ifdef TESTING_SUPPORT
 	string test_file;
 	if (m_parameters->getParam("test", test_file)) {
-		LOG(DEBUG, "Running tests on file %s", test_file.c_str());
+		LOG(LogLevel::Debug, "Running tests on file %s", test_file.c_str());
 		UnitTests test(test_file);
 		return QTest::qExec(&test);
 	}
