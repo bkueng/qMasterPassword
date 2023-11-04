@@ -18,29 +18,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Check out scrypt
-        uses: actions/checkout@master
-        with:
-          repository: barrysteyn/scrypt-windows
-          path: scrypt-windows
-
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
 
-      - name: Install node
-        uses: actions/setup-node@master
-
-      - name: Install node-gyp
-        shell: powershell
-        run: |
-          npm install --global node-gyp@latest
-
-      - name: Build scrypt-windows
-        working-directory: scrypt-windows
-        run: |
-          node-gyp configure
-          node-gyp build
-          node-gyp install
+      - name: Download artifacts for scrypt-windows 1.1.6
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          repo:         stefanb2/scrypt-windows
+          branch:       master
+          workflow:     build.yml
+          name:         scrypt-windows-1.1.6
+          path:         scrypt-windows
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
