@@ -27,7 +27,7 @@
 //most of the defines in here are project/OS specific
 
 
-#if defined(WIN32) || defined(WIN64)
+#if defined(_WIN32) || defined(_WIN64)
 #define PATH_SEP "\\"
 #else
 #define PATH_SEP "/"
