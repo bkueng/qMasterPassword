@@ -33,11 +33,11 @@ Keypress::~Keypress() {
 }
 
 static VirtualKeyCode modifier_keys[] = {
-	SHIFT,
-	CONTROL,
-	MENU,
-	LWIN,
-	RWIN
+	VirtualKeyCode::SHIFT,
+	VirtualKeyCode::CONTROL,
+	VirtualKeyCode::MENU,
+	VirtualKeyCode::LWIN,
+	VirtualKeyCode::RWIN
 };
 
 
