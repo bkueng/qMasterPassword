@@ -34,3 +34,5 @@ ui/ui_*.h
 *.pro.user
 
 /.qtc_clangd
+
+/cmake-build-*
