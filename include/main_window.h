@@ -160,6 +160,7 @@ private slots:
 	void iconAboutToShow();
 	void showTrayIcon(bool visible);
 	void showSettingsWidget();
+	void quit();
 	void showAboutWidget();
 	void showShortcutsWidget();
 	void clearDataFromClipboard();

@@ -903,6 +903,9 @@ void MainWindow::showSettingsWidget() {
 		}
 	}
 }
+void MainWindow::quit() {
+	qApp->quit();
+}
 void MainWindow::showAboutWidget() {
 
 	static const char* about_msg =
