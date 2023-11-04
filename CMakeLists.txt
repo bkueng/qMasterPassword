@@ -83,8 +83,9 @@ if(UNIX)
 endif()
 
 if(WIN32)
+    find_library(SCRYPT_LIBRARY NAMES scrypt scrypt_lib)
     target_link_libraries(${TARGET} PRIVATE
-        scrypt
+        ${SCRYPT_LIBRARY}
         ws2_32
     )
 endif()
