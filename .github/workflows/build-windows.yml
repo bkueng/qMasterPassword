@@ -27,20 +27,20 @@ jobs:
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
 
-      - name: install node
+      - name: Install node
         uses: actions/setup-node@master
 
-      - name: Install node-gpy
+      - name: Install node-gyp
         shell: powershell
         run: |
           npm install --global node-gyp@latest
 
       - name: Build scrypt-windows
+        working-directory: scrypt-windows
         run: |
           node-gyp configure
           node-gyp build
           node-gyp install
-        working-directory: scrypt-windows
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
@@ -52,7 +52,13 @@ jobs:
           setup-python: false
 
       - name: Configure
-        run: cmake -B ${{ runner.temp }}/build . "-DCMAKE_CXX_FLAGS=-I${{ github.workspace }}/scrypt-windows/scrypt-1.1.6/lib" -DCMAKE_LIBRARY_PATH=${{ github.workspace }}/scrypt-windows/build/Release
+        env:
+          CXXFLAGS: -I${{ github.workspace }}/scrypt-windows/scrypt-1.1.6/lib
+        run: >
+          cmake -B ${{ runner.temp }}/build
+          "-DCMAKE_LIBRARY_PATH=${{ github.workspace }}/scrypt-windows/build/Release"
+          .
 
       - name: Build
-        run: cmake --build ${{ runner.temp }}/build
+        run: |
+          cmake --build ${{ runner.temp }}/build

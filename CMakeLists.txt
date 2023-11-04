@@ -84,6 +84,10 @@ endif()
 
 if(WIN32)
     find_library(SCRYPT_LIBRARY NAMES scrypt scrypt_lib)
+    target_link_options(${TARGET} BEFORE PRIVATE
+        /LTCG /INCREMENTAL:NO
+        /NODEFAULTLIB:libcmt.lib
+    )
     target_link_libraries(${TARGET} PRIVATE
         ${SCRYPT_LIBRARY}
         ws2_32
