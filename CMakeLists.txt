@@ -12,6 +12,7 @@ set(CMAKE_SKIP_RPATH ON)
 find_package(QT NAMES Qt5 Qt6 REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Gui Widgets LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} OPTIONAL_COMPONENTS DBus Test)
+find_package(OpenSSL REQUIRED)
 
 # exposes ${TS_FILES}
 add_subdirectory(data/translations)
@@ -68,21 +69,21 @@ target_link_libraries(${TARGET} PRIVATE
     Qt::Core
     Qt::Gui
     Qt::Widgets
+    OpenSSL::Crypto
 )
+target_include_directories(${TARGET} PRIVATE ${OPENSSL_INCLUDE_DIR})
 
 if(UNIX)
     target_link_libraries(${TARGET} PRIVATE
         Qt::DBus
         X11
         Xtst
-        crypto
         scrypt
     )
 endif()
 
 if(WIN32)
     target_link_libraries(${TARGET} PRIVATE
-        libeay32
         scrypt
         ws2_32
     )
