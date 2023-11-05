@@ -166,10 +166,9 @@ CInputBuilder& CInputBuilder::AddCharacters(std::vector<wchar_t> characters)
             return *this;
         }
 
-CInputBuilder& CInputBuilder::AddCharacters(LPCTSTR characters)
+CInputBuilder& CInputBuilder::AddCharacters(LPCWSTR wstr)
         {
 			
-			LPCWSTR wstr = characters; 
 			int count = wcslen(wstr);
 			wchar_t* pwchr = const_cast<wchar_t*> (&wstr[0]);
 			for(int j = 0; j < count; ++j)

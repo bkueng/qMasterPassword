@@ -47,7 +47,7 @@ Exception::~Exception()
 void Exception::log()
 {
 	if (!m_bLogged) {
-		CLog::getInstance().Log(ERROR, m_file, m_func, m_line, "Exception: %s",
+		CLog::getInstance().Log(LogLevel::Error, m_file, m_func, m_line, "Exception: %s",
 								getErrorStr().c_str());
 		m_bLogged = true;
 	}
@@ -117,7 +117,7 @@ ExceptionString::ExceptionString(EnErrors err, const char* func
 void ExceptionString::log()
 {
 	if (!m_bLogged) {
-		CLog::getInstance().Log(ERROR, m_file, m_func, m_line, "%s",
+		CLog::getInstance().Log(LogLevel::Error, m_file, m_func, m_line, "%s",
 								m_err_desc.c_str());
 		m_bLogged = true;
 	}

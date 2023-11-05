@@ -20,6 +20,8 @@
 
 #include <type_traits>
 #include <string>
+#include <locale>
+#include <codecvt>
 
 
 #if defined(_WIN32)
@@ -33,11 +35,11 @@ Keypress::~Keypress() {
 }
 
 static VirtualKeyCode modifier_keys[] = {
-	SHIFT,
-	CONTROL,
-	MENU,
-	LWIN,
-	RWIN
+	VirtualKeyCode::SHIFT,
+	VirtualKeyCode::CONTROL,
+	VirtualKeyCode::MENU,
+	VirtualKeyCode::LWIN,
+	VirtualKeyCode::RWIN
 };
 
 
@@ -82,21 +84,9 @@ void Keypress::type(const char* str) {
 	CKeyboardSimulator* sim = (CKeyboardSimulator*)m_simulator;
 
 	//we need to convert str from UTF8 to UTF16
-	/*
-	//with c++11:
-#include <locale>
-#include <codecvt>
 	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 	std::wstring wide = converter.from_bytes(str);
 	sim->TextEntry(wide.c_str());
-	*/
-
-	//Win32 API
-	std::string sstr = str;
-	int size_needed = MultiByteToWideChar(CP_UTF8, 0, &sstr[0], (int)sstr.size(), NULL, 0);
-	std::wstring wstrTo( size_needed, 0 );
-	MultiByteToWideChar(CP_UTF8, 0, &sstr[0], (int)sstr.size(), &wstrTo[0], size_needed);
-	sim->TextEntry(wstrTo.c_str());
 }
 
 

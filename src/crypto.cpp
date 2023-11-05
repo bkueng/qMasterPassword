@@ -59,7 +59,7 @@ void User::setStorePasswordHash(const std::string& password) {
 	unsigned char salt_buffer[salt_length];
 	int ret = secureRandomBytes(salt_buffer, salt_length);
 	if (ret == 0) {
-		LOG(WARN, "Unsecure random bytes used for password salt!");
+		LOG(LogLevel::Warn, "Unsecure random bytes used for password salt!");
 	} else if (ret == -1) {
 		throw CryptoException(CryptoException::Type_random_failed);
 	}

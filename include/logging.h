@@ -19,15 +19,17 @@
 #include <string>
 using namespace std;
 
-enum ELOG {
-	NONE = 0,
-	ERROR,
-	WARN,
-	INFO,
-	DEBUG
+enum class LogLevel {
+	None = 0,
+	Error,
+	Warn,
+	Info,
+	Debug,
+
+	Count
 };
 
-#define LOG_LEVEL_COUNT 5
+#define LOG_LEVEL_COUNT static_cast<int>(LogLevel::Count)
 
 
 #define LOG(level, fmt, ...) CLog::getInstance().Log(level, __FILE__, \
@@ -49,17 +51,17 @@ public:
 			   *(m_instance.log = new CLog());
 	}
 	
-	static string toStr(ELOG level);
-	static bool parseLevel(const string& level, ELOG& level_out);
+	static string toStr(LogLevel level);
+	static bool parseLevel(const string& level, LogLevel& level_out);
 	
-	void Log(ELOG level, const char* file, const char* function, int line,
+	void Log(LogLevel level, const char* file, const char* function, int line,
 			 const char* fmt, ...);
 			 
-	ELOG consoleLevel() { return m_console_log; }
-	ELOG fileLevel() { return m_file_log; }
+	LogLevel consoleLevel() { return m_console_log; }
+	LogLevel fileLevel() { return m_file_log; }
 	
-	void setConsoleLevel(ELOG level) { if (level >= NONE && level <= DEBUG) m_console_log = level; }
-	void setFileLevel(ELOG level) { if (level >= NONE && level <= DEBUG) m_file_log = level; }
+	void setConsoleLevel(LogLevel level) { if (level >= LogLevel::None && level <= LogLevel::Debug) m_console_log = level; }
+	void setFileLevel(LogLevel level) { if (level >= LogLevel::None && level <= LogLevel::Debug) m_file_log = level; }
 	
 	bool logDateTimeFile() { return m_bLog_time_file; }
 	bool logDateTimeConsole() { return m_bLog_time_console; }
@@ -68,15 +70,15 @@ public:
 	void setLogDateTimeFile(bool on) { m_bLog_time_file = on; }
 	
 	
-	bool logSourceFile(ELOG level) { return m_bLog_src_file[level]; }
-	void setLogSourceFile(ELOG level, bool on) { m_bLog_src_file[level] = on; }
+	bool logSourceFile(LogLevel level) { return m_bLog_src_file[static_cast<int>(level)]; }
+	void setLogSourceFile(LogLevel level, bool on) { m_bLog_src_file[static_cast<int>(level)] = on; }
 	void setLogSourceFileAll(bool on)
 	{ for (int i = 0; i < LOG_LEVEL_COUNT; ++i) m_bLog_src_file[i] = on; }
 	
-	int getFileLogCount(ELOG log_level) { return m_file_log_count[log_level];}
+	int getFileLogCount(LogLevel log_level) { return m_file_log_count[static_cast<int>(log_level)];}
 	int getFileLogCount(); //sum all levels
 	
-	int getConsoleLogCount(ELOG log_level) { return m_console_log_count[log_level];}
+	int getConsoleLogCount(LogLevel log_level) { return m_console_log_count[static_cast<int>(log_level)];}
 	int getConsoleLogCount(); //sum all levels
 	
 	static string getDate(); //format: DD.MM.YY
@@ -89,8 +91,8 @@ private:
 	bool m_bLog_time_console;
 	bool m_bLog_src_file[LOG_LEVEL_COUNT];
 	
-	ELOG m_console_log;
-	ELOG m_file_log;
+	LogLevel m_console_log;
+	LogLevel m_file_log;
 	
 	int m_file_log_count[LOG_LEVEL_COUNT];
 	int m_console_log_count[LOG_LEVEL_COUNT];

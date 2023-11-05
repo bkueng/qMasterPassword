@@ -43,7 +43,7 @@ public:
    virtual void ModifiedKeyStroke(std::vector<VirtualKeyCode>* modifierKeyCodes, VirtualKeyCode keyCode) = 0;
    virtual void ModifiedKeyStroke(VirtualKeyCode modifierKey, std::vector<VirtualKeyCode>* keyCodes) = 0;
    virtual void ModifiedKeyStroke(VirtualKeyCode modifierKeyCode, VirtualKeyCode keyCode) = 0;
-   virtual void TextEntry(LPCTSTR text) = 0;
+   virtual void TextEntry(LPCWSTR text) = 0;
 };
 
 class  IMouseSimulator

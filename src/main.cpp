@@ -21,13 +21,13 @@ int main(int argc, char* argv[])
 	try {
 	
 #ifdef _DEBUG
-		CLog::getInstance().setConsoleLevel(DEBUG);
+		CLog::getInstance().setConsoleLevel(LogLevel::Debug);
 #else
-		CLog::getInstance().setConsoleLevel(WARN);
+		CLog::getInstance().setConsoleLevel(LogLevel::Warn);
 #endif
-		CLog::getInstance().setFileLevel(NONE);
+		CLog::getInstance().setFileLevel(LogLevel::None);
 		CLog::getInstance().setLogSourceFileAll(false);
-		CLog::getInstance().setLogSourceFile(ERROR, true);
+		CLog::getInstance().setLogSourceFile(LogLevel::Error, true);
 		
 		Exception::setLogAllExceptions(true);
 		

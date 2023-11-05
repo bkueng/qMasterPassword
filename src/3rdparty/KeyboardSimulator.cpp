@@ -138,7 +138,7 @@
     }
 
 
-    void CKeyboardSimulator::TextEntry(LPCTSTR text)
+    void CKeyboardSimulator::TextEntry(LPCWSTR text)
     {
 		  CInputBuilder inputList;
         SendSimulatedInput(inputList.AddCharacters(text));

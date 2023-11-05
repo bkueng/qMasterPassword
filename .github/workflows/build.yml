@@ -15,3 +15,6 @@ on:
 jobs:
   matrix-linux:
     uses: ./.github/workflows/build-linux.yml
+
+  matrix-windows:
+    uses: ./.github/workflows/build-windows.yml

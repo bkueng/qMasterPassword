@@ -23,7 +23,7 @@
 
 #include <openssl/hmac.h>
 #include <openssl/rand.h>
-#ifdef WIN32
+#ifdef _WIN32
 extern "C" {
 #include <crypto/crypto_scrypt.h>
 }
