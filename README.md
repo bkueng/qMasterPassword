@@ -30,10 +30,17 @@ there are prebuilt binaries under
 * Qt 5.2 or higher (see branch qt4.8 for older Qt version support)
 * cmake, make or ninja
 * OpenSSL (libcrypto library)
-* libscrypt library (https://github.com/technion/libscrypt for Linux/OSX,
-  https://github.com/barrysteyn/scrypt-windows for Windows).
+* Linux/OSX: [libscrypt](https://github.com/technion/libscrypt) library
 
-  On Debian/Ubuntu, the library is available as `libscrypt-dev`.
+  On Debian/Ubuntu, it is available as `libscrypt-dev`.
+
+  On RedHat/Fedora, it is available as `libscrypt-devel`.
+
+* Windows: [scrypt-windows](https://github.com/barrysteyn/scrypt-windows) has been added as
+a git submodule.
+
+  You need to add `--recurse-submodules` to the `git clone` command line.
+
 * Linux: libX11 libXtst
 
 

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.18)
 set(TARGET qMasterPassword)
 project(${TARGET}
-   LANGUAGES CXX
+    LANGUAGES C CXX
 )
 
 set(CMAKE_AUTOUIC_SEARCH_PATHS ui)
@@ -83,13 +83,7 @@ if(UNIX)
 endif()
 
 if(WIN32)
-    find_library(SCRYPT_LIBRARY NAMES scrypt scrypt_lib)
-    target_link_options(${TARGET} BEFORE PRIVATE
-        /LTCG /INCREMENTAL:NO
-        /NODEFAULTLIB:libcmt.lib
-    )
     target_link_libraries(${TARGET} PRIVATE
-        ${SCRYPT_LIBRARY}
         ws2_32
     )
 endif()
