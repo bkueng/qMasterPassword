@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/bkueng/qMasterPassword.svg)](https://travis-ci.org/bkueng/qMasterPassword)
+[![GitHub Build Status](https://github.com/bkueng/qMasterPassword/actions/workflows/build.yml/badge.svg?branch=main&event=push)](https://github.com/bkueng/qMasterPassword/actions/workflows/build.yml?query=branch%3Amain+event%3Apush)
+[![Travis CI Build Status](https://travis-ci.org/bkueng/qMasterPassword.svg)](https://travis-ci.org/bkueng/qMasterPassword)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/4067/badge.svg)](https://scan.coverity.com/projects/4067)
 
 ### qMasterPassword
