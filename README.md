@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/bkueng/qMasterPassword.svg)](https://travis-ci.org/bkueng/qMasterPassword)
+[![GitHub Build Status](https://github.com/bkueng/qMasterPassword/actions/workflows/build.yml/badge.svg?branch=main&event=push)](https://github.com/bkueng/qMasterPassword/actions/workflows/build.yml?query=branch%3Amain+event%3Apush)
+[![Travis CI Build Status](https://travis-ci.org/bkueng/qMasterPassword.svg)](https://travis-ci.org/bkueng/qMasterPassword)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/4067/badge.svg)](https://scan.coverity.com/projects/4067)
 
 ### qMasterPassword
@@ -10,13 +11,12 @@ and a site name. This means you automatically get different passwords for each
 account and there is no password file that can be lost or get stolen. There is
 also no need to trust any online password service.
 
-See https://spectre.app/#introduction to get more familiar with the concept
+See [this introduction page](https://spectre.app/#introduction) to get more familiar with the concept
 and reasons why to use it.
 
-The algorithm is described here: 
-https://spectre.app/spectre-algorithm.pdf
+The algorithm is described [here](https://spectre.app/spectre-algorithm.pdf).
 
-https://spectre.app also contains other compatible software for various platforms, like
+The [Spectre home page](https://spectre.app) also contains other compatible software for various platforms, like
 Android or iOS.
 
 qMasterPassword is developed on Linux and also tested on Windows. For Windows
@@ -30,10 +30,17 @@ there are prebuilt binaries under
 * Qt 5.2 or higher (see branch qt4.8 for older Qt version support)
 * cmake, make or ninja
 * OpenSSL (libcrypto library)
-* libscrypt library (https://github.com/technion/libscrypt for Linux/OSX,
-  https://github.com/barrysteyn/scrypt-windows for Windows).
+* Linux/OSX: [libscrypt](https://github.com/technion/libscrypt) library
 
-  On Debian/Ubuntu, the library is available as `libscrypt-dev`.
+  On Debian/Ubuntu, it is available as `libscrypt-dev`.
+
+  On RedHat/Fedora, it is available as `libscrypt-devel`.
+
+* Windows: [scrypt-windows](https://github.com/barrysteyn/scrypt-windows) has been added as
+a git submodule.
+
+  You need to add `--recurse-submodules` to the `git clone` command line.
+
 * Linux: libX11 libXtst
 
 

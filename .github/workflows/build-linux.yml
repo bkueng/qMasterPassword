@@ -105,7 +105,7 @@ jobs:
 
       # NOTE: execute *AFTER* dependency installation to ensure that it uses a git checkout!
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Configure
         run: |
