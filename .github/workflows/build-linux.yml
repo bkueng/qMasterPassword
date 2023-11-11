@@ -110,7 +110,7 @@ jobs:
       - name: Configure
         run: |
           rm -rf ${RUNNER_TEMP}/build
-          cmake -GNinja -B ${RUNNER_TEMP}/build .
+          cmake -GNinja -DCMAKE_BUILD_TYPE=Release -B ${RUNNER_TEMP}/build .
 
       - name: Build
         run: cmake --build ${RUNNER_TEMP}/build

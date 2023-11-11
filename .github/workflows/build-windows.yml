@@ -38,4 +38,4 @@ jobs:
 
       - name: Build
         run: |
-          cmake --build ${{ runner.temp }}/build
+          cmake --build ${{ runner.temp }}/build --config Release
