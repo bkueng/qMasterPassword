@@ -88,6 +88,17 @@ if(WIN32)
     target_link_libraries(${TARGET} PRIVATE
         ws2_32
     )
+
+    # find path to Qt binaries from qmake location
+    get_target_property(QMAKE_EXECUTABLE Qt::qmake IMPORTED_LOCATION)
+    get_filename_component(QT_BIN_DIR "${QMAKE_EXECUTABLE}" DIRECTORY)
+    add_custom_target(windeployqt
+        COMMAND ${QT_BIN_DIR}/windeployqt
+            --release
+            --translations ${TRANSLATIONS}
+            --verbose 2
+            \"$ENV{WINDEPLOY_DIR}/bin/${CMAKE_PROJECT_NAME}$<TARGET_FILE_SUFFIX:${TARGET}>\"
+    )
 endif()
 
 install(
@@ -109,6 +120,6 @@ if(LINUX OR (UNIX AND NOT APPLE))
     install(
         FILES data/icons/app_icon.png
         DESTINATION ${CMAKE_INSTALL_DATADIR}/pixmaps
-	RENAME qmasterpassword.png
+        RENAME qmasterpassword.png
     )
 endif()
