@@ -116,34 +116,16 @@ jobs:
         run: cmake --build ${RUNNER_TEMP}/build
 
       - name: Install
+        env:
+          LINUXDEPLOY_DIR: ${{ runner.temp }}/linuxdeploy
         run: |
-          rm -rf ${RUNNER_TEMP}/install
-          cmake --install ${RUNNER_TEMP}/build --prefix ${RUNNER_TEMP}/install
-          cp -pr ${RUNNER_TEMP}/build/translations ${RUNNER_TEMP}/install/
+          rm -rf ${LINUXDEPLOY_DIR}
+          cmake --install ${RUNNER_TEMP}/build --prefix ${LINUXDEPLOY_DIR}/AppDir/usr
 
       - name: Test
         run: |
           cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -B ${RUNNER_TEMP}/build .
           cmake --build ${RUNNER_TEMP}/build --target test
-
-      - name: Prepare AppImage Build
-        env:
-          LINUXDEPLOY_DIR: ${{ runner.temp }}/linuxdeploy
-        run: |
-          mkdir -p \
-            ${LINUXDEPLOY_DIR}/AppDir/usr/share/metainfo \
-            ${LINUXDEPLOY_DIR}/AppDir/usr/share/qMasterPassword \
-            ${LINUXDEPLOY_DIR}/AppDir/usr/translations
-
-          cp -p data/qMasterPassword.appdata.xml ${LINUXDEPLOY_DIR}/AppDir/usr/share/metainfo/
-
-          cp -p ${RUNNER_TEMP}/install/bin/qMasterPassword ${LINUXDEPLOY_DIR}/
-
-          cp -pr \
-            ${RUNNER_TEMP}/install/translations \
-            ${LINUXDEPLOY_DIR}/AppDir/usr/share/qMasterPassword/
-        if: |
-          matrix.appimage
 
       - name: Download linuxdeploy
         working-directory: ${{ runner.temp }}/linuxdeploy
@@ -162,15 +144,16 @@ jobs:
           APPIMAGE_EXTRACT_AND_RUN: 1
           QML_SOURCES_PATHS:        ${{ github.workspace }}/src
         run: >
+          mkdir -p AppDir/usr/translations &&
+
           chmod +x ./*.AppImage &&
 
           ./linuxdeploy-x86_64.AppImage
           --verbosity=2
           --appdir=AppDir
-          --desktop-file=${GITHUB_WORKSPACE}/data/qMasterPassword.desktop
-          --executable=qMasterPassword
-          --icon-file=${GITHUB_WORKSPACE}/data/icons/app_icon.png
-          --icon-filename=qmasterpassword
+          --desktop-file=AppDir/usr/share/applications/qMasterPassword.desktop
+          --executable=AppDir/usr/bin/qMasterPassword
+          --icon-file=AppDir/usr/share/pixmaps/qmasterpassword.png
           --plugin=qt
           --output=appimage &&
 

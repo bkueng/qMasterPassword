@@ -44,7 +44,8 @@ else()
     qt_add_executable(${TARGET} WIN32)
 
     qt_add_lrelease(${TARGET}
-	TS_FILES ${TS_FILES}
+        TS_FILES ${TS_FILES}
+        QM_FILES_OUTPUT_VARIABLE QM_FILES
     )
 endif()
 
@@ -53,7 +54,8 @@ add_subdirectory(src)
 add_subdirectory(test)
 add_subdirectory(ui)
 
-if(LINUX)
+# LINUX requires CMake >= 3.25.0
+if(LINUX OR (UNIX AND NOT APPLE))
     if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         target_compile_options(${TARGET} PRIVATE
             -Wno-unused-parameter
@@ -91,3 +93,22 @@ endif()
 install(
     TARGETS ${TARGET}
 )
+install(
+    FILES ${QM_FILES}
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/${CMAKE_PROJECT_NAME}/translations
+)
+if(LINUX OR (UNIX AND NOT APPLE))
+    install(
+        FILES data/${CMAKE_PROJECT_NAME}.desktop
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/applications
+    )
+    install(
+        FILES data/${CMAKE_PROJECT_NAME}.appdata.xml
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/metainfo
+    )
+    install(
+        FILES data/icons/app_icon.png
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/pixmaps
+	RENAME qmasterpassword.png
+    )
+endif()
