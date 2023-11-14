@@ -101,6 +101,14 @@ if(WIN32)
     )
 endif()
 
+    add_custom_target(makensis
+        COMMAND makensis
+            -DWINDEPLOY_DIR="$ENV{WINDEPLOY_DIR}"
+            -DNSIS_DIR="$ENV{NSIS_DIR}"
+            -v4
+            -wx
+            ${CMAKE_CURRENT_SOURCE_DIR}/data/windows/installer.nsi
+    )
 install(
     TARGETS ${TARGET}
 )

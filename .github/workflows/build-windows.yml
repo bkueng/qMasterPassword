@@ -37,6 +37,7 @@ jobs:
       - name: Configure
         env:
           WINDEPLOY_DIR: ${{ runner.temp }}/windeploy
+          NSIS_DIR: ${{ runner.temp }}/nsis
         run: |
           if (Test-Path ${{ runner.temp }}/build) { remove-item -recurse -force ${{ runner.temp }}/build }
           cmake -B ${{ runner.temp }}/build .
@@ -54,3 +55,17 @@ jobs:
         run: |
           $env:VCINSTALLDIR="$(vswhere -latest -property installationPath)/VC"
           cmake --build ${{ runner.temp }}/build --config Release --target windeployqt
+
+      - name: Build installer package
+        run: |
+          if (Test-Path ${{ runner.temp }}/nsis) { remove-item -recurse -force ${{ runner.temp }}/nsis }
+          mkdir -path ${{ runner.temp }}/nsis
+          cmake --build ${{ runner.temp }}/build --config Release --target makensis
+
+      - name: Upload installer package
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows-installer
+          path: ${{ runner.temp }}/nsis/qMasterPassword.exe
+        if: |
+          startsWith(matrix.qt, '6')
