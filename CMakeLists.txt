@@ -11,7 +11,9 @@ set(CMAKE_SKIP_RPATH ON)
 
 find_package(QT NAMES Qt5 Qt6 REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Gui Widgets LinguistTools)
-find_package(Qt${QT_VERSION_MAJOR} OPTIONAL_COMPONENTS DBus Test)
+if(CMAKE_BUILD_TYPE STREQUAL Debug)
+    find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Test)
+endif()
 find_package(OpenSSL REQUIRED)
 
 # exposes ${TS_FILES}
@@ -76,6 +78,8 @@ target_link_libraries(${TARGET} PRIVATE
 target_include_directories(${TARGET} PRIVATE ${OPENSSL_INCLUDE_DIR})
 
 if(UNIX)
+    find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS DBus)
+    find_package(X11 REQUIRED COMPONENTS Xtst xkbcommon_X11)
     target_link_libraries(${TARGET} PRIVATE
         Qt::DBus
         X11
