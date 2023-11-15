@@ -6,8 +6,6 @@ target_sources(${TARGET} PRIVATE
     global.cpp
     identicon.cpp
     import_export.cpp
-    keypress.cpp
-    keypress_linux.cpp
     logging.cpp
     main.cpp
     main_class.cpp
@@ -20,9 +18,18 @@ target_sources(${TARGET} PRIVATE
     user_widget.cpp
 )
 
-if(WIN32)
+# OS specific keypress handling implementation
+if (LINUX OR (UNIX AND NOT APPLE))
+    target_sources(${TARGET} PRIVATE
+        keypress_linux.cpp
+    )
+elseif(WIN32)
     target_sources(${TARGET} PRIVATE
         keypress_windows.cpp
+    )
+else()
+    target_sources(${TARGET} PRIVATE
+        keypress.cpp
     )
 endif()
 
