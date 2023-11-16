@@ -17,8 +17,6 @@
 #include "keypress.h"
 #include "exception.h"
 
-#if defined(__linux__)
-
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <X11/XKBlib.h>
@@ -850,5 +848,3 @@ static void _xdo_populate_charcode_map(xdo_t *xdo) {
 	xdo->charcodes[idx].index = 0;
 	xdo->charcodes[idx].modmask = 0;
 }
-
-#endif /* defined(__linux__) */

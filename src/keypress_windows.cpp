@@ -23,9 +23,6 @@
 #include <locale>
 #include <codecvt>
 
-
-#if defined(_WIN32)
-
 Keypress::Keypress() {
 	m_simulator = new CKeyboardSimulator();
 }
@@ -88,7 +85,3 @@ void Keypress::type(const char* str) {
 	std::wstring wide = converter.from_bytes(str);
 	sim->TextEntry(wide.c_str());
 }
-
-
-#endif /* defined(__linux__) */
-

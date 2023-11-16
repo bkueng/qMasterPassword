@@ -15,8 +15,6 @@
 
 #include "keypress.h"
 
-#if !defined(__linux__) && !defined(_WIN32)
-
 #warning keypress stuff not (yet) implemented for your OS
 
 
@@ -37,6 +35,3 @@ void Keypress::altTab() {
 
 void Keypress::type(const char* str) {
 }
-
-
-#endif /* defined(__linux__) */

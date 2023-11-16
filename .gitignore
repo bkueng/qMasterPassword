@@ -5,6 +5,9 @@
 *.a
 
 /build*
+/install
+/windeploy
+/nsis
 /.config
 /release
 /debug

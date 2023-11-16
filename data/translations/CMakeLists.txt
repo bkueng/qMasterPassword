@@ -13,3 +13,7 @@ list(TRANSFORM translation_files
 
 # expose list as ${TS_FILES} to parent scope
 set(TS_FILES ${translation_files} PARENT_SCOPE)
+
+# expose comma-separated list of locales to parent scope
+string(REPLACE ";" "," translations "${locales}")
+set(TRANSLATIONS ${translations} PARENT_SCOPE)

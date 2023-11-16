@@ -167,19 +167,12 @@ void CMain::loadTranslation() {
 		QLibraryInfo::path(QLibraryInfo::TranslationsPath);
 #endif
 
-#if defined(Q_OS_WIN) || defined(Q_OS_OS2)
-	// In windows and OS2 try to load the qt translation from the app path, as
-	// most users won't have Qt installed.
-	(void) m_qt_trans.load(locale, "qt", "_", app_trans_path);
-	(void) m_qtbase_trans.load(locale, "qtbase", "_", app_trans_path);
-#else
-	// In linux try to load it first from app path (in case there's an updated
+	// Try to load it first from app path (in case there's an updated
 	// translation), if it fails it will try then from the Qt path.
 	if (!m_qt_trans.load(locale, "qt", "_", app_trans_path))
 		(void) m_qt_trans.load(locale, "qt", "_", qt_trans_path);
 	if (!m_qtbase_trans.load(locale, "qtbase", "_", app_trans_path))
 		(void) m_qtbase_trans.load(locale, "qtbase", "_", qt_trans_path);
-#endif
 
 	if (!m_app_trans.load(locale, "translation", "_", src_app_trans_path)) {
 		if (!m_app_trans.load(locale, "translation", "_", app_trans_path)) {

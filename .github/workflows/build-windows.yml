@@ -22,6 +22,8 @@ jobs:
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
+        with:
+          msbuild-architecture: x64
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
@@ -33,9 +35,37 @@ jobs:
           setup-python: false
 
       - name: Configure
+        env:
+          WINDEPLOY_DIR: ${{ runner.temp }}/windeploy
+          NSIS_DIR: ${{ runner.temp }}/nsis
         run: |
+          if (Test-Path ${{ runner.temp }}/build) { remove-item -recurse -force ${{ runner.temp }}/build }
           cmake -B ${{ runner.temp }}/build .
 
       - name: Build
         run: |
-          cmake --build ${{ runner.temp }}/build
+          cmake --build ${{ runner.temp }}/build --config Release
+
+      - name: Install
+        run: |
+          if (Test-Path ${{ runner.temp }}/windeploy) { remove-item -recurse -force ${{ runner.temp }}/windeploy }
+          cmake --install ${{ runner.temp }}/build --prefix ${{ runner.temp }}/windeploy
+
+      - name: Run windeployqt
+        run: |
+          $env:VCINSTALLDIR="$(vswhere -latest -property installationPath)/VC"
+          cmake --build ${{ runner.temp }}/build --config Release --target windeployqt
+
+      - name: Build installer package
+        run: |
+          if (Test-Path ${{ runner.temp }}/nsis) { remove-item -recurse -force ${{ runner.temp }}/nsis }
+          mkdir -path ${{ runner.temp }}/nsis
+          cmake --build ${{ runner.temp }}/build --config Release --target makensis
+
+      - name: Upload installer package
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows-installer
+          path: ${{ runner.temp }}/nsis/qMasterPassword.exe
+        if: |
+          startsWith(matrix.qt, '6')
