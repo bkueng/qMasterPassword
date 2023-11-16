@@ -39,7 +39,7 @@ jobs:
           WINDEPLOY_DIR: ${{ runner.temp }}/windeploy
           NSIS_DIR: ${{ runner.temp }}/nsis
         run: |
-          if (Test-Path ${{ runner.temp }}/build) { remove-item -recurse -force ${{ runner.temp }}/build }
+          if (test-path ${{ runner.temp }}/build) { remove-item -recurse -force ${{ runner.temp }}/build }
           cmake -B ${{ runner.temp }}/build .
 
       - name: Build
@@ -48,17 +48,21 @@ jobs:
 
       - name: Install
         run: |
-          if (Test-Path ${{ runner.temp }}/windeploy) { remove-item -recurse -force ${{ runner.temp }}/windeploy }
+          if (test-path ${{ runner.temp }}/windeploy) { remove-item -recurse -force ${{ runner.temp }}/windeploy }
           cmake --install ${{ runner.temp }}/build --prefix ${{ runner.temp }}/windeploy
 
       - name: Run windeployqt
+        # @TODO: is there an easy way to determine the libcrypto DLL name
+        #        the executable is linked against? For now hard-code the
+        #        name that is correct for current GitHub Windows runner.
         run: |
           $env:VCINSTALLDIR="$(vswhere -latest -property installationPath)/VC"
           cmake --build ${{ runner.temp }}/build --config Release --target windeployqt
+          copy -verbose -force -path $(get-command libcrypto-1_1-x64.dll).Source -destination ${{ runner.temp }}/windeploy/bin/
 
       - name: Build installer package
         run: |
-          if (Test-Path ${{ runner.temp }}/nsis) { remove-item -recurse -force ${{ runner.temp }}/nsis }
+          if (test-path ${{ runner.temp }}/nsis) { remove-item -recurse -force ${{ runner.temp }}/nsis }
           mkdir -path ${{ runner.temp }}/nsis
           cmake --build ${{ runner.temp }}/build --config Release --target makensis
 
