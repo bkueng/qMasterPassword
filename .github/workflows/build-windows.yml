@@ -39,7 +39,7 @@ jobs:
           WINDEPLOY_DIR: ${{ runner.temp }}/windeploy
           NSIS_DIR: ${{ runner.temp }}/nsis
         run: |
-          if (Test-Path ${{ runner.temp }}/build) { remove-item -recurse -force ${{ runner.temp }}/build }
+          if (test-path ${{ runner.temp }}/build) { remove-item -recurse -force ${{ runner.temp }}/build }
           cmake -B ${{ runner.temp }}/build .
 
       - name: Build
@@ -48,17 +48,20 @@ jobs:
 
       - name: Install
         run: |
-          if (Test-Path ${{ runner.temp }}/windeploy) { remove-item -recurse -force ${{ runner.temp }}/windeploy }
+          if (test-path ${{ runner.temp }}/windeploy) { remove-item -recurse -force ${{ runner.temp }}/windeploy }
           cmake --install ${{ runner.temp }}/build --prefix ${{ runner.temp }}/windeploy
 
       - name: Run windeployqt
         run: |
           $env:VCINSTALLDIR="$(vswhere -latest -property installationPath)/VC"
+          $env:DUMPBIN_EXE="$(vswhere -latest -find **/hostx64/x64/dumpbin.exe -sort | select -last 1)"
           cmake --build ${{ runner.temp }}/build --config Release --target windeployqt
+          $env:LIBCRYPTO_NAME="$( (& "${env:DUMPBIN_EXE}" /dependents ${{ runner.temp }}/windeploy/bin/qMasterPassword.exe | select-string -pattern "libcrypto-.*\.dll").toString().trim() )"
+          copy -verbose -force -path $(get-command "${env:LIBCRYPTO_NAME}").Source -destination ${{ runner.temp }}/windeploy/bin/
 
       - name: Build installer package
         run: |
-          if (Test-Path ${{ runner.temp }}/nsis) { remove-item -recurse -force ${{ runner.temp }}/nsis }
+          if (test-path ${{ runner.temp }}/nsis) { remove-item -recurse -force ${{ runner.temp }}/nsis }
           mkdir -path ${{ runner.temp }}/nsis
           cmake --build ${{ runner.temp }}/build --config Release --target makensis
 
