@@ -52,13 +52,12 @@ jobs:
           cmake --install ${{ runner.temp }}/build --prefix ${{ runner.temp }}/windeploy
 
       - name: Run windeployqt
-        # @TODO: is there an easy way to determine the libcrypto DLL name
-        #        the executable is linked against? For now hard-code the
-        #        name that is correct for current GitHub Windows runner.
         run: |
           $env:VCINSTALLDIR="$(vswhere -latest -property installationPath)/VC"
+          $env:DUMPBIN_EXE="$(vswhere -latest -find **/hostx64/x64/dumpbin.exe -sort | select -last 1)"
           cmake --build ${{ runner.temp }}/build --config Release --target windeployqt
-          copy -verbose -force -path $(get-command libcrypto-1_1-x64.dll).Source -destination ${{ runner.temp }}/windeploy/bin/
+          $env:LIBCRYPTO_NAME="$( (& "${env:DUMPBIN_EXE}" /dependents ${{ runner.temp }}/windeploy/bin/qMasterPassword.exe | select-string -pattern "libcrypto-.*\.dll").toString().trim() )"
+          copy -verbose -force -path $(get-command "${env:LIBCRYPTO_NAME}").Source -destination ${{ runner.temp }}/windeploy/bin/
 
       - name: Build installer package
         run: |
