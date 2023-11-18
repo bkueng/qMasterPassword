@@ -105,12 +105,14 @@ MainWindow::MainWindow(QWidget *parent) :
 			QKeySequence(Qt::Key_Y));
 	m_table_shortcuts[(int)ShortcutAction::CopyUserToClipboard].push_back(
 			QKeySequence(Qt::Key_U));
+#ifndef DISABLE_FILL_FORM_SHORTCUTS
 	m_table_shortcuts[(int)ShortcutAction::FillForm].push_back(
 			QKeySequence(QKeySequence::Paste));
 	m_table_shortcuts[(int)ShortcutAction::FillForm].push_back(
 			QKeySequence(Qt::Key_P));
 	m_table_shortcuts[(int)ShortcutAction::FillFormPasswordOnly].push_back(
 			QKeySequence(Qt::SHIFT | Qt::Key_P));
+#endif
 	m_table_shortcuts[(int)ShortcutAction::SelectFilter].push_back(
 			QKeySequence(Qt::Key_Slash));
 	m_table_shortcuts[(int)ShortcutAction::PreviousItem].push_back(
@@ -451,12 +453,14 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event) {
 							copyUserToClipboard(item->site());
 					}
 						break;
+#ifndef DISABLE_FILL_FORM_SHORTCUTS
 					case ShortcutAction::FillForm:
 						fillForm();
 						break;
 					case ShortcutAction::FillFormPasswordOnly:
 						fillForm(true);
 						break;
+#endif
 					case ShortcutAction::SelectFilter:
 						m_ui->txtFilter->selectAll();
 						m_ui->txtFilter->setFocus();
@@ -484,6 +488,8 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event) {
 	}
 	return false;
 }
+
+#ifndef DISABLE_FILL_FORM_SHORTCUTS
 void MainWindow::fillForm(bool password_only) {
 	TableItem* item = getSelectedItem();
 	if (item) {
@@ -514,6 +520,7 @@ void MainWindow::fillForm(bool password_only) {
 		//the user probably already released them
 	}
 }
+#endif
 
 void MainWindow::openSelectedUrl() {
 	TableItem* item = getSelectedItem();
@@ -988,10 +995,12 @@ QString MainWindow::description(ShortcutAction action) {
 		return tr("Copy password of selected item to clipboard");
 	case ShortcutAction::CopyUserToClipboard:
 		return tr("Copy login/user name of selected item to clipboard");
+#ifndef DISABLE_FILL_FORM_SHORTCUTS
 	case ShortcutAction::FillForm:
 		return tr("Auto fill form: select next window and fill in user name (if set) and password");
 	case ShortcutAction::FillFormPasswordOnly:
 		return tr("Auto fill form (password only)");
+#endif
 	case ShortcutAction::SelectFilter:
 		return tr("Focus the filter text");
 	case ShortcutAction::PreviousItem:
