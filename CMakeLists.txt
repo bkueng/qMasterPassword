@@ -103,7 +103,6 @@ if(WIN32)
             --verbose 2
             \"$ENV{WINDEPLOY_DIR}/bin/${CMAKE_PROJECT_NAME}$<TARGET_FILE_SUFFIX:${TARGET}>\"
     )
-endif()
 
     add_custom_target(makensis
         COMMAND makensis
@@ -113,6 +112,8 @@ endif()
             -wx
             ${CMAKE_CURRENT_SOURCE_DIR}/data/windows/installer.nsi
     )
+endif()
+
 install(
     TARGETS ${TARGET}
 )
