@@ -30,6 +30,8 @@ jobs:
           - container: fedora:38
             qt:        6
             appimage:  true
+          - container: fedora:rawhide
+            no_x11:    true
 
       fail-fast: false
 
@@ -40,13 +42,21 @@ jobs:
       DEBIAN_FRONTEND:     noninteractive
       DEBIAN_QT5_PACKAGES: qtbase5-dev qttools5-dev
       DEBIAN_QT6_PACKAGES: qt6-base-dev qt6-tools-dev qt6-tools-dev-tools qt6-l10n-tools libgl1-mesa-dev
+      DEBIAN_X11_PACKAGES: libx11-dev libxkbcommon-x11-dev libxtst-dev
       REDHAT_QT5_PACKAGES: qt5-linguist
       REDHAT_QT6_PACKAGES: qt6-qttools-devel
+      REDHAT_X11_PACKAGES: libX11-devel libXtst-devel libxkbcommon-x11-devel
 
     steps:
       - name: Detect OS release
         run: |
           . /etc/os-release && echo "OS_RELEASE_ID=${ID}" >>${GITHUB_ENV}
+
+      - name: Disable X11 dependencies
+        run: |
+          echo "CONFIGURE_NO_X11=-DDISABLE_FILL_FORM_SHORTCUTS=1" >>${GITHUB_ENV}
+        if: |
+          matrix.no_x11
 
       - name: Add packages for AppImage Build
         run: |
@@ -61,6 +71,12 @@ jobs:
         if: |
           env.OS_RELEASE_ID == 'debian' || env.OS_RELEASE_ID == 'ubuntu'
 
+      - name: Add X11 packages for Debian systems
+        run: |
+          echo "X11_PACKAGES=${DEBIAN_X11_PACKAGES}" >>${GITHUB_ENV}
+        if: |
+          matrix.no_x11 != true && ( env.OS_RELEASE_ID == 'debian' || env.OS_RELEASE_ID == 'ubuntu' )
+
       - name: Install dependencies for Debian systems
         run: >
           apt-get install --no-install-recommends -q -y
@@ -71,10 +87,8 @@ jobs:
           g++
           libscrypt-dev
           libssl-dev
-          libx11-dev
-          libxkbcommon-x11-dev
-          libxtst-dev
           ${DEBIAN_QT${{ matrix.qt }}_PACKAGES}
+          ${X11_PACKAGES}
           ${APPIMAGE_PACKAGES}
         if: |
           env.OS_RELEASE_ID == 'debian' || env.OS_RELEASE_ID == 'ubuntu'
@@ -83,6 +97,12 @@ jobs:
         run: dnf upgrade -y
         if: |
           env.OS_RELEASE_ID == 'fedora'
+
+      - name: Add X11 packages for RedHat systems
+        run: |
+          echo "X11_PACKAGES=${REDHAT_X11_PACKAGES}" >>${GITHUB_ENV}
+        if: |
+          matrix.no_x11 != true && ( env.OS_RELEASE_ID == 'fedora' )
 
       - name: Install dependencies for RedHat systems
         run: >
@@ -93,12 +113,10 @@ jobs:
           ninja-build
           gcc-c++
           libscrypt-devel
-          libX11-devel
-          libXtst-devel
-          libxkbcommon-x11-devel
           openssl-devel
           qt${{ matrix.qt }}-qtbase-devel
           ${REDHAT_QT${{ matrix.qt }}_PACKAGES}
+          ${X11_PACKAGES}
           ${APPIMAGE_PACKAGES}
         if: |
           env.OS_RELEASE_ID == 'fedora'
@@ -110,7 +128,7 @@ jobs:
       - name: Configure
         run: |
           rm -rf ${RUNNER_TEMP}/build
-          cmake -GNinja -DCMAKE_BUILD_TYPE=Release -B ${RUNNER_TEMP}/build .
+          cmake -GNinja -DCMAKE_BUILD_TYPE=Release ${CONFIGURE_NO_X11} -B ${RUNNER_TEMP}/build .
 
       - name: Build
         run: cmake --build ${RUNNER_TEMP}/build
