@@ -51,10 +51,15 @@ else()
     )
 endif()
 
-add_subdirectory(include)
-add_subdirectory(src)
-add_subdirectory(test)
-add_subdirectory(ui)
+option(DISABLE_FILL_FORM_SHORTCUTS "Build without fill form support" OFF)
+if (DISABLE_FILL_FORM_SHORTCUTS)
+    message(STATUS "Fill form shortcuts are disabled")
+    target_compile_definitions(${TARGET} PRIVATE
+        DISABLE_FILL_FORM_SHORTCUTS
+    )
+else()
+    message(STATUS "Fill form shortcuts are enabled")
+endif()
 
 # LINUX requires CMake >= 3.25.0
 if(LINUX OR (UNIX AND NOT APPLE))
@@ -79,13 +84,15 @@ target_include_directories(${TARGET} PRIVATE ${OPENSSL_INCLUDE_DIR})
 
 if(UNIX)
     find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS DBus)
-    find_package(X11 REQUIRED COMPONENTS Xtst xkbcommon_X11)
     target_link_libraries(${TARGET} PRIVATE
         Qt::DBus
-        X11
-        Xtst
         scrypt
     )
+
+    if (NOT DISABLE_FILL_FORM_SHORTCUTS)
+        # this defines X11_FOUND
+        find_package(X11 REQUIRED COMPONENTS Xtst xkbcommon_X11)
+    endif()
 endif()
 
 if(WIN32)
@@ -103,7 +110,6 @@ if(WIN32)
             --verbose 2
             \"$ENV{WINDEPLOY_DIR}/bin/${CMAKE_PROJECT_NAME}$<TARGET_FILE_SUFFIX:${TARGET}>\"
     )
-endif()
 
     add_custom_target(makensis
         COMMAND makensis
@@ -113,6 +119,14 @@ endif()
             -wx
             ${CMAKE_CURRENT_SOURCE_DIR}/data/windows/installer.nsi
     )
+endif()
+
+# subdirectories can rely on variables set by find_package() calls
+add_subdirectory(include)
+add_subdirectory(src)
+add_subdirectory(test)
+add_subdirectory(ui)
+
 install(
     TARGETS ${TARGET}
 )

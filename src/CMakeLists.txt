@@ -18,19 +18,25 @@ target_sources(${TARGET} PRIVATE
     user_widget.cpp
 )
 
-# OS specific keypress handling implementation
-if (LINUX OR (UNIX AND NOT APPLE))
-    target_sources(${TARGET} PRIVATE
-        keypress_linux.cpp
-    )
-elseif(WIN32)
-    target_sources(${TARGET} PRIVATE
-        keypress_windows.cpp
-    )
-else()
-    target_sources(${TARGET} PRIVATE
-        keypress.cpp
-    )
+# Keypress insertion implementation for "Fill Form" shortcuts
+if (NOT DISABLE_FILL_FORM_SHORTCUTS)
+    if (X11_FOUND)
+        target_sources(${TARGET} PRIVATE
+            keypress_linux.cpp
+        )
+        target_link_libraries(${TARGET} PRIVATE
+            X11
+            Xtst
+        )
+    elseif(WIN32)
+        target_sources(${TARGET} PRIVATE
+            keypress_windows.cpp
+        )
+    else()
+        target_sources(${TARGET} PRIVATE
+            keypress.cpp
+        )
+    endif()
 endif()
 
 add_subdirectory(3rdparty)

@@ -36,7 +36,9 @@
 #include "app_settings.h"
 #include "import_export.h"
 #include "identicon.h"
+#ifndef DISABLE_FILL_FORM_SHORTCUTS
 #include "keypress.h"
+#endif
 
 namespace Ui {
 class MainWindow;
@@ -69,8 +71,10 @@ public:
 	enum class ShortcutAction {
 		CopyPWToClipboard,
 		CopyUserToClipboard,
+#ifndef DISABLE_FILL_FORM_SHORTCUTS
 		FillForm,
 		FillFormPasswordOnly,
+#endif
 		SelectFilter,
 		PreviousItem,
 		NextItem,
@@ -105,7 +109,9 @@ private:
 	void activateLogoutTimer();
 	void abortLogoutTimer();
 	void openSelectedUrl();
+#ifndef DISABLE_FILL_FORM_SHORTCUTS
 	void fillForm(bool password_only = false);
+#endif
 
 	MasterPassword m_master_password;
 	Identicon m_identicon;
@@ -134,7 +140,9 @@ private:
 
 	int m_copy_column_idx;
 
+#ifndef DISABLE_FILL_FORM_SHORTCUTS
 	Keypress m_keypress;
+#endif
 
 	/** key bindings for actions on selected item. an action can have multiple
 	 *  shortcuts */
