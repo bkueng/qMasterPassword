@@ -15,6 +15,7 @@ if(CMAKE_BUILD_TYPE STREQUAL Debug)
     find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Test)
 endif()
 find_package(OpenSSL REQUIRED)
+find_package(Threads REQUIRED)
 
 # exposes ${TS_FILES}
 add_subdirectory(data/translations)
@@ -79,6 +80,7 @@ target_link_libraries(${TARGET} PRIVATE
     Qt::Gui
     Qt::Widgets
     OpenSSL::Crypto
+    Threads::Threads
 )
 target_include_directories(${TARGET} PRIVATE ${OPENSSL_INCLUDE_DIR})
 

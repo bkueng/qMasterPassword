@@ -12,6 +12,7 @@ jobs:
     strategy:
       matrix:
         container:
+          - debian:oldstable
           - debian:stable
           - debian:testing
           - fedora:38
@@ -32,6 +33,11 @@ jobs:
             appimage:  true
           - container: fedora:rawhide
             no_x11:    true
+
+        exclude:
+          # Debian Bullseye doesn't have Qt6
+          - container: debian:oldstable
+            qt:        6
 
       fail-fast: false
 
