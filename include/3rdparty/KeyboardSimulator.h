@@ -3,7 +3,7 @@
  * All rights reserved.
  *
  * Licence GNU GPL version 3
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -19,40 +19,37 @@
  *
  */
 
-#include "IInputSimulator.h"
-#include "InputBuilder.h"
 #include <vector>
 
-template<typename T, unsigned int size>
-unsigned int GetArrLength(T(&)[size]){return size;}
+#include "IInputSimulator.h"
+#include "InputBuilder.h"
 
- 
-
-class  CKeyboardSimulator :
-	public IKeyboardSimulator
+template <typename T, unsigned int size>
+unsigned int GetArrLength(T (&)[size])
 {
-private:
-	IInputMessageDispatcher* _pmessageDispatcher;
-	bool bNeedDelete;
+    return size;
+}
+
+class CKeyboardSimulator : public IKeyboardSimulator {
+   private:
+    IInputMessageDispatcher* _pmessageDispatcher;
+    bool bNeedDelete;
     int SendSimulatedInput(INPUT& input);
-	int SendSimulatedInput( CInputBuilder& inputbuilder );
+    int SendSimulatedInput(CInputBuilder& inputbuilder);
 
-public:
-   
-         CKeyboardSimulator(IInputMessageDispatcher* pmessageDispatcher);
-         CKeyboardSimulator();
-	     ~CKeyboardSimulator();
-		 
+   public:
+    CKeyboardSimulator(IInputMessageDispatcher* pmessageDispatcher);
+    CKeyboardSimulator();
+    ~CKeyboardSimulator();
 
-         void KeyDown(VirtualKeyCode keyCode);
-         void KeyUp(VirtualKeyCode keyCode);
-         void KeyPress(VirtualKeyCode keyCode);
-		 void KeyPress(VirtualKeyCode keyCode, const unsigned int count /*= 1*/ );
-         void ModifiedKeyStroke(VirtualKeyCode modifierKeyCode, VirtualKeyCode keyCode);
-         void ModifiedKeyStroke(std::vector<VirtualKeyCode>* modifierKeyCodes, VirtualKeyCode keyCode);
-         void ModifiedKeyStroke(VirtualKeyCode modifierKey, std::vector<VirtualKeyCode>* keyCodes);
-         void ModifiedKeyStroke(std::vector<VirtualKeyCode>* modifierKeyCodes, std::vector<VirtualKeyCode>* keyCodes);
-         void TextEntry(LPCWSTR text);
-
+    void KeyDown(VirtualKeyCode keyCode);
+    void KeyUp(VirtualKeyCode keyCode);
+    void KeyPress(VirtualKeyCode keyCode);
+    void KeyPress(VirtualKeyCode keyCode, const unsigned int count /*= 1*/);
+    void ModifiedKeyStroke(VirtualKeyCode modifierKeyCode, VirtualKeyCode keyCode);
+    void ModifiedKeyStroke(std::vector<VirtualKeyCode>* modifierKeyCodes, VirtualKeyCode keyCode);
+    void ModifiedKeyStroke(VirtualKeyCode modifierKey, std::vector<VirtualKeyCode>* keyCodes);
+    void ModifiedKeyStroke(std::vector<VirtualKeyCode>* modifierKeyCodes,
+                           std::vector<VirtualKeyCode>* keyCodes);
+    void TextEntry(LPCWSTR text);
 };
-

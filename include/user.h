@@ -17,13 +17,13 @@
 #ifndef _HEADER_USER_H_
 #define _HEADER_USER_H_
 
-#include "crypto.h"
-
-#include <QString>
+#include <QDateTime>
 #include <QList>
 #include <QMetaType>
-#include <QDateTime>
+#include <QString>
 #include <memory>
+
+#include "crypto.h"
 
 typedef qint32 CategoryId;
 
@@ -32,51 +32,49 @@ typedef qint32 CategoryId;
  *
  */
 class UiSite {
-public:
-	Site site;
+   public:
+    Site site;
 
-	QList<CategoryId> category_ids;
-	QString user_name;
-	QString url;
-	QString comment;
+    QList<CategoryId> category_ids;
+    QString user_name;
+    QString url;
+    QString comment;
 
-	QDateTime time_created;
-	QDateTime time_edited;
+    QDateTime time_created;
+    QDateTime time_edited;
 
-	bool password_visible = true;
-private:
+    bool password_visible = true;
+
+   private:
 };
 
 Q_DECLARE_METATYPE(UiSite)
-QDataStream &operator<<(QDataStream &, const UiSite &);
-QDataStream &operator>>(QDataStream &, UiSite &);
-
+QDataStream& operator<<(QDataStream&, const UiSite&);
+QDataStream& operator>>(QDataStream&, UiSite&);
 
 /**
  ** class UiUser
  */
 class UiUser {
-public:
-	UiUser(const QString& user_name="")
-		: m_user(std::string(user_name.toUtf8().constData())) {}
+   public:
+    UiUser(const QString& user_name = "") : m_user(std::string(user_name.toUtf8().constData())) {}
 
-	const QList<std::shared_ptr<UiSite>>& getSites() const { return m_sites; }
-	QList<std::shared_ptr<UiSite>>& getSites() { return m_sites; }
+    const QList<std::shared_ptr<UiSite>>& getSites() const { return m_sites; }
+    QList<std::shared_ptr<UiSite>>& getSites() { return m_sites; }
 
-	QString getUserName() const {
-		return QString::fromUtf8(m_user.getUserName().c_str()); }
-	void setUserName(const QString& userName) {
-		m_user.setUserName(userName.toUtf8().constData()); }
+    QString getUserName() const { return QString::fromUtf8(m_user.getUserName().c_str()); }
+    void setUserName(const QString& userName) { m_user.setUserName(userName.toUtf8().constData()); }
 
-	const User& userData() const { return m_user; }
-	User& userData() { return m_user; }
-private:
-	User m_user;
-	QList<std::shared_ptr<UiSite>> m_sites;
+    const User& userData() const { return m_user; }
+    User& userData() { return m_user; }
+
+   private:
+    User m_user;
+    QList<std::shared_ptr<UiSite>> m_sites;
 };
 
 Q_DECLARE_METATYPE(UiUser)
-QDataStream &operator<<(QDataStream &, const UiUser &);
-QDataStream &operator>>(QDataStream &, UiUser &);
+QDataStream& operator<<(QDataStream&, const UiUser&);
+QDataStream& operator>>(QDataStream&, UiUser&);
 
 #endif /* _HEADER_USER_H_ */

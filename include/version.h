@@ -21,42 +21,40 @@
 #define VERSION_H_
 
 /* stl */
-#include <string>
 #include <sstream>
+#include <string>
 using namespace std;
 
-
-#define VERSION_MAJOR	2	/*<! @brief Major version number. */
-#define VERSION_MINOR	0	/*<! @brief Minor version number. */
-#define VERSION_PATCH	0	/*<! @brief patch number. */
-
+#define VERSION_MAJOR 2 /*<! @brief Major version number. */
+#define VERSION_MINOR 0 /*<! @brief Minor version number. */
+#define VERSION_PATCH 0 /*<! @brief patch number. */
 
 struct VERSION {
-	VERSION() : bSet(false) {}
-	VERSION(int vmajor, int vminor, int vpatch) : bSet(true)
-	{
-		this->major = vmajor; this->minor = vminor; this->patch = vpatch;
-	}
-	
-	bool bSet;
-	
-	int major;
-	int minor;
-	int patch;
-	
-	
-	string toStr()
-	{
-		// version has the format: v<major>.<minor>[-p<patch>]
-		if (!bSet) return "";
-		ostringstream stream;
-		stream << "v" << major << "." << minor;
-		if (patch != 0) stream << "." << patch;
-		return stream.str();
-	}
+    VERSION() : bSet(false) {}
+    VERSION(int vmajor, int vminor, int vpatch) : bSet(true)
+    {
+        this->major = vmajor;
+        this->minor = vminor;
+        this->patch = vpatch;
+    }
+
+    bool bSet;
+
+    int major;
+    int minor;
+    int patch;
+
+    string toStr()
+    {
+        // version has the format: v<major>.<minor>[-p<patch>]
+        if (!bSet) return "";
+        ostringstream stream;
+        stream << "v" << major << "." << minor;
+        if (patch != 0) stream << "." << patch;
+        return stream.str();
+    }
 };
 
 VERSION getAppVersion();
-
 
 #endif /* VERSION_H_ */

@@ -12,46 +12,39 @@
  *
  */
 
-
 #include "identicon.h"
-#include "crypto_functions.h"
+
 #include "crypto.h"
+#include "crypto_functions.h"
 
 constexpr const char* Identicon::left_arm[];
 constexpr const char* Identicon::right_arm[];
 constexpr const char* Identicon::body[];
 constexpr const char* Identicon::accessory[];
 
-const QColor Identicon::colors_dark[] = {
-		QColor("#dc322f"), QColor("#859900"),
-		QColor("#b58900"), QColor("#268bd2"),
-		QColor("#d33682"), QColor("#2aa198"),
-		QColor("#586e75")
-};
-const QColor Identicon::colors_light[] = {
-		QColor("#dc322f"), QColor("#859900"),
-		QColor("#b58900"), QColor("#268bd2"),
-		QColor("#d33682"), QColor("#2aa198"),
-		QColor("#93a1a1")
-};
+const QColor Identicon::colors_dark[] = {QColor("#dc322f"), QColor("#859900"), QColor("#b58900"),
+                                         QColor("#268bd2"), QColor("#d33682"), QColor("#2aa198"),
+                                         QColor("#586e75")};
+const QColor Identicon::colors_light[] = {QColor("#dc322f"), QColor("#859900"), QColor("#b58900"),
+                                          QColor("#268bd2"), QColor("#d33682"), QColor("#2aa198"),
+                                          QColor("#93a1a1")};
 
-void Identicon::getIdenticon(const QString& master_password, QString& identicon,
-		QColor& color) {
+void Identicon::getIdenticon(const QString& master_password, QString& identicon, QColor& color)
+{
+    identicon = "";
+    QByteArray master_password_array = master_password.toUtf8();
+    const char* pw = master_password_array.constData();
+    QByteArray user_name_array = m_user_name.toUtf8();
+    const int seed_len = 32;
+    unsigned char seed_bytes[seed_len];
+    if (!HMAC_SHA256((uint8_t*)pw, master_password_array.size(),
+                     (unsigned char*)user_name_array.constData(), user_name_array.size(),
+                     seed_bytes))
+        throw CryptoException(CryptoException::Type_HMAC_SHA256_failed);
 
-	identicon = "";
-	QByteArray master_password_array = master_password.toUtf8();
-	const char* pw = master_password_array.constData();
-	QByteArray user_name_array = m_user_name.toUtf8();
-	const int seed_len = 32;
-	unsigned char seed_bytes[seed_len];
-	if (!HMAC_SHA256((uint8_t*)pw, master_password_array.size(),
-			(unsigned char*)user_name_array.constData(),
-			user_name_array.size(), seed_bytes))
-		throw CryptoException(CryptoException::Type_HMAC_SHA256_failed);
-
-	identicon += left_arm[seed_bytes[0] % arraySize(left_arm)];
-	identicon += body[seed_bytes[1] % arraySize(body)];
-	identicon += right_arm[seed_bytes[2] % arraySize(right_arm)];
-	identicon += accessory[seed_bytes[3] % arraySize(accessory)];
-	color = colors_dark[seed_bytes[4] % arraySize(colors_dark)];
+    identicon += left_arm[seed_bytes[0] % arraySize(left_arm)];
+    identicon += body[seed_bytes[1] % arraySize(body)];
+    identicon += right_arm[seed_bytes[2] % arraySize(right_arm)];
+    identicon += accessory[seed_bytes[3] % arraySize(accessory)];
+    color = colors_dark[seed_bytes[4] % arraySize(colors_dark)];
 }

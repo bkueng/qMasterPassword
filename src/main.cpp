@@ -14,31 +14,27 @@
 
 #include "main_class.h"
 
-
 int main(int argc, char* argv[])
 {
-	int ret = 0;
-	try {
-	
+    int ret = 0;
+    try {
 #ifdef _DEBUG
-		CLog::getInstance().setConsoleLevel(LogLevel::Debug);
+        CLog::getInstance().setConsoleLevel(LogLevel::Debug);
 #else
-		CLog::getInstance().setConsoleLevel(LogLevel::Warn);
+        CLog::getInstance().setConsoleLevel(LogLevel::Warn);
 #endif
-		CLog::getInstance().setFileLevel(LogLevel::None);
-		CLog::getInstance().setLogSourceFileAll(false);
-		CLog::getInstance().setLogSourceFile(LogLevel::Error, true);
-		
-		Exception::setLogAllExceptions(true);
-		
-		
-		CMain main;
-		main.init(argc, argv);
-		ret = main.exec();
-	} catch (Exception& e) {
-		e.log();
-		ret = -1;
-	}
-	return ret;
-}
+        CLog::getInstance().setFileLevel(LogLevel::None);
+        CLog::getInstance().setLogSourceFileAll(false);
+        CLog::getInstance().setLogSourceFile(LogLevel::Error, true);
 
+        Exception::setLogAllExceptions(true);
+
+        CMain main;
+        main.init(argc, argv);
+        ret = main.exec();
+    } catch (Exception& e) {
+        e.log();
+        ret = -1;
+    }
+    return ret;
+}

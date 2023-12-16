@@ -1,13 +1,14 @@
-#include "stdafx.h"
 #include "InputSimulator.h"
+
 #include "KeyboardSimulator.h"
 #include "MouseSimulator.h"
 #include "WindowsInputDeviceStateAdaptor.h"
+#include "stdafx.h"
 /* Copyright(c) 1998-2012, Arnaud Colin
  * All rights reserved.
  *
  * Licence GNU GPL version 3
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -23,28 +24,27 @@
  *
  */
 
-
-CInputSimulator::CInputSimulator(IKeyboardSimulator* pkeyboardSimulator, IMouseSimulator* pmouseSimulator, IInputDeviceStateAdaptor* pinputDeviceStateAdaptor)
-        {
-            _pkeyboardSimulator = pkeyboardSimulator;
-            _pmouseSimulator = pmouseSimulator;
-            _pinputDeviceState = pinputDeviceStateAdaptor;
-			bNeedDelete = false;
-        }
+CInputSimulator::CInputSimulator(IKeyboardSimulator* pkeyboardSimulator,
+                                 IMouseSimulator* pmouseSimulator,
+                                 IInputDeviceStateAdaptor* pinputDeviceStateAdaptor)
+{
+    _pkeyboardSimulator = pkeyboardSimulator;
+    _pmouseSimulator = pmouseSimulator;
+    _pinputDeviceState = pinputDeviceStateAdaptor;
+    bNeedDelete = false;
+}
 
 CInputSimulator::CInputSimulator()
-        {
-            _pkeyboardSimulator = new CKeyboardSimulator();
-            _pmouseSimulator = new CMouseSimulator();
-            _pinputDeviceState = new CWindowsInputDeviceStateAdaptor();
-			bNeedDelete = true;
-        }
+{
+    _pkeyboardSimulator = new CKeyboardSimulator();
+    _pmouseSimulator = new CMouseSimulator();
+    _pinputDeviceState = new CWindowsInputDeviceStateAdaptor();
+    bNeedDelete = true;
+}
 
 CInputSimulator::~CInputSimulator()
-        {
-			if(bNeedDelete)
-				delete _pkeyboardSimulator;
-				delete _pmouseSimulator;
-				delete _pinputDeviceState;
-        }
-
+{
+    if (bNeedDelete) delete _pkeyboardSimulator;
+    delete _pmouseSimulator;
+    delete _pinputDeviceState;
+}

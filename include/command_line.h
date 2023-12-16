@@ -16,9 +16,9 @@
 #define COMMAND_LINE_H_
 
 #include <map>
+#include <queue>
 #include <string>
 #include <vector>
-#include <queue>
 using namespace std;
 
 /*********************************************************************//*
@@ -47,102 +47,92 @@ using namespace std;
  * - it is not checked whether a parameter/switch/task name is used twice
  *//*********************************************************************/
 
-enum ECLParsingResult {
-	Parse_success = 0,
-	Parse_none_found,
-	Parse_unknown_command
-};
+enum ECLParsingResult { Parse_success = 0, Parse_none_found, Parse_unknown_command };
 
 struct SCLSwitch {
-	SCLSwitch() : bGiven(false) {}
-	
-	char short_name;
-	
-	bool bGiven;
+    SCLSwitch() : bGiven(false) {}
+
+    char short_name;
+
+    bool bGiven;
 };
 
 struct SCLParam {
-	SCLParam() {}
-	
-	char short_name;
-	
-	queue<string> values; //can be multiple
-	string def_val;
+    SCLParam() {}
+
+    char short_name;
+
+    queue<string> values;  // can be multiple
+    string def_val;
 };
 
 struct SCLTask {
-	SCLTask() : bGiven(false) {}
-	
-	char short_name;
-	
-	bool bGiven;
-	map<string, SCLParam> params;
-	map<string, SCLSwitch> switches;
-	
-	SCLParam* findParam(const string& name);
-	SCLParam* findParam(char short_name);
-	
-	SCLSwitch* findSwitch(const string& name);
-	SCLSwitch* findSwitch(char short_name);
+    SCLTask() : bGiven(false) {}
+
+    char short_name;
+
+    bool bGiven;
+    map<string, SCLParam> params;
+    map<string, SCLSwitch> switches;
+
+    SCLParam* findParam(const string& name);
+    SCLParam* findParam(char short_name);
+
+    SCLSwitch* findSwitch(const string& name);
+    SCLSwitch* findSwitch(char short_name);
 };
 
-class CCommandLineParser
-{
-public:
-	CCommandLineParser(int argc, char* argv[]);
-	~CCommandLineParser();
-	
-	//argument initialization
-	void addTask(const string& name, char short_name = ' ');
-	//if task_name is "" then it is global
-	void addParam(const string& name, char short_name = ' ',
-				  const string& default_val = "", const string& task_name = "");
-	void addSwitch(const string& name, char short_name = ' ',
-				   const string& task_name = "");
-				   
-	//parse the arguments
-	//bAllow_files: if true: arguments without -- or - are interpreted as files
-	//  and can be queried with getFiles()
-	ECLParsingResult parse(bool bAllow_files = false);
-	
-	//set the current task and return it if found, NULL otherwise
-	//if name is "", task will be unset
-	const SCLTask* setTask(const string& name);
-	//searches globally and also in current task if set
-	bool getSwitch(const string& name);
-	//sets val to first element on queue and pops it. next call returns next element,
-	//until queue is empty, then false is returned and val is set to default value
-	bool getParam(const string& name, string& val);
-	const string& getParamDefault(const string& name);
-	//todo: int/float overloading?
-	
-	
-	const vector<string>& getFiles() const { return m_files; }
-	
-	const string& getUnknownCommand() const { return m_unknown_command; }
-private:
-	ECLParsingResult unknownCommand(const string& command);
-	
-	SCLTask* findTask(const string& name);
-	SCLTask* findTask(char short_name);
-	
-	map<string, SCLTask> m_tasks;
-	SCLTask m_global;
-	
-	vector<string> m_files;
-	
-	string m_unknown_command;
-	SCLTask* m_cur_task;
-	
-	/* contains an empty element at the end to avoid index checks */
-	vector<string> m_args;
-	
-	int m_argc;
-	ECLParsingResult m_parse_result;
+class CCommandLineParser {
+   public:
+    CCommandLineParser(int argc, char* argv[]);
+    ~CCommandLineParser();
+
+    // argument initialization
+    void addTask(const string& name, char short_name = ' ');
+    // if task_name is "" then it is global
+    void addParam(const string& name, char short_name = ' ', const string& default_val = "",
+                  const string& task_name = "");
+    void addSwitch(const string& name, char short_name = ' ', const string& task_name = "");
+
+    // parse the arguments
+    // bAllow_files: if true: arguments without -- or - are interpreted as files
+    //   and can be queried with getFiles()
+    ECLParsingResult parse(bool bAllow_files = false);
+
+    // set the current task and return it if found, NULL otherwise
+    // if name is "", task will be unset
+    const SCLTask* setTask(const string& name);
+    // searches globally and also in current task if set
+    bool getSwitch(const string& name);
+    // sets val to first element on queue and pops it. next call returns next element,
+    // until queue is empty, then false is returned and val is set to default value
+    bool getParam(const string& name, string& val);
+    const string& getParamDefault(const string& name);
+    // todo: int/float overloading?
+
+    const vector<string>& getFiles() const { return m_files; }
+
+    const string& getUnknownCommand() const { return m_unknown_command; }
+
+   private:
+    ECLParsingResult unknownCommand(const string& command);
+
+    SCLTask* findTask(const string& name);
+    SCLTask* findTask(char short_name);
+
+    map<string, SCLTask> m_tasks;
+    SCLTask m_global;
+
+    vector<string> m_files;
+
+    string m_unknown_command;
+    SCLTask* m_cur_task;
+
+    /* contains an empty element at the end to avoid index checks */
+    vector<string> m_args;
+
+    int m_argc;
+    ECLParsingResult m_parse_result;
 };
-
-
-
-
 
 #endif /* COMMAND_LINE_H_ */

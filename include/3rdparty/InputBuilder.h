@@ -4,7 +4,7 @@
  * All rights reserved.
  *
  * Licence GNU GPL version 3
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -20,40 +20,34 @@
  *
  */
 
-#include "VirtualKeyCode.h"
 #include <vector>
 
+#include "VirtualKeyCode.h"
 
-class  CInputBuilder
-{
-private:
-	std::vector<INPUT> _inputList;
+class CInputBuilder {
+   private:
+    std::vector<INPUT> _inputList;
 
+   public:
+    CInputBuilder(void);
+    ~CInputBuilder(void);
 
-public:
-	CInputBuilder(void);
-	~CInputBuilder(void);
+    INPUT* ToArray();
+    inline unsigned int Size() { return _inputList.size(); }
 
-	INPUT* ToArray();
-	inline unsigned int Size()
-	{
-		return _inputList.size();
-	}
-
-	INPUT operator[](int position);
+    INPUT operator[](int position);
 
     CInputBuilder& AddKeyDown(VirtualKeyCode keyCode);
     CInputBuilder& AddKeyUp(VirtualKeyCode keyCode);
     CInputBuilder& AddKeyPress(VirtualKeyCode keyCode);
 
-	CInputBuilder& AddKeyUp( std::vector<VirtualKeyCode>* pmodifierKeyCodes);
-	CInputBuilder& AddKeyDown( std::vector<VirtualKeyCode>* pmodifierKeyCodes);
-	CInputBuilder& AddKeyPress( std::vector<VirtualKeyCode>* pkeyCodes);
+    CInputBuilder& AddKeyUp(std::vector<VirtualKeyCode>* pmodifierKeyCodes);
+    CInputBuilder& AddKeyDown(std::vector<VirtualKeyCode>* pmodifierKeyCodes);
+    CInputBuilder& AddKeyPress(std::vector<VirtualKeyCode>* pkeyCodes);
 
     CInputBuilder& AddCharacter(wchar_t character);
     CInputBuilder& AddCharacters(std::vector<wchar_t> characters);
-	CInputBuilder& AddCharacters(LPCWSTR characters);
-
+    CInputBuilder& AddCharacters(LPCWSTR characters);
 
     CInputBuilder& AddRelativeMouseMovement(int x, int y);
     CInputBuilder& AddAbsoluteMouseMovement(int absoluteX, int absoluteY);
@@ -68,10 +62,5 @@ public:
     CInputBuilder& AddMouseXButtonDoubleClick(int xButtonId);
     CInputBuilder& AddMouseVerticalWheelScroll(int scrollAmount);
 
-
-	CInputBuilder& AddHardware( DWORD msg, DWORD paramh, DWORD paraml);
- 
+    CInputBuilder& AddHardware(DWORD msg, DWORD paramh, DWORD paraml);
 };
-
-  
-  

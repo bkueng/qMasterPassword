@@ -3,7 +3,7 @@
  * All rights reserved.
  *
  * Licence GNU GPL version 3
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -19,26 +19,24 @@
  *
  */
 
-#include "IInputSimulator.h"
-#include "InputBuilder.h"
 #include <vector>
 
-class CMouseSimulator :
-	public IMouseSimulator
-{
- private:
-	static const int MouseWheelClickSize = 120;
-	IInputMessageDispatcher* _pmessageDispatcher;
+#include "IInputSimulator.h"
+#include "InputBuilder.h"
+
+class CMouseSimulator : public IMouseSimulator {
+   private:
+    static const int MouseWheelClickSize = 120;
+    IInputMessageDispatcher* _pmessageDispatcher;
     bool bNeedDelete;
     int SendSimulatedInput(INPUT& input);
-	int SendSimulatedInput( CInputBuilder& inputbuilder );
+    int SendSimulatedInput(CInputBuilder& inputbuilder);
 
-
-public:
+   public:
     CMouseSimulator(IInputMessageDispatcher* messageDispatcher);
     CMouseSimulator();
-	~CMouseSimulator();
-        
+    ~CMouseSimulator();
+
     void MoveMouseBy(int pixelDeltaX, int pixelDeltaY);
     void MoveMouseTo(double absoluteX, double absoluteY);
     void MoveMouseToPositionOnVirtualDesktop(double absoluteX, double absoluteY);
@@ -55,4 +53,4 @@ public:
     void XButtonClick(int buttonId);
     void XButtonDoubleClick(int buttonId);
     void VerticalScroll(int scrollAmountInClicks);
-    };
+};

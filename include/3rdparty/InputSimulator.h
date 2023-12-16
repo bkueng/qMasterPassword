@@ -4,7 +4,7 @@
  * All rights reserved.
  *
  * Licence GNU GPL version 3
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -20,34 +20,22 @@
  *
  */
 
+class CInputSimulator : public IInputSimulator {
+   private:
+    IKeyboardSimulator* _pkeyboardSimulator;
+    IMouseSimulator* _pmouseSimulator;
+    IInputDeviceStateAdaptor* _pinputDeviceState;
+    bool bNeedDelete;
 
-  class CInputSimulator : public IInputSimulator
-    {
-	private:
-        IKeyboardSimulator* _pkeyboardSimulator;
-        IMouseSimulator* _pmouseSimulator;
-        IInputDeviceStateAdaptor* _pinputDeviceState;
-		bool bNeedDelete;
+   public:
+    CInputSimulator(IKeyboardSimulator* pkeyboardSimulator, IMouseSimulator* pmouseSimulator,
+                    IInputDeviceStateAdaptor* pinputDeviceStateAdaptor);
+    CInputSimulator();
+    ~CInputSimulator();
 
-	public:
-         CInputSimulator(IKeyboardSimulator* pkeyboardSimulator, IMouseSimulator* pmouseSimulator, IInputDeviceStateAdaptor* pinputDeviceStateAdaptor);
-         CInputSimulator();
-		~CInputSimulator();
+    inline IKeyboardSimulator* GetKeyboard() { return _pkeyboardSimulator; }
 
-        inline IKeyboardSimulator* GetKeyboard()
-        {
-             return _pkeyboardSimulator; 
-        }
+    inline IMouseSimulator* GetMouse() { return _pmouseSimulator; }
 
-        inline IMouseSimulator* GetMouse()
-        {
-            return _pmouseSimulator;
-        }
-
-         inline IInputDeviceStateAdaptor* GetInputDeviceState()
-        {
-           return _pinputDeviceState; 
-        }
-
-
-    };
+    inline IInputDeviceStateAdaptor* GetInputDeviceState() { return _pinputDeviceState; }
+};

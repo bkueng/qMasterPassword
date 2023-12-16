@@ -15,35 +15,34 @@
 #ifndef _HEADER_PUSHBUTTON_DELEGATE_H
 #define _HEADER_PUSHBUTTON_DELEGATE_H
 
-#include <QStyledItemDelegate>
 #include <QPushButton>
+#include <QStyledItemDelegate>
 class MainWindow;
 
 /**
  ** class PushButtonDelegate
  * Delegate class to draw a button in a table view
  */
-class PushButtonDelegate: public QStyledItemDelegate {
-	Q_OBJECT
-public:
-	PushButtonDelegate(MainWindow& main_window, QObject *parent = 0);
+class PushButtonDelegate : public QStyledItemDelegate {
+    Q_OBJECT
+   public:
+    PushButtonDelegate(MainWindow& main_window, QObject* parent = 0);
 
-	QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
-			const QModelIndex &index) const;
+    QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option,
+                          const QModelIndex& index) const;
 
-	/*
-	//no editing needed
-	void setEditorData(QWidget *editor, const QModelIndex &index) const;
-	void setModelData(QWidget *editor, QAbstractItemModel *model,
-			const QModelIndex &index) const;
-	*/
+    /*
+    //no editing needed
+    void setEditorData(QWidget *editor, const QModelIndex &index) const;
+    void setModelData(QWidget *editor, QAbstractItemModel *model,
+            const QModelIndex &index) const;
+    */
 
-	void updateEditorGeometry(QWidget *editor,
-			const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option,
+                              const QModelIndex& index) const;
 
-private:
-	MainWindow& m_main_window;
+   private:
+    MainWindow& m_main_window;
 };
 
-
-#endif // _HEADER_PUSHBUTTON_DELEGATE_H
+#endif  // _HEADER_PUSHBUTTON_DELEGATE_H

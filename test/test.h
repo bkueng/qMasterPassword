@@ -17,29 +17,30 @@
 #ifndef _HEADER_TEST_H_
 #define _HEADER_TEST_H_
 
-#include <QtTest/QtTest>
-#include <QObject>
 #include <QMap>
+#include <QObject>
+#include <QtTest/QtTest>
 #include <string>
 
 struct TestNode {
-	QString parent;
-	QMap<QString, QString> attributes;
+    QString parent;
+    QMap<QString, QString> attributes;
 };
 
 class UnitTests : public QObject {
-Q_OBJECT
-public:
-	UnitTests(const std::string& file_name);
+    Q_OBJECT
+   public:
+    UnitTests(const std::string& file_name);
 
-	typedef QMap<QString, TestNode> DataTree;
-private slots:
-	void runTests_data();
-	void runTests();
-private:
-	bool getAttribute(const DataTree& data, DataTree::ConstIterator iter,
-			QString name, QString& ret);
-	std::string m_file_name;
+    typedef QMap<QString, TestNode> DataTree;
+   private slots:
+    void runTests_data();
+    void runTests();
+
+   private:
+    bool getAttribute(const DataTree& data, DataTree::ConstIterator iter, QString name,
+                      QString& ret);
+    std::string m_file_name;
 };
 
 #endif /* _HEADER_TEST_H_ */

@@ -61,4 +61,3 @@ cp "$REPO_ROOT"/data/icons/app_icon.png "$BUILD_DIR"/qmasterpassword.png
 
 # move built AppImage back into original CWD
 mv qMasterPassword*.AppImage "$OLD_CWD"
-
