@@ -21,8 +21,10 @@
  *
  */
 
-#include <WinUser.h>
+// clang-format off
 #include <windows.h>
+#include <WinUser.h>
+// clang-format on
 
 #if _MSC_VER > 1600
 enum class MouseButton

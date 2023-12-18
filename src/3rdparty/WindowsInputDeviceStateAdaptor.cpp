@@ -1,6 +1,8 @@
+// clang-format off
+#include "stdafx.h"
+// clang-format on
 #include "WindowsInputDeviceStateAdaptor.h"
 
-#include "stdafx.h"
 /* Copyright(c) 1998-2012, Arnaud Colin
  * All rights reserved.
  *
