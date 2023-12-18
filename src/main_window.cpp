@@ -938,7 +938,7 @@ void MainWindow::showAboutWidget()
                            .arg(QString::fromStdString(getAppVersion().toStr()))
                            .arg(QT_VERSION_STR)
                            .arg(qVersion())
-                           .arg("Copyright (c) 2015 Beat Küng <a "
+                           .arg("Copyright (c) 2015-2024 Beat Küng <a "
                                 "href=\"mailto:beat-kueng@gmx.net\">beat-kueng@gmx.net</a>")
                            .arg("<a href=\"http://www.gnu.org/licenses/gpl.html\">GNU General "
                                 "Public License Version 3</a>")
