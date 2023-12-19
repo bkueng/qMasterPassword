@@ -26,9 +26,6 @@
 # static analysis output
 /analysis
 
-# astyle backup files
-*.astyle.orig
-
 /Makefile*
 /qMasterPassword
 
@@ -39,3 +36,4 @@ ui/ui_*.h
 /.qtc_clangd
 
 /cmake-build-*
+/.idea

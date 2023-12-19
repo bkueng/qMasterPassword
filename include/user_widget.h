@@ -16,40 +16,37 @@
 #define HEADER_USER_WIDGET_H
 
 #include <QDialog>
-#include "user.h"
+
 #include "identicon.h"
+#include "user.h"
 
 namespace Ui {
 class UserWidget;
 }
 
-class UserWidget : public QDialog
-{
-	Q_OBJECT
+class UserWidget : public QDialog {
+    Q_OBJECT
 
-public:
-	enum Type {
-		Type_edit,
-		Type_new
-	};
-	explicit UserWidget(Type type, QWidget *parent = 0);
-	~UserWidget();
+   public:
+    enum Type { Type_edit, Type_new };
+    explicit UserWidget(Type type, QWidget* parent = 0);
+    ~UserWidget();
 
-	QString password() const;
-	QString userName() const;
+    QString password() const;
+    QString userName() const;
 
-	void setData(const UiUser& user);
-	void applyData(UiUser& user);
+    void setData(const UiUser& user);
+    void applyData(UiUser& user);
 
-	bool checkPasswordOnLogin() const;
+    bool checkPasswordOnLogin() const;
 
-private:
-	Ui::UserWidget *ui;
-	Identicon m_identicon;
-private slots:
-	void checkInputValidity();
-	void identiconHelp();
-	void generatePasswordClicked();
+   private:
+    Ui::UserWidget* ui;
+    Identicon m_identicon;
+   private slots:
+    void checkInputValidity();
+    void identiconHelp();
+    void generatePasswordClicked();
 };
 
-#endif // HEADER_USER_WIDGET_H
+#endif  // HEADER_USER_WIDGET_H

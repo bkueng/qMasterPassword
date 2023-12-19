@@ -17,43 +17,40 @@
 #ifndef _HEADER_UITEMPLATE_HELPERS_H
 #define _HEADER_UITEMPLATE_HELPERS_H
 
-#include "user.h"
-#include <QStandardItem>
-#include <QPushButton>
 #include <QCheckBox>
+#include <QPushButton>
+#include <QStandardItem>
 
+#include "user.h"
 
-template<typename T>
+template <typename T>
 class UserUITemplate : public T {
-public:
-	UserUITemplate(UiSite& site, const QString& item_text)
-		: T(item_text), m_site(site) {}
-	UserUITemplate(UiSite& site, const QString& item_text, QWidget* parent)
-		: T(item_text, parent), m_site(site) {}
+   public:
+    UserUITemplate(UiSite& site, const QString& item_text) : T(item_text), m_site(site) {}
+    UserUITemplate(UiSite& site, const QString& item_text, QWidget* parent)
+        : T(item_text, parent), m_site(site)
+    {
+    }
 
-	UiSite& site() { return m_site; }
-private:
-	UiSite& m_site;
+    UiSite& site() { return m_site; }
+
+   private:
+    UiSite& m_site;
 };
 typedef UserUITemplate<QStandardItem> TableItem;
 typedef UserUITemplate<QPushButton> UserPushButton;
 
+template <typename T>
+class CategoryUiTemplate : public T {
+   public:
+    CategoryUiTemplate(CategoryId id, const QString& text) : T(text), category_id(id) {}
 
+    const CategoryId category_id;
 
-template<typename T>
-class CategoryUiTemplate : public T
-{
-public:
-	CategoryUiTemplate(CategoryId id, const QString& text)
-		: T(text), category_id(id) {}
-
-	const CategoryId category_id;
-private:
+   private:
 };
 
 typedef CategoryUiTemplate<QCheckBox> CategoryCheckbox;
 typedef CategoryUiTemplate<QPushButton> CategoryButton;
 
-
-
-#endif // _HEADER_UITEMPLATE_HELPERS_H
+#endif  // _HEADER_UITEMPLATE_HELPERS_H

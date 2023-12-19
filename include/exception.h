@@ -15,45 +15,43 @@
 #ifndef EXCEPTION_H_
 #define EXCEPTION_H_
 
-#include "config.h"
-
+#include <cstdarg>
 #include <cstdio>
 #include <string>
-#include <cstdarg>
+
+#include "config.h"
 using namespace std;
 
 enum EnErrors {
-	SUCCESS = 0,
-	EGENERAL,
-	EASSERT,
-	EPOOL,
-	ELIST,
-	EOUT_OF_MEMORY,
-	ETIMEOUT,
-	EINVALID_PARAMETER,
-	EDEVICE,
-	ENOTHING_TO_ABORT,
-	EDEVICE_BUSY,
-	ECANNOT_DELETE,
-	EBUFFER_TOO_SMALL,
-	ECANNOT_UNLOAD,
-	ENR_OF_INSTANCES_EXHAUSTED,
-	EALREADY_INITIALIZED,
-	ENOT_INITIALIZED,
-	ENO_SUCH_DEVICE,
-	EUNABLE_TO_READ,
-	ETRY_AGAIN,
-	EINTERRUPTED,
-	EUNSUPPORTED,
-	EFAILED_TO_LOAD,
-	EWRONG_STATE,
-	EFILE_ERROR,
-	EFILE_EXISTS,
-	EFILE_PARSING_ERROR,
-	EUNABLE_TO_OPEN_FILE
+    SUCCESS = 0,
+    EGENERAL,
+    EASSERT,
+    EPOOL,
+    ELIST,
+    EOUT_OF_MEMORY,
+    ETIMEOUT,
+    EINVALID_PARAMETER,
+    EDEVICE,
+    ENOTHING_TO_ABORT,
+    EDEVICE_BUSY,
+    ECANNOT_DELETE,
+    EBUFFER_TOO_SMALL,
+    ECANNOT_UNLOAD,
+    ENR_OF_INSTANCES_EXHAUSTED,
+    EALREADY_INITIALIZED,
+    ENOT_INITIALIZED,
+    ENO_SUCH_DEVICE,
+    EUNABLE_TO_READ,
+    ETRY_AGAIN,
+    EINTERRUPTED,
+    EUNSUPPORTED,
+    EFAILED_TO_LOAD,
+    EWRONG_STATE,
+    EFILE_ERROR,
+    EFILE_EXISTS,
+    EFILE_PARSING_ERROR,
+    EUNABLE_TO_OPEN_FILE
 };
-
-
 
 /*********************************************************************//*
  * class Exception
@@ -61,43 +59,39 @@ enum EnErrors {
  * general exception class with logging functionality
  *//*********************************************************************/
 
-#define EXCEPTION(err) \
-	Exception(err, __FUNCTION__, __FILE__, __LINE__)
+#define EXCEPTION(err) Exception(err, __FUNCTION__, __FILE__, __LINE__)
 
+class Exception {
+   public:
+    Exception(EnErrors err, const char* func, const char* file, int line);
+    Exception(EnErrors err);
+    virtual ~Exception();
 
-class Exception
-{
-public:
-	Exception(EnErrors err, const char* func, const char* file, int line);
-	Exception(EnErrors err);
-	virtual ~Exception();
-	
-	virtual EnErrors getError() const { return m_err; }
-	virtual string getErrorStr() const; //description of the error number
-	
-	virtual void log();
-	
-	//whether all exceptions should be logged when they are created
-	static void setLogAllExceptions(bool bLog) { m_bLog_exceptions = bLog; }
-	static bool logAllExceptions() { return m_bLog_exceptions; }
-	
-	//create a copy of this object. the caller must delete it
-	virtual Exception* copy() const;
-	
-protected:
-	bool m_bLogged;
-	
-	//where the exception occured:
-	const char* m_func;
-	const char* m_file;
-	int m_line;
-	
-	static bool m_bLog_exceptions;
-private:
-	EnErrors m_err;
+    virtual EnErrors getError() const { return m_err; }
+    virtual string getErrorStr() const;  // description of the error number
+
+    virtual void log();
+
+    // whether all exceptions should be logged when they are created
+    static void setLogAllExceptions(bool bLog) { m_bLog_exceptions = bLog; }
+    static bool logAllExceptions() { return m_bLog_exceptions; }
+
+    // create a copy of this object. the caller must delete it
+    virtual Exception* copy() const;
+
+   protected:
+    bool m_bLogged;
+
+    // where the exception occured:
+    const char* m_func;
+    const char* m_file;
+    int m_line;
+
+    static bool m_bLog_exceptions;
+
+   private:
+    EnErrors m_err;
 };
-
-
 
 /*********************************************************************//*!
  * @class ExceptionString
@@ -106,56 +100,56 @@ private:
  *//*********************************************************************/
 
 #define EXCEPTION_s(err, err_fmt, ...) \
-	ExceptionString(err, __FUNCTION__, __FILE__, __LINE__, err_fmt, ## __VA_ARGS__)
+    ExceptionString(err, __FUNCTION__, __FILE__, __LINE__, err_fmt, ##__VA_ARGS__)
 
+class ExceptionString : public Exception {
+   public:
+    ExceptionString(EnErrors err, const char* func, const char* file, int line, const char* fmt,
+                    ...);
+    virtual ~ExceptionString();
 
-class ExceptionString : public Exception
-{
-public:
-	ExceptionString(EnErrors err, const char* func
-					, const char* file, int line, const char* fmt, ...);
-	virtual ~ExceptionString();
-	
-	virtual void log();
-	
-	virtual string getErrorStr() const { return m_err_desc; }
-	
-	virtual Exception* copy() const;
-private:
-	string m_err_desc;
+    virtual void log();
+
+    virtual string getErrorStr() const { return m_err_desc; }
+
+    virtual Exception* copy() const;
+
+   private:
+    string m_err_desc;
 };
 
-
-
 #define THROW(err) throw(EXCEPTION(err))
-#define THROW_s(err, err_fmt, ...) throw(EXCEPTION_s(err, err_fmt, ## __VA_ARGS__))
+#define THROW_s(err, err_fmt, ...) throw(EXCEPTION_s(err, err_fmt, ##__VA_ARGS__))
 
-#define ASSERT_THROW(exp, err) if(!(exp)) throw(EXCEPTION(err))
+#define ASSERT_THROW(exp, err) \
+    if (!(exp)) throw(EXCEPTION(err))
 #define ASSERT_THROW_s(exp, err_fmt, ...) \
-	if(!(exp)) throw(EXCEPTION_s(EASSERT, err_fmt, ## __VA_ARGS__))
+    if (!(exp)) throw(EXCEPTION_s(EASSERT, err_fmt, ##__VA_ARGS__))
 #define ASSERT_THROW_e(exp, err, err_fmt, ...) \
-	if(!(exp)) throw(EXCEPTION_s(err, err_fmt, ## __VA_ARGS__))
-
+    if (!(exp)) throw(EXCEPTION_s(err, err_fmt, ##__VA_ARGS__))
 
 #ifdef _DEBUG
-#define DEBUG_ASSERT(exp, err_fmt, ...) \
-	if(!(exp)) { \
-		printf("Assert: %s:%i %s: ", __FILE__, __LINE__, __FUNCTION__); \
-		printf(err_fmt, ## __VA_ARGS__); \
-		printf("\nGood bye\n"); abort(); \
-	}
-#define DEBUG_ASSERT1(exp) \
-	if(!(exp)) { \
-		printf("\nAssertion \"%s\" failed\nIn: %s:%i %s\n", #exp, __FILE__, __LINE__, __FUNCTION__); \
-		printf("Good bye\n"); abort(); \
-	}
+#define DEBUG_ASSERT(exp, err_fmt, ...)                                 \
+    if (!(exp)) {                                                       \
+        printf("Assert: %s:%i %s: ", __FILE__, __LINE__, __FUNCTION__); \
+        printf(err_fmt, ##__VA_ARGS__);                                 \
+        printf("\nGood bye\n");                                         \
+        abort();                                                        \
+    }
+#define DEBUG_ASSERT1(exp)                                                            \
+    if (!(exp)) {                                                                     \
+        printf("\nAssertion \"%s\" failed\nIn: %s:%i %s\n", #exp, __FILE__, __LINE__, \
+               __FUNCTION__);                                                         \
+        printf("Good bye\n");                                                         \
+        abort();                                                                      \
+    }
 #else
 #define DEBUG_ASSERT(exp, err_fmt, ...) \
-	{ }
+    {                                   \
+    }
 #define DEBUG_ASSERT1(exp) \
-	{ }
+    {                      \
+    }
 #endif
 
 #endif /* EXCEPTION_H_ */
-
-

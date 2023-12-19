@@ -63,6 +63,11 @@ Keyboard: When the list view has focus:
 - [J] / [K]: Select next/previous item
 - [Q]: Logout
 
+#### Development
+For development, install the pre-commit scripts:
+```shell
+pre-commit install
+```
 
 #### Testing
 ```shell

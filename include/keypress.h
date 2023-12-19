@@ -24,30 +24,27 @@ typedef xdo xdo_t;
  ** class Keypress
  */
 class Keypress {
-public:
-	Keypress();
-	~Keypress();
+   public:
+    Keypress();
+    ~Keypress();
 
-	/** saves the current modifiers (alt, ...) & releases them */
-	void releaseModifiers();
-	/** restores previously saved modifiers */
-	void restoreModifiers();
+    /** saves the current modifiers (alt, ...) & releases them */
+    void releaseModifiers();
+    /** restores previously saved modifiers */
+    void restoreModifiers();
 
-	void altTab();
-	void type(const char* str);
+    void altTab();
+    void type(const char* str);
 
-private:
-
+   private:
 #if defined(__linux__)
-	void* m_display = nullptr;
-	xdo_t* m_xdo = nullptr;
-	void* m_active_mods = nullptr;
+    void* m_display = nullptr;
+    xdo_t* m_xdo = nullptr;
+    void* m_active_mods = nullptr;
 #elif defined(_WIN32)
-	void* m_simulator = nullptr;
-	bool m_keys_pressed[5];
+    void* m_simulator = nullptr;
+    bool m_keys_pressed[5];
 #endif /* defined(__linux__) */
-
 };
-
 
 #endif /* _HEADER_KEYBOARD_H_ */

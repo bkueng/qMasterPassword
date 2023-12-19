@@ -4,7 +4,7 @@
  * All rights reserved.
  *
  * Licence GNU GPL version 3
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -20,15 +20,11 @@
  *
  */
 
-
-class CWindowsInputDeviceStateAdaptor :
-	public IInputDeviceStateAdaptor
-{
-public:
-	bool IsKeyDown(VirtualKeyCode keyCode);
+class CWindowsInputDeviceStateAdaptor : public IInputDeviceStateAdaptor {
+   public:
+    bool IsKeyDown(VirtualKeyCode keyCode);
     bool IsKeyUp(VirtualKeyCode keyCode);
     bool IsHardwareKeyDown(VirtualKeyCode keyCode);
     bool IsHardwareKeyUp(VirtualKeyCode keyCode);
-	bool IsTogglingKeyInEffect(VirtualKeyCode keyCode);
+    bool IsTogglingKeyInEffect(VirtualKeyCode keyCode);
 };
-

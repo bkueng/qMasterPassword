@@ -15,17 +15,14 @@
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
-
-//#define APP_NAME ""
+// #define APP_NAME ""
 
 #ifndef APP_NAME
 #error "APP_NAME must be defined. either in config.h or as a compiler define"
 #endif
 
-
-//this file contains defines to change the behaviour of the application
-//most of the defines in here are project/OS specific
-
+// this file contains defines to change the behaviour of the application
+// most of the defines in here are project/OS specific
 
 #if defined(_WIN32) || defined(_WIN64)
 #define PATH_SEP "\\"
@@ -33,9 +30,6 @@
 #define PATH_SEP "/"
 #endif
 
-
 #define LOG_FILE "." PATH_SEP "" APP_NAME ".log"
-
-
 
 #endif /* CONFIG_H_ */

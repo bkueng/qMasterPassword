@@ -1,10 +1,13 @@
+// clang-format off
 #include "stdafx.h"
+// clang-format on
 #include "WindowsInputDeviceStateAdaptor.h"
+
 /* Copyright(c) 1998-2012, Arnaud Colin
  * All rights reserved.
  *
  * Licence GNU GPL version 3
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -21,33 +24,29 @@
  */
 
 bool CWindowsInputDeviceStateAdaptor::IsKeyDown(VirtualKeyCode keyCode)
-        {
-			SHORT result = GetKeyState( (UINT16) keyCode);
-            return (result < 0);
-        }
+{
+    SHORT result = GetKeyState((UINT16)keyCode);
+    return (result < 0);
+}
 
+bool CWindowsInputDeviceStateAdaptor::IsKeyUp(VirtualKeyCode keyCode)
+{
+    return !IsKeyDown(keyCode);
+}
 
-        bool CWindowsInputDeviceStateAdaptor::IsKeyUp(VirtualKeyCode keyCode)
-        {
-            return !IsKeyDown(keyCode);
-        }
+bool CWindowsInputDeviceStateAdaptor::IsHardwareKeyDown(VirtualKeyCode keyCode)
+{
+    SHORT result = GetAsyncKeyState((UINT16)keyCode);
+    return (result < 0);
+}
 
-        bool CWindowsInputDeviceStateAdaptor::IsHardwareKeyDown(VirtualKeyCode keyCode)
-        {
-            SHORT result = GetAsyncKeyState((UINT16) keyCode);
-            return (result < 0);
-        }
+bool CWindowsInputDeviceStateAdaptor::IsHardwareKeyUp(VirtualKeyCode keyCode)
+{
+    return !IsHardwareKeyDown(keyCode);
+}
 
-        bool CWindowsInputDeviceStateAdaptor::IsHardwareKeyUp(VirtualKeyCode keyCode)
-        {
-            return !IsHardwareKeyDown(keyCode);
-        }
-
-		bool CWindowsInputDeviceStateAdaptor::IsTogglingKeyInEffect(VirtualKeyCode keyCode)
-        {
-            UINT16 result = GetKeyState((UINT16) keyCode);
-            return (result & 0x01) == 0x01;
-        }
-
-
-		
+bool CWindowsInputDeviceStateAdaptor::IsTogglingKeyInEffect(VirtualKeyCode keyCode)
+{
+    UINT16 result = GetKeyState((UINT16)keyCode);
+    return (result & 0x01) == 0x01;
+}

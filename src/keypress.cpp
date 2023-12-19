@@ -12,26 +12,30 @@
  *
  */
 
-
 #include "keypress.h"
 
 #warning keypress stuff not (yet) implemented for your OS
 
-
-Keypress::Keypress() {
+Keypress::Keypress()
+{
 }
 
-Keypress::~Keypress() {
+Keypress::~Keypress()
+{
 }
 
-void Keypress::releaseModifiers() {
+void Keypress::releaseModifiers()
+{
 }
 
-void Keypress::restoreModifiers() {
+void Keypress::restoreModifiers()
+{
 }
 
-void Keypress::altTab() {
+void Keypress::altTab()
+{
 }
 
-void Keypress::type(const char* str) {
+void Keypress::type(const char* str)
+{
 }

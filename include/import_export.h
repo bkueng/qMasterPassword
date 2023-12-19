@@ -12,12 +12,12 @@
  *
  */
 
-
 #ifndef _HEADER_IMPORT_EXPORT_H_
 #define _HEADER_IMPORT_EXPORT_H_
 
-#include <QString>
 #include <QMap>
+#include <QString>
+
 #include "user.h"
 
 /**
@@ -26,14 +26,14 @@
  *  existing sites with the same name.
  */
 class DataImportExport {
-public:
-	DataImportExport(const QMap<CategoryId, QString>& categories);
+   public:
+    DataImportExport(const QMap<CategoryId, QString>& categories);
 
-	void exportJson(const UiUser& user, const QString& file_name);
-	void importJson(UiUser& user, const QString& file_name);
+    void exportJson(const UiUser& user, const QString& file_name);
+    void importJson(UiUser& user, const QString& file_name);
 
-private:
-	const QMap<CategoryId, QString>& m_categories;
+   private:
+    const QMap<CategoryId, QString>& m_categories;
 };
 
 #endif /* _HEADER_IMPORT_EXPORT_H_ */

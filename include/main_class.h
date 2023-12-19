@@ -16,9 +16,9 @@
 #define MAIN_CLASS_H_
 
 #include <QTranslator>
-#include "global.h"
-#include "command_line.h"
 
+#include "command_line.h"
+#include "global.h"
 
 /*********************************************************************//*
  * class CMain
@@ -26,37 +26,33 @@
  * main class with the main task and command line parser
  *//*********************************************************************/
 
+class CMain {
+   public:
+    CMain();
+    ~CMain();
 
-class CMain
-{
-public:
-	CMain();
-	~CMain();
-	
-	/* parse the command line parameters */
-	void init(int argc, char* argv[]);
-	
-	int exec();
-	
-private:
-	void parseCommandLine(int argc, char* argv[]);
-	void printHelp();
-	void wrongUsage(const char* fmt, ...);
-	void printVersion();
-	
-	int processArgs();
-	
-	void loadTranslation();
-	QTranslator m_app_trans;
-	QTranslator m_qt_trans;
-	QTranslator m_qtbase_trans;
-	
-	CCommandLineParser* m_parameters;
-	ECLParsingResult m_cl_parse_result;
-	int m_argc;
-	char** m_argv;
+    /* parse the command line parameters */
+    void init(int argc, char* argv[]);
+
+    int exec();
+
+   private:
+    void parseCommandLine(int argc, char* argv[]);
+    void printHelp();
+    void wrongUsage(const char* fmt, ...);
+    void printVersion();
+
+    int processArgs();
+
+    void loadTranslation();
+    QTranslator m_app_trans;
+    QTranslator m_qt_trans;
+    QTranslator m_qtbase_trans;
+
+    CCommandLineParser* m_parameters;
+    ECLParsingResult m_cl_parse_result;
+    int m_argc;
+    char** m_argv;
 };
-
-
 
 #endif /* MAIN_CLASS_H_ */

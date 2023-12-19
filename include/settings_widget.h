@@ -16,62 +16,61 @@
 #define SETTINGS_WIDGET_H
 
 #include <QDialog>
-#include <QMap>
 #include <QList>
+#include <QMap>
 #include <QString>
+
 #include "app_settings.h"
-#include "user.h"
 #include "import_export.h"
+#include "user.h"
 
 namespace Ui {
 class SettingsWidget;
 }
 
-class SettingsWidget : public QDialog
-{
-	Q_OBJECT
+class SettingsWidget : public QDialog {
+    Q_OBJECT
 
-public:
-	explicit SettingsWidget(ApplicationSettings& settings,
-			QMap<QString, UiUser>& users, QMap<CategoryId, QString> categories,
-			DataImportExport& import_export,
-			QWidget *parent = 0);
-	~SettingsWidget();
+   public:
+    explicit SettingsWidget(ApplicationSettings& settings, QMap<QString, UiUser>& users,
+                            QMap<CategoryId, QString> categories, DataImportExport& import_export,
+                            QWidget* parent = 0);
+    ~SettingsWidget();
 
-	static QList<QString> defaultCategories();
+    static QList<QString> defaultCategories();
 
-	QList<QString> categories();
+    QList<QString> categories();
 
-signals:
-	void dataImported(QString user_name);
+   signals:
+    void dataImported(QString user_name);
 
-private:
-	UiUser* selectedUser();
-	void updateUi();
-	bool canAddCategory(const QString& category_name);
+   private:
+    UiUser* selectedUser();
+    void updateUi();
+    bool canAddCategory(const QString& category_name);
 
-	Ui::SettingsWidget *ui;
-	ApplicationSettings& m_settings;
-	QMap<QString, UiUser>& m_users;
-	DataImportExport& m_import_export;
-private slots:
-	void showPWAfterLogin(bool show);
-	void showTrayIcon(bool show);
-	void autoLogout(bool activated);
-	void autoLogoutValueChanged(int value);
-	void formFillHideWindow(bool activated);
-	void exportAsJsonClicked();
-	void importFromJsonClicked();
-	void clipboardTimeoutChanged(int timeout);
-	void clipboardTimeoutClicked(bool activated);
-	void showIdenticonClicked(bool activated);
+    Ui::SettingsWidget* ui;
+    ApplicationSettings& m_settings;
+    QMap<QString, UiUser>& m_users;
+    DataImportExport& m_import_export;
+   private slots:
+    void showPWAfterLogin(bool show);
+    void showTrayIcon(bool show);
+    void autoLogout(bool activated);
+    void autoLogoutValueChanged(int value);
+    void formFillHideWindow(bool activated);
+    void exportAsJsonClicked();
+    void importFromJsonClicked();
+    void clipboardTimeoutChanged(int timeout);
+    void clipboardTimeoutClicked(bool activated);
+    void showIdenticonClicked(bool activated);
 
-	void removeSelectedCategoryClicked();
-	void addNewCategoryClicked();
-	void categoryNameChanged();
-	void restoreDefaultCategories();
-signals:
-	void showTrayIconChanged(bool visible);
+    void removeSelectedCategoryClicked();
+    void addNewCategoryClicked();
+    void categoryNameChanged();
+    void restoreDefaultCategories();
+   signals:
+    void showTrayIconChanged(bool visible);
 };
 
-#endif // SETTINGS_WIDGET_H
+#endif  // SETTINGS_WIDGET_H

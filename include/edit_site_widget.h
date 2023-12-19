@@ -15,45 +15,41 @@
 #ifndef EDIT_SITE_WIDGET_H
 #define EDIT_SITE_WIDGET_H
 
-#include <QDialog>
 #include <QCheckBox>
+#include <QDialog>
 #include <QMap>
-#include "user.h"
+
 #include "crypto.h"
 #include "uitemplate_helpers.h"
+#include "user.h"
 
 namespace Ui {
 class EditSiteWidget;
 }
 
+class EditSiteWidget : public QDialog {
+    Q_OBJECT
 
-class EditSiteWidget : public QDialog
-{
-	Q_OBJECT
+   public:
+    enum Type { Type_edit, Type_new };
+    explicit EditSiteWidget(const QMap<CategoryId, QString>& categories, UiSite& site, Type type,
+                            QWidget* parent = 0);
+    ~EditSiteWidget();
 
-public:
-	enum Type {
-		Type_edit,
-		Type_new
-	};
-	explicit EditSiteWidget(const QMap<CategoryId, QString>& categories,
-			UiSite& site, Type type, QWidget *parent = 0);
-	~EditSiteWidget();
+    /** set the input data to the object */
+    void applyData();
 
-	/** set the input data to the object */
-	void applyData();
+   private:
+    Ui::EditSiteWidget* ui;
+    UiSite& m_site;
+    const Type m_type;
+    User m_sample_user;
+    MasterPassword m_sample_password;
+    const QMap<CategoryId, QString>& m_categories;
 
-private:
-	Ui::EditSiteWidget *ui;
-	UiSite& m_site;
-	const Type m_type;
-	User m_sample_user;
-	MasterPassword m_sample_password;
-	const QMap<CategoryId, QString>& m_categories;
-
-private slots:
-	void passwordTypeChanged(int new_type);
-	void checkInputValidity();
+   private slots:
+    void passwordTypeChanged(int new_type);
+    void checkInputValidity();
 };
 
-#endif // EDIT_SITE_WIDGET_H
+#endif  // EDIT_SITE_WIDGET_H

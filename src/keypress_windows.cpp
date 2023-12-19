@@ -12,76 +12,73 @@
  *
  */
 
-
-#include "keypress.h"
+#include <codecvt>
+#include <locale>
+#include <string>
+#include <type_traits>
 
 #include "KeyboardSimulator.h"
 #include "WindowsInputDeviceStateAdaptor.h"
+#include "keypress.h"
 
-#include <type_traits>
-#include <string>
-#include <locale>
-#include <codecvt>
-
-Keypress::Keypress() {
-	m_simulator = new CKeyboardSimulator();
+Keypress::Keypress()
+{
+    m_simulator = new CKeyboardSimulator();
 }
 
-Keypress::~Keypress() {
-	if (m_simulator) delete ((CKeyboardSimulator*)m_simulator);
+Keypress::~Keypress()
+{
+    if (m_simulator) delete ((CKeyboardSimulator*)m_simulator);
 }
 
-static VirtualKeyCode modifier_keys[] = {
-	VirtualKeyCode::SHIFT,
-	VirtualKeyCode::CONTROL,
-	VirtualKeyCode::MENU,
-	VirtualKeyCode::LWIN,
-	VirtualKeyCode::RWIN
-};
+static VirtualKeyCode modifier_keys[] = {VirtualKeyCode::SHIFT, VirtualKeyCode::CONTROL,
+                                         VirtualKeyCode::MENU, VirtualKeyCode::LWIN,
+                                         VirtualKeyCode::RWIN};
 
+void Keypress::releaseModifiers()
+{
+    constexpr int num_keys = sizeof(modifier_keys) / sizeof(VirtualKeyCode);
+    static_assert(num_keys == sizeof(m_keys_pressed) / sizeof(m_keys_pressed[0]),
+                  "array size missmatch");
 
-void Keypress::releaseModifiers() {
-	constexpr int num_keys = sizeof(modifier_keys) / sizeof(VirtualKeyCode);
-	static_assert(num_keys == sizeof(m_keys_pressed) / sizeof(m_keys_pressed[0]),
-			"array size missmatch");
+    // FIXME: handle numlock?
 
-	//FIXME: handle numlock?
-
-	CKeyboardSimulator* sim = (CKeyboardSimulator*)m_simulator;
-	CWindowsInputDeviceStateAdaptor adaptor;
-	for (int i = 0; i < num_keys; ++i) {
-		m_keys_pressed[i] = adaptor.IsHardwareKeyDown(modifier_keys[i]);
-		if (m_keys_pressed[i]) {
-			sim->KeyUp(modifier_keys[i]);
-		}
-	}
+    CKeyboardSimulator* sim = (CKeyboardSimulator*)m_simulator;
+    CWindowsInputDeviceStateAdaptor adaptor;
+    for (int i = 0; i < num_keys; ++i) {
+        m_keys_pressed[i] = adaptor.IsHardwareKeyDown(modifier_keys[i]);
+        if (m_keys_pressed[i]) {
+            sim->KeyUp(modifier_keys[i]);
+        }
+    }
 }
 
-void Keypress::restoreModifiers() {
-	constexpr int num_keys = sizeof(modifier_keys) / sizeof(VirtualKeyCode);
-	CKeyboardSimulator* sim = (CKeyboardSimulator*)m_simulator;
-	CWindowsInputDeviceStateAdaptor adaptor;
-	for (int i = 0; i < num_keys; ++i) {
-		if (m_keys_pressed[i])
-			sim->KeyDown(modifier_keys[i]);
-	}
+void Keypress::restoreModifiers()
+{
+    constexpr int num_keys = sizeof(modifier_keys) / sizeof(VirtualKeyCode);
+    CKeyboardSimulator* sim = (CKeyboardSimulator*)m_simulator;
+    CWindowsInputDeviceStateAdaptor adaptor;
+    for (int i = 0; i < num_keys; ++i) {
+        if (m_keys_pressed[i]) sim->KeyDown(modifier_keys[i]);
+    }
 }
 
-void Keypress::altTab() {
-	CKeyboardSimulator* sim = (CKeyboardSimulator*)m_simulator;
-	sim->KeyDown(VirtualKeyCode::LMENU);
-	sim->KeyDown(VirtualKeyCode::TAB);
-	Sleep(100);
-	sim->KeyUp(VirtualKeyCode::TAB);
-	sim->KeyUp(VirtualKeyCode::LMENU);
+void Keypress::altTab()
+{
+    CKeyboardSimulator* sim = (CKeyboardSimulator*)m_simulator;
+    sim->KeyDown(VirtualKeyCode::LMENU);
+    sim->KeyDown(VirtualKeyCode::TAB);
+    Sleep(100);
+    sim->KeyUp(VirtualKeyCode::TAB);
+    sim->KeyUp(VirtualKeyCode::LMENU);
 }
 
-void Keypress::type(const char* str) {
+void Keypress::type(const char* str)
+{
+    CKeyboardSimulator* sim = (CKeyboardSimulator*)m_simulator;
 
-	CKeyboardSimulator* sim = (CKeyboardSimulator*)m_simulator;
-
-	//we need to convert str from UTF8 to UTF16
-	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-	std::wstring wide = converter.from_bytes(str);
-	sim->TextEntry(wide.c_str());
+    // we need to convert str from UTF8 to UTF16
+    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+    std::wstring wide = converter.from_bytes(str);
+    sim->TextEntry(wide.c_str());
 }
