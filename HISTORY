@@ -1,3 +1,8 @@
++ Release v2.0.1
+
+Update metadata
+
+
 + Release v2.0
 - Qt6 fixes
 - change from qmake to cmake

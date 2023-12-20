@@ -27,7 +27,7 @@ using namespace std;
 
 #define VERSION_MAJOR 2 /*<! @brief Major version number. */
 #define VERSION_MINOR 0 /*<! @brief Minor version number. */
-#define VERSION_PATCH 0 /*<! @brief patch number. */
+#define VERSION_PATCH 1 /*<! @brief patch number. */
 
 struct VERSION {
     VERSION() : bSet(false) {}
