@@ -121,7 +121,7 @@ MainWindow::MainWindow(QWidget* parent)
         LOG(LogLevel::Warn,
             "Cannot connect to the D-Bus session bus.\n"
             "To start it, run: eval `dbus-launch --auto-syntax`\n");
-    } else if (!QDBusConnection::sessionBus().registerService("org.bkueng.qMasterPassword")) {
+    } else if (!QDBusConnection::sessionBus().registerService("io.github.bkueng.qMasterPassword")) {
         LOG(LogLevel::Warn, "%s", qPrintable(QDBusConnection::sessionBus().lastError().message()));
     } else {
         DBusAdapter* dbus_adapter = new DBusAdapter(this);
