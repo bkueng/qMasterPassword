@@ -1,13 +1,17 @@
 name: pre-commit
 
 on:
-  pull_request:
-  push:
-    branches: [main]
+  workflow_call:
 
 jobs:
   pre-commit:
+    name: Run pre-commit checks
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        pre-commit: [yes]
+      fail-fast: false
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
