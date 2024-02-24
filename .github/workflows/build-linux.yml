@@ -186,7 +186,7 @@ jobs:
           matrix.appimage
 
       - name: Upload AppImage
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: appimage-qt${{ matrix.qt }}
           path: ${{ runner.temp }}/linuxdeploy/qMasterPassword-x86_64.AppImage
