@@ -1,0 +1,48 @@
+---
+name: build-flatpak
+
+on:
+   workflow_call:
+
+jobs:
+  build-linux:
+    name: Build Flatpak
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        flatpak: [yes]
+      fail-fast: false
+
+    container:
+      image: bilelmoussaoui/flatpak-github-actions:kde-5.15-23.08
+      options: --privileged
+
+    steps:
+      - name: Install additional packages
+        run: >
+          dnf install --setopt=install_weak_deps=False -y
+          nodejs
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build
+        # NOTE: this git commit adds support for "upload-artifact: false"
+        # @TODO - replace with tag once included in a release
+        uses: flatpak/flatpak-github-actions/flatpak-builder@b8be6bc0ede43cb3a2cc55895654312b14f84a0d
+        with:
+          bundle: io.github.bkueng.qMasterPassword
+          manifest-path: ./data/flatpak/io.github.bkueng.qMasterPassword.yml
+          cache-key: flatpak-builder-${{ github.sha }}
+          upload-artifact: false
+          verbose: true
+
+      - name: Upload Flatpak
+        uses: actions/upload-artifact@v4
+        with:
+          name: flatpak
+          path: io.github.bkueng.qMasterPassword
+        # skip step when running under act-cli
+        if: |
+          env.ACT != 'true'

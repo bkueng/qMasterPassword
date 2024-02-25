@@ -16,6 +16,9 @@ jobs:
   matrix-precommit:
     uses: ./.github/workflows/pre-commit.yml
 
+  matrix-flatpak:
+    uses: ./.github/workflows/build-flatpak.yml
+
   matrix-linux:
     uses: ./.github/workflows/build-linux.yml
 
