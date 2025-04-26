@@ -8,10 +8,6 @@ on:
     branches:
       - main
 
-  schedule:
-    # run every month on the 10th at "night" time
-    - cron:  '16 3 10 * *'
-
 jobs:
   matrix-precommit:
     uses: ./.github/workflows/pre-commit.yml
