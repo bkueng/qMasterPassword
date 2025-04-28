@@ -15,9 +15,9 @@ jobs:
           - debian:oldstable
           - debian:stable
           - debian:testing
-          - fedora:38
-          - fedora:39
           - fedora:40
+          - fedora:41
+          - fedora:42
           - fedora:rawhide
           - ubuntu:latest
           - ubuntu:rolling
@@ -29,10 +29,13 @@ jobs:
           - container: ubuntu:latest
             qt:        5
             appimage:  true
-          - container: fedora:38
+          - container: fedora:40
+            no_x11:    true
             qt:        6
             appimage:  true
-          - container: fedora:40
+          - container: fedora:41
+            no_x11:    true
+          - container: fedora:42
             no_x11:    true
           - container: fedora:rawhide
             no_x11:    true
