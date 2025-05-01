@@ -2,7 +2,11 @@
 name: build-flatpak
 
 on:
-   workflow_call:
+  workflow_call:
+
+  push:
+    branches:
+      - flathub-release
 
 jobs:
   build-linux:
@@ -48,3 +52,14 @@ jobs:
         # skip step when running under act-cli
         if: |
           env.ACT != 'true'
+
+      - name: Deploy release to Flathub
+        uses: flatpak/flatpak-github-actions/flat-manager@v4
+        with:
+          repository: flathub
+          flat-manager-url: https://flathub.org
+          token: ${{ secrets.FLATHUB_TOKEN }}
+          verbose: true
+        # only execute step when pushing to "flathub-release" branch
+        if: |
+          github.ref == 'refs/heads/flathub-release'
