@@ -51,21 +51,10 @@ class Identicon {
         return sizeof(array) / sizeof(array[0]);
     }
 
-    static constexpr const char* left_arm[] = {u8"\u2554", u8"\u255a", u8"\u2570", u8"\u2550"};
-    static constexpr const char* right_arm[] = {u8"\u2557", u8"\u255d", u8"\u256f", u8"\u2550"};
-    static constexpr const char* body[] = {u8"\u2588", u8"\u2591", u8"\u2592",
-                                           u8"\u2593", u8"\u263a", u8"\u263b"};
-    static constexpr const char* accessory[] = {
-        u8"\u25c8", u8"\u25ce", u8"\u25d0", u8"\u25d1", u8"\u25d2", u8"\u25d3", u8"\u2600",
-        u8"\u2601", u8"\u2602", u8"\u2603", u8"\u2604", u8"\u2605", u8"\u2606", u8"\u260e",
-        u8"\u260f", u8"\u2388", u8"\u2302", u8"\u2618", u8"\u2622", u8"\u2623", u8"\u2615",
-        u8"\u231a", u8"\u231b", u8"\u23f0", u8"\u26a1", u8"\u26c4", u8"\u26c5", u8"\u2614",
-        u8"\u2654", u8"\u2655", u8"\u2656", u8"\u2657", u8"\u2658", u8"\u2659", u8"\u265a",
-        u8"\u265b", u8"\u265c", u8"\u265d", u8"\u265e", u8"\u265f", u8"\u2668", u8"\u2669",
-        u8"\u266a", u8"\u266b", u8"\u2690", u8"\u2691", u8"\u2694", u8"\u2696", u8"\u2699",
-        u8"\u26a0", u8"\u2318", u8"\u23ce", u8"\u2704", u8"\u2706", u8"\u2708", u8"\u2709",
-        u8"\u270c"};
-
+    static const char* const left_arm[];
+    static const char* const right_arm[];
+    static const char* const body[];
+    static const char* const accessory[];
     static const QColor colors_dark[];
     static const QColor colors_light[];
 };
