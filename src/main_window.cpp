@@ -107,8 +107,13 @@ MainWindow::MainWindow(QWidget* parent)
 #ifndef DISABLE_FILL_FORM_SHORTCUTS
     m_table_shortcuts[(int)ShortcutAction::FillForm].push_back(QKeySequence(QKeySequence::Paste));
     m_table_shortcuts[(int)ShortcutAction::FillForm].push_back(QKeySequence(Qt::Key_P));
-    m_table_shortcuts[(int)ShortcutAction::FillFormPasswordOnly].push_back(
-        QKeySequence(Qt::SHIFT | Qt::Key_P));
+    m_table_shortcuts[(int)ShortcutAction::FillFormPasswordOnly].push_back(QKeySequence(
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+        Qt::SHIFT + ((Qt::Modifier)Qt::Key_P)
+#else
+        QKeyCombination(Qt::SHIFT, Qt::Key_P)
+#endif
+            ));
 #endif
     m_table_shortcuts[(int)ShortcutAction::SelectFilter].push_back(QKeySequence(Qt::Key_Slash));
     m_table_shortcuts[(int)ShortcutAction::PreviousItem].push_back(QKeySequence(Qt::Key_K));
