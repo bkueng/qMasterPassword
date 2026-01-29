@@ -218,7 +218,7 @@ void MasterPassword::addIntToString(std::string& str, uint32_t val)
 
 std::string MasterPassword::templateForType(MPSiteType type, uint8_t seed_byte)
 {
-    if (!(type & MPSiteTypeClassGenerated)) {
+    if (!(type & ((MPSiteType)MPSiteTypeClassGenerated))) {
         THROW(EINVALID_PARAMETER);
     }
 
