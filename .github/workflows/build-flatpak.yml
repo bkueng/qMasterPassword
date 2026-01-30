@@ -5,7 +5,7 @@ on:
    workflow_call:
 
 jobs:
-  build-linux:
+  build-flatpak:
     name: Build Flatpak
     runs-on: ubuntu-latest
 

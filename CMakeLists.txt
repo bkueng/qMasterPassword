@@ -2,9 +2,31 @@ cmake_minimum_required(VERSION 3.18)
 set(TARGET qMasterPassword)
 project(${TARGET} LANGUAGES C CXX)
 
+# enforce the highest available C++ standard
+if("cxx_std_26" IN_LIST CMAKE_CXX_COMPILE_FEATURES)
+    message(STATUS "Using C++26 standard")
+    set(CMAKE_CXX_STANDARD 26)
+elseif("cxx_std_23" IN_LIST CMAKE_CXX_COMPILE_FEATURES)
+    message(STATUS "Using C++23 standard")
+    set(CMAKE_CXX_STANDARD 23)
+else()
+    # fall back to C++20 if the compiler supports it
+    message(STATUS "Using C++20 standard")
+    set(CMAKE_CXX_STANDARD 20)
+endif()
+
+# enforce the highest available C standard
+if("c_std_23" IN_LIST CMAKE_C_COMPILE_FEATURES)
+    message(STATUS "Using C23 standard")
+    set(CMAKE_C_STANDARD 23)
+else()
+    # fall back to C17 if the compiler supports it
+    message(STATUS "Using C17 standard")
+    set(CMAKE_C_STANDARD 17)
+endif()
+
 set(CMAKE_AUTOUIC_SEARCH_PATHS ui)
 set(CMAKE_AUTORCC ON)
-set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_SKIP_RPATH ON)
 
