@@ -17,6 +17,8 @@
 # flatpak bundle copied out from act-cli container for testing
 # flatpak --user install --bundle ./io.github.bkueng.qMasterPassword
 /io.github.bkueng.qMasterPassword
+/.event.json
+/.secrets
 
 *.log
 
